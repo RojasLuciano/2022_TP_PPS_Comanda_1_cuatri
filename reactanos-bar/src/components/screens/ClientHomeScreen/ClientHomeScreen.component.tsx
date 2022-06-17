@@ -149,7 +149,18 @@ const ClientHomeScreen = ({ navigation }: any) => {
         });
     };
 
-    const getTableStatus = async () => {
+    const goToPoll = () => {
+        navigation.navigate(Screens.ADD_POLL, {
+        });
+    };
+
+    const goToGames = () => {
+        navigation.navigate(Screens.GUESS_THE_NUMBER, {
+        });
+    };
+
+
+    const getOrderStatus = async () => {
         try {
             dispatch(fetchLoadingStart());
             const querySnapshot = await getDocs(
@@ -228,18 +239,18 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     {tableButtons && (
                         <>
                         <MarginVertical>
-                            <CardButton onPress={goToQr}>
+                            <CardButton onPress={goToPoll}>
                                 Realizar encuesta
                             </CardButton>
                         </MarginVertical>
                         <MarginVertical>
-                            <CardButton onPress={goToQr}>
+                            <CardButton onPress={goToGames}>
                                 Ir a los juegos
                             </CardButton>
                         </MarginVertical>
                         <MarginVertical>
-                            <CardButton onPress={getTableStatus}>
-                                Estado de la mesa
+                            <CardButton onPress={getOrderStatus}>
+                                Estado del pedido
                             </CardButton>
                         </MarginVertical>
                         </>
