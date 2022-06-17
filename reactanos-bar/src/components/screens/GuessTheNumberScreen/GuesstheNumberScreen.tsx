@@ -8,19 +8,24 @@ import { AuthTypes } from "../../../redux/authReducer";
 import { IStore } from "../../../redux/store";
 import { fetchLoadingFinish, fetchLoadingStart } from "../../../redux/loaderReducer";
 import { sleep } from "../../../utils/utils";
-import { successHandler } from "../../../utils/SuccessHandler";
 import { errorHandler } from "../../../utils/ErrorsHandler";
 import { StyledParagraph } from "../../atoms/Paragraph/Paragraph.styled";
 import { useFocusEffect } from "@react-navigation/native";
 import Button from "../../atoms/Button/Button.component";
 import { Input, View } from "native-base";
 import Heading from "../../atoms/Heading/Heading.component";
+import { collection, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../InitApp";
+import { Screens } from "../../../navigation/Screens";
 
 const GuessTheNumberScreen = ({ navigation }: any) => {
     const data: AuthTypes = useSelector<IStore, any>(store => store.auth);
     const dispatch = useDispatch();
     const [secretNumber, setSecretNumber] = useState(0);
     const [guess, setGuess] = useState('');
+    const [lifes, setLifes] = useState(3);
+    const [message, setMessage] = useState('Enviar');
+    const [noLifesMessage, setNoLifesMessage] = useState('');
 
     useFocusEffect(
         useCallback(() => {
@@ -37,18 +42,22 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
 
     const checkGuessHandler = async () => {
         try {
-            dispatch(fetchLoadingStart());
             await sleep(500);
             if (guess === "" || guess === undefined) {
                 throw { code: "empty-fields" };
             }
             if (guess === secretNumber.toString()) {
-                successHandler("guessed-number");
+                setNoLifesMessage('Felicidades, ganaste un 15% de descuento!.');
                 setGuess('');
-                setSecretNumberHandler();
-
+                applyDiscount();
+                await sleep(1500);
+                dispatch(fetchLoadingStart());
+                navigation.navigate(Screens.CLIENT_HOME, {
+                    screen: Screens.CLIENT_HOME,
+                });
             } else {
-                errorHandler("havent-guessed");
+                setNoLifesMessage('No adivinaste, intenta de nuevo!.');
+                setLifes(prevCount => prevCount - 1);
                 setGuess('');
                 await sleep(500);
             }
@@ -59,13 +68,30 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
         }
     }
 
+    const applyDiscount = async () => {
+        try {
+            const userCollection = collection(db, "users");
+            const userRef = doc(userCollection, data.user.id);
+            await updateDoc(userRef, { discount: 15 });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const onChangeHandler = (text: string) => {
         setGuess(text);
+        console.log(lifes);
+        if (lifes <= 0) {
+            setMessage('Reintentar');
+            setNoLifesMessage('Ya no tienes vidas, intenta de nuevo!.');
+            setLifes(3);
+        } else {
+            setMessage('Enviar');
+        }
     }
 
     return (
         <StyledLinearGradient colors={["#6190E8", "#A7BFE8"]}>
-            
             <StyledMargin>
                 <Heading
                     level="XL"
@@ -73,7 +99,7 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
                     color="white"
                     bold={true}
                 >
-                    Adivina el número {secretNumber}
+                    Adivina el número
                 </Heading>
             </StyledMargin>
 
@@ -91,12 +117,14 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
             <StyledMargin>
                 <View
                     style={{
-                        width: "10%",
+                        width: "20%",
                         alignSelf: "center",
                     }}
                 >
                     <Input
                         style={{
+                            width: 50,
+                            fontSize: 40,
                             alignSelf: "center",
                             borderColor: "white",
                             borderWidth: 1,
@@ -109,11 +137,23 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
                 </View>
             </StyledMargin>
 
-            <Button onPress={checkGuessHandler} > Enviar </Button>
+            <StyledMargin>
+                <StyledParagraph
+                    level="L"
+                    color="white"
+                    bold={true}
+                    textAlign="center"
+                >
+                    {noLifesMessage}
+                </StyledParagraph>
+            </StyledMargin>
+
+            <Button onPress={checkGuessHandler} > {message} </Button>
         </StyledLinearGradient>
     );
 };
 export default GuessTheNumberScreen;
+
 
 
 
