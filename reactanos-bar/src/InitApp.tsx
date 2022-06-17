@@ -19,10 +19,10 @@ export const db = getFirestore(app);
 
 const InitApp = () => {
     const data:IStore = useSelector<IStore, any>(store => store);
-
+  
     useEffect(() => {
-        notificationsConfiguration();
-    },[])
+      notificationsConfiguration();
+    }, [])  
 
     return (
         <NavigationContainer>

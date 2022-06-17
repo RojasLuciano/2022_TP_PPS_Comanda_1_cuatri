@@ -1,4 +1,3 @@
-import { ActivityIndicator } from 'react-native'
 import React from 'react'
 import { StyledView } from './Spinner.styled'
 import LottieView from 'lottie-react-native';
