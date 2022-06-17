@@ -4,7 +4,6 @@
     import { addDoc, collection, onSnapshot, orderBy, query } from 'firebase/firestore';
     import { db } from "../../../InitApp";
     import { useSelector } from 'react-redux'
-
     
     const ChatScreen = ({ navigation }: any) => {
 
