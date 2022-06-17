@@ -4,6 +4,7 @@
     import { addDoc, collection, onSnapshot, orderBy, query } from 'firebase/firestore';
     import { db } from "../../../InitApp";
     import { useSelector } from 'react-redux'
+import { StyledView } from './ChatScreen.styled';
     
     const ChatScreen = ({ navigation }: any) => {
 
@@ -42,9 +43,9 @@
             return <Day {...props} textStyle={{color: 'black'}}/>
         }
         
-        return (      
+        return (     
+            <StyledView colors={["#6190E8", "#A7BFE8"]}>
             <GiftedChat  
-                messagesContainerStyle={{ backgroundColor: '#848cc4', borderColor: '#a5d1f1', shadowColor: '#a5d1f1' }}
                 optionTintColor='#optionTintColor'
                 messages={messages}
                 onSend={messages => onSend(messages)}
@@ -68,6 +69,7 @@
                         </View>
                 </Send> )}           
             />      
+            </StyledView>
         );
     }
     
