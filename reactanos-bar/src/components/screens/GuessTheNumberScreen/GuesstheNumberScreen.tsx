@@ -27,7 +27,7 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
     const [message, setMessage] = useState('Enviar');
     const [noLifesMessage, setNoLifesMessage] = useState('');
     const discount = [15, 10, 20];
-    const random = Math.floor(Math.random() * discount.length);
+    const random = Math.floor(Math.random() * discount.length); 
 
     useFocusEffect(
         useCallback(() => {
