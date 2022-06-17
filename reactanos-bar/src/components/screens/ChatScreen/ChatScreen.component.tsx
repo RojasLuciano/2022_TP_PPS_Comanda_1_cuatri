@@ -7,7 +7,7 @@
     
     const ChatScreen = ({ navigation }: any) => {
 
-        const [messages, setMessages] = useState([]);
+        const [messages, setMessages] = useState<any>([]);
         const userData:any = useSelector<any>(store => store.auth);
     
         useLayoutEffect(() => {
@@ -23,7 +23,7 @@
         }, [])
     
         const onSend = useCallback((messages = []) => {
-            setMessages(previousMessages =>
+            setMessages((previousMessages:any) =>
                 GiftedChat.append(previousMessages, messages))
             const {
                 _id,

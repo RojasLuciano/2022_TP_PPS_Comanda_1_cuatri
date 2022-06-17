@@ -20,6 +20,7 @@ import WaitingClientListStack from './stacks/WaitingClientListStack';
 import AddPollScreen from '../components/screens/AddPollScreen/AddPollScreen';
 import GraphicScreen from '../components/screens/GraphicScreen/GraphicScreen';
 import GuessTheNumberScreen from '../components/screens/GuessTheNumberScreen/GuesstheNumberScreen';
+import AddOrderScreen from '../components/screens/AddOrderScreen/AddOrderScreen.component';
 
 const Drawer = createDrawerNavigator();
 
@@ -53,6 +54,7 @@ const DrawerStack = () => {
           <Drawer.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListStack} options={{headerShown:false}} />
           <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />
           <Drawer.Screen name={Screens.GUESS_THE_NUMBER} component={GuessTheNumberScreen} />
+          <Drawer.Screen name={Screens.ADD_ORDER} component={AddOrderScreen} />
         </Drawer.Navigator>
     );
 } 

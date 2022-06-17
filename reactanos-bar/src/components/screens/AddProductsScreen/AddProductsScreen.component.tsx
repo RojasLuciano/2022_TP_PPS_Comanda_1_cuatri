@@ -9,9 +9,8 @@ import Modal from "../../atoms/Modal/Modal.component";
 import Carousel from "../../molecules/Carousel/Carousel.component";
 import { useForm } from "react-hook-form";
 import AddProductsController from "../../organisms/AddProductsController/AddProductsController.component";
-import { uploadImages, validateInputs } from '../../../utils/utils';
+import { uploadImages } from '../../../utils/utils';
 import { errorHandler } from "../../../utils/ErrorsHandler";
-import { showMessage } from "react-native-flash-message";
 import { db } from "../../../InitApp";
 import { addDoc, collection } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,7 +45,6 @@ const AddProductsScreen = ({navigation}:any) => {
         try {
             dispatch(fetchLoadingStart());
             const values = getValues();
-            // validateInputs(values);
             const imagesRef = await uploadImages(images);
             const docRef = await addDoc(collection(db, "products"), {
                 user: data.user.email,

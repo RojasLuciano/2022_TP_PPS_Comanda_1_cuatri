@@ -12,6 +12,9 @@ export const successHandler = (error:any) => {
         case 'poll-created':
             message="Encuesta enviada exitosamente";
         break;
+        case 'order-created':
+            message="Pedido registrado exitosamente";
+        break;
         case 'guessed-number':
             message="Has adivinado";
         break;

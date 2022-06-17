@@ -52,3 +52,7 @@ export const normalize = (size: number) => {
         return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
     }
 };
+
+export const currencyFormat = (num:string) => {
+    return '$' + num.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+ }

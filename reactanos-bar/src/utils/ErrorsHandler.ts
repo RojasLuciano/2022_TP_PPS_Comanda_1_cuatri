@@ -48,8 +48,9 @@ export const errorHandler = (error:any) => {
         case 'havent-guessed':
             message="No has adivinado el número"
         break;
-        
-
+        case 'order-error':
+            message="Ocurrió un error al generar el pedido"
+        break;
         default:
             message="Ha ocurrido un error, por favor reintente nuevamente"
         break;
