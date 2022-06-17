@@ -1,6 +1,5 @@
 import React, {
   useCallback,
-  useEffect,
   useLayoutEffect,
   useState,
 } from "react";
@@ -16,12 +15,10 @@ import {
 import { db } from "../../../InitApp";
 import { useSelector } from "react-redux";
 import { StyledView } from "./ChatScreen.styled";
-import { useFocusEffect } from "@react-navigation/native";
 
 const ChatScreen = ({ navigation, route }: any) => {
   const [messages, setMessages] = useState([]);
   const userData: any = useSelector<any>((store) => store.auth);
-  //table = userData.user.table;
 
   useLayoutEffect(() => {
     let table = userData.user?.table || route.params.table;
