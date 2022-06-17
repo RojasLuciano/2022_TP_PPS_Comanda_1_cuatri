@@ -5,14 +5,25 @@
     import { db } from "../../../InitApp";
     import { useSelector } from 'react-redux'
 import { StyledView } from './ChatScreen.styled';
+import { useFocusEffect } from '@react-navigation/native';
     
-    const ChatScreen = ({ navigation }: any) => {
+    const ChatScreen = ({ navigation }: any, { table } : any) => {
 
         const [messages, setMessages] = useState([]);
         const userData:any = useSelector<any>(store => store.auth);
+
+        useFocusEffect(
+            useCallback(() => {
+                if(userData.user.profile === "cliente"){
+                    table = userData.user.table
+                }else{
+                    table = navigation.params.table
+                }
+                }, [])
+        );
     
         useLayoutEffect(() => {
-            const unsubscribe = onSnapshot(query(collection(db, "chatMeza#"), orderBy("createdAt", "desc")), (snapshot =>
+            const unsubscribe = onSnapshot(query(collection(db, "chatMeza"+table), orderBy("createdAt", "desc")), (snapshot =>
                 setMessages(snapshot.docs.map(doc => ({
                     _id: doc.data()._id,
                     text: doc.data().text,
@@ -31,7 +42,7 @@ import { StyledView } from './ChatScreen.styled';
                 createdAt,
                 text,
                 user } = messages[0]
-            addDoc(collection(db, "chatMeza#"), {
+            addDoc(collection(db, "chatMeza"+table), {
                 _id,
                 createdAt,
                 text,
@@ -54,7 +65,6 @@ import { StyledView } from './ChatScreen.styled';
                 maxInputLength={21}
                 user={{
                     _id: userData?.user?.email || 1,
-                    //name: userData?.currentUser?.displayName || '',
                     name: userData?.user?.name || '',
                 }}
                 textInputProps={{                      
