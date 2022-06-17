@@ -100,7 +100,8 @@ const AddClientScreen = () => {
                   image: fileRef.fullPath,
                   creationDate: new Date(),
                   profile:"cliente",
-                  status:"Pendiente"
+                  status:"Pendiente",
+                  pollfilled:false
               });
             }else{
                 const blob: any = await getBlob(image);
@@ -111,7 +112,8 @@ const AddClientScreen = () => {
                   name: values.name,
                   image: fileRef.fullPath,
                   creationDate: new Date(),
-                  profile:"invitado"
+                  profile:"invitado",
+                  pollfilled:false
                 });
             }
 

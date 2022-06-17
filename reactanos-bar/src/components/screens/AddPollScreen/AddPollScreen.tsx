@@ -23,8 +23,9 @@ import Button from "../../atoms/Button/Button.component";
 import { StyledParagraph } from "../../atoms/Paragraph/Paragraph.styled";
 import ControlledInput from "../../molecules/ControlledInput/ControlledInput.component";
 import Select from "../../molecules/Select/Select.component";
-import { Box, Slider, Checkbox, Radio } from "native-base";
+import { Box, Slider, Checkbox, Radio, View } from "native-base";
 import { Screens } from "../../../navigation/Screens";
+import Heading from "../../atoms/Heading/Heading.component";
 
 interface PollData {
     name: string;
@@ -45,6 +46,7 @@ const AddPollScreen = ({ navigation }: any) => {
     const [creditOrDebit, setcreditOrDebit] = useState(false);
     const [cash, setcash] = useState(false);
     const [other, setother] = useState(false);
+    const [userAlreadyFilledPoll, setUserAlreadyFilledPoll] = useState(false);
 
     const dataAttention = [
         { label: "Muy buena", value: "great" },
@@ -73,8 +75,8 @@ const AddPollScreen = ({ navigation }: any) => {
     );
 
     const uploadPoll = async () => {
-
         try {
+            setUserAlreadyFilledPoll(true);
             dispatch(fetchLoadingStart());
             const values = getValues();
             validateInputs(values);
@@ -88,18 +90,16 @@ const AddPollScreen = ({ navigation }: any) => {
                 PollCreditOrDebit: creditOrDebit,
                 PollOther: other,
                 PollCash: cash,
+                PollAlreadyFilled: userAlreadyFilledPoll,
                 creationDate: new Date(),
                 images: imagesRef,
                 ...values
             });
             successHandler('poll-created');
-            // navigation.navigate(Screens.QRCode, { // TODO: change to poll-created
-            //     title: "Mesa creada exitosamente",
-            //     subtitle:
-            //         "La mesa ya está cargado en nuestras bases de datos, de todas formas asegurate de guardar el código QR que te brindamos",
-            //     code: JSON.stringify({tableCode:values.tableNumber.toString()}),
-            // });
-            reset(); 
+            navigation.navigate(Screens.CLIENT_HOME, {
+                screen: Screens.CLIENT_HOME,
+            });
+            reset();
             OtherReset();
         } catch (e: any) {
             console.log(e);
@@ -108,7 +108,7 @@ const AddPollScreen = ({ navigation }: any) => {
             dispatch(fetchLoadingFinish());
         }
     };
- 
+
     const handleCamera = async () => {
         let result: any = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -133,150 +133,169 @@ const AddPollScreen = ({ navigation }: any) => {
     return (
         <StyledLinearGradient colors={["#6190E8", "#A7BFE8"]}>
             <StyledView contentContainerStyle={{ alignItems: 'center' }}>
-                <Modal
-                    isVisible={modalVisible}
-                    title={`${images.length}/3 Fotos agregadas`}
-                    subtitle="Es necesario que cargues todas las imágenes para la encuesta"
-                    onPrimaryText="Siguiente foto"
-                    onPrimary={handleCamera}
-                    onSecondaryText="Cancelar"
-                    onSecondary={handleCancel}
-                />
-                {images.length < 1 ?
-                    <ImageButton source={require('../../../../assets/add-photo.png')} onPress={handleCamera} /> :
-                    <Carousel images={images} />}
-                <StyledView>
 
+                {data.user.pollfilled ? (
                     <StyledMargin>
-                        <StyledParagraph
-                            level="L"
+                        <Heading
+                            level="XL"
+                            textAlign="center"
                             color="white"
                             bold={true}
-                            textAlign="left"
                         >
-                            •  ¿Que te ha parecido la comida?
-                        </StyledParagraph>
+                            Ya completaste la encuesta!.{'\n'} Gracias por tu participación.
+                        </Heading>
                     </StyledMargin>
 
-                    <StyledMargin>
-                        <Select value={foodQuality} onChange={handleSelectAttention} placeholder="Tu respuesta nos ayuda a mejorar" data={dataAttention} />
-                    </StyledMargin>
+                   
 
-                    <StyledMargin>
-                        <StyledParagraph
-                            level="L"
-                            color="white"
-                            bold={true}
-                            textAlign="left"
-                        >
-                            •  ¿Que te ha parecido el precio?
-                        </StyledParagraph>
-                    </StyledMargin>
+                    
+                ) :
+                    <StyledView contentContainerStyle={{ alignItems: 'center' }}>
+                        <Modal
+                            isVisible={modalVisible}
+                            title={`${images.length}/3 Fotos agregadas`}
+                            subtitle="Es necesario que cargues todas las imágenes para la encuesta"
+                            onPrimaryText="Siguiente foto"
+                            onPrimary={handleCamera}
+                            onSecondaryText="Cancelar"
+                            onSecondary={handleCancel}
+                        />
+                        {images.length < 1 ?
+                            <ImageButton source={require('../../../../assets/add-photo.png')} onPress={handleCamera} /> :
+                            <Carousel images={images} />}
+                        <StyledView>
+                            <StyledMargin>
+                                <StyledParagraph
+                                    level="L"
+                                    color="white"
+                                    bold={true}
+                                    textAlign="left"
+                                >
+                                    •  ¿Que te ha parecido la comida?
+                                </StyledParagraph>
+                            </StyledMargin>
 
-                    <StyledMargin>
-                        <Radio.Group
-                            name="myRadioGroup"
-                            value={price}
-                            onChange={(price) => {
-                                setPollsPrice(price);
-                            }}>
-                            <Radio value="dissatisfied">
-                                Insatisfecho
-                            </Radio>
-                            <Radio value="satisfied">
-                                Satisfecho
-                            </Radio>
-                            <Radio value="normal" >
-                                Normal
-                            </Radio>
-                        </Radio.Group>
-                    </StyledMargin>
+                            <StyledMargin>
+                                <Select value={foodQuality} onChange={handleSelectAttention} placeholder="Tu respuesta nos ayuda a mejorar" data={dataAttention} />
+                            </StyledMargin>
 
-                    <StyledMargin>
-                        <StyledParagraph
-                            level="L"
-                            color="white"
-                            bold={true}
-                            textAlign="left"
-                        >
-                            •  ¿Que te ha parecido la atencion?
-                        </StyledParagraph>
-                    </StyledMargin>
+                            <StyledMargin>
+                                <StyledParagraph
+                                    level="L"
+                                    color="white"
+                                    bold={true}
+                                    textAlign="left"
+                                >
+                                    •  ¿Que te ha parecido el precio?
+                                </StyledParagraph>
+                            </StyledMargin>
 
-                    <StyledMargin>
-                        <Box alignItems="center" w="100%">
-                            <Slider
-                                w="3/4" maxW="300" defaultValue={70} minValue={0} maxValue={100} accessibilityLabel="hello world" step={10} size="sm"
-                                colorScheme="cyan" onChange={v => {
-                                    setOnChangeSliderValue(Math.floor(v));
-                                }} onChangeEnd={v => {
-                                    v;
-                                }}>
-                                <Slider.Track>
-                                    <Slider.FilledTrack />
-                                </Slider.Track>
-                                <Slider.Thumb />
-                            </Slider>
-                        </Box>
+                            <StyledMargin>
+                                <Radio.Group
+                                    name="myRadioGroup"
+                                    value={price}
+                                    onChange={(price) => {
+                                        setPollsPrice(price);
+                                    }}>
+                                    <Radio value="dissatisfied">
+                                        Insatisfecho
+                                    </Radio>
+                                    <Radio value="satisfied">
+                                        Satisfecho
+                                    </Radio>
+                                    <Radio value="normal" >
+                                        Normal
+                                    </Radio>
+                                </Radio.Group>
+                            </StyledMargin>
 
-                    </StyledMargin>
+                            <StyledMargin>
+                                <StyledParagraph
+                                    level="L"
+                                    color="white"
+                                    bold={true}
+                                    textAlign="left"
+                                >
+                                    •  ¿Que te ha parecido la atencion?
+                                </StyledParagraph>
+                            </StyledMargin>
 
-                    <StyledMargin>
-                        <StyledParagraph
-                            level="L"
-                            color="white"
-                            bold={true}
-                            textAlign="left"
-                        >
-                            •  ¿Metodo favorito de pago?
-                        </StyledParagraph>
-                    </StyledMargin>
+                            <StyledMargin>
+                                <Box alignItems="center" w="100%">
+                                    <Slider
+                                        w="3/4" maxW="300" defaultValue={70} minValue={0} maxValue={100} accessibilityLabel="hello world" step={10} size="sm"
+                                        colorScheme="cyan" onChange={v => {
+                                            setOnChangeSliderValue(Math.floor(v));
+                                        }} onChangeEnd={v => {
+                                            v;
+                                        }}>
+                                        <Slider.Track>
+                                            <Slider.FilledTrack />
+                                        </Slider.Track>
+                                        <Slider.Thumb />
+                                    </Slider>
+                                </Box>
 
-                    <Checkbox
-                        value={"creditOrDebit"}
-                        onChange={() => {
-                          setcreditOrDebit(!creditOrDebit);
-                        }} 
-                        isChecked={creditOrDebit} 
-                    >  
-                        Tarjeta de crédito o débito
-                    </Checkbox> 
+                            </StyledMargin>
 
-                    <Checkbox 
-                        value={"cash"}
-                        onChange={() => { 
-                            setcash(!cash);
-                        }}
-                        isChecked={cash}
-                    >
-                        Efectivo 
-                    </Checkbox> 
-                    <Checkbox
-                        value={"other"} 
-                        onChange={() => {
-                            setother(!other);
-                        }}
-                        isChecked={other}
-                    >
-                        Otro
-                    </Checkbox>
-  
-                    <StyledMargin>
-                        <StyledParagraph
-                            level="L"    
-                            color="white"
-                            bold={true}
-                            textAlign="left"
-                        >
-                            •  Dejanos tu opinion sobre el servicio
-                        </StyledParagraph>
-                    </StyledMargin>
+                            <StyledMargin>
+                                <StyledParagraph
+                                    level="L"
+                                    color="white"
+                                    bold={true}
+                                    textAlign="left"
+                                >
+                                    •  ¿Metodo favorito de pago?
+                                </StyledParagraph>
+                            </StyledMargin>
 
-                    <StyledMargin>
-                        <ControlledInput onSubmitEditing={() => opinion.current.focus()} placeholder="Tu respuesta nos ayuda a mejorar" variant="rounded" control={control} name="PollsOpinion" />
-                    </StyledMargin>
-                        <Button onPress={handleSubmit(uploadPoll)}>Enviar</Button>
-                </StyledView>
+                            <Checkbox
+                                value={"creditOrDebit"}
+                                onChange={() => {
+                                    setcreditOrDebit(!creditOrDebit);
+                                }}
+                                isChecked={creditOrDebit}
+                            >
+                                Tarjeta de crédito o débito
+                            </Checkbox>
+
+                            <Checkbox
+                                value={"cash"}
+                                onChange={() => {
+                                    setcash(!cash);
+                                }}
+                                isChecked={cash}
+                            >
+                                Efectivo
+                            </Checkbox>
+                            <Checkbox
+                                value={"other"}
+                                onChange={() => {
+                                    setother(!other);
+                                }}
+                                isChecked={other}
+                            >
+                                Otro
+                            </Checkbox>
+
+                            <StyledMargin>
+                                <StyledParagraph
+                                    level="L"
+                                    color="white"
+                                    bold={true}
+                                    textAlign="left"
+                                >
+                                    •  Dejanos tu opinion sobre el servicio
+                                </StyledParagraph>
+                            </StyledMargin>
+
+                            <StyledMargin>
+                                <ControlledInput onSubmitEditing={() => opinion.current.focus()} placeholder="Tu respuesta nos ayuda a mejorar" variant="rounded" control={control} name="PollsOpinion" />
+                            </StyledMargin>
+                            <Button onPress={handleSubmit(uploadPoll)}>Enviar</Button>
+                        </StyledView>
+                    </StyledView>
+                }
             </StyledView>
         </StyledLinearGradient>
     );
