@@ -52,7 +52,7 @@
                 renderAvatarOnTop={true}
                 maxInputLength={21}
                 user={{
-                    _id: userData?.currentUser?.email || 1,
+                    _id: userData?.user?.email || 1,
                     //name: userData?.currentUser?.displayName || '',
                     name: userData?.user?.name || '',
                 }}
