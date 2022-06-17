@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyledView, MarginVertical } from "./ClientHomeScreen.styled";
 import CardButton from "../../molecules/CardButton/CardButton.component";
 import Paragraph from "../../atoms/Heading/Heading.component";
@@ -11,7 +11,7 @@ import {
     fetchLoadingFinish,
     fetchLoadingStart,
 } from "../../../redux/loaderReducer";
-import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../InitApp";
 import { showMessage } from "react-native-flash-message";
 import { errorHandler } from "../../../utils/ErrorsHandler";
@@ -21,12 +21,13 @@ import { useFocusEffect } from "@react-navigation/native";
 const ClientHomeScreen = ({ navigation }: any) => {
     const data: AuthTypes = useSelector<IStore, any>((store) => store.auth);
     const dispatch = useDispatch();
+    const [tableButtons, setTableButtons] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
             onRefresh();
         }, [])
-      );
+    );
 
     const onRefresh = () => {
         dispatch(refreshUserData());
@@ -43,7 +44,10 @@ const ClientHomeScreen = ({ navigation }: any) => {
             }
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, data.user.id);
-            await updateDoc(userRef, { restoStatus: "Pendiente", modifiedDate: new Date() });
+            await updateDoc(userRef, {
+                restoStatus: "Pendiente",
+                modifiedDate: new Date(),
+            });
             showMessage({
                 type: "success",
                 message: "Exito",
@@ -51,13 +55,13 @@ const ClientHomeScreen = ({ navigation }: any) => {
             });
             dispatch(refreshUserData());
         } catch (error: any) {
-            console.log(error)
+            console.log(error);
             errorHandler(error.code);
             dispatch(fetchLoadingFinish());
         }
     };
 
-    const sitOnTable = async (code:string) => {
+    const sitOnTable = async (code: string) => {
         try {
             dispatch(fetchLoadingStart());
             const collectionRef = collection(db, "tables");
@@ -66,42 +70,108 @@ const ClientHomeScreen = ({ navigation }: any) => {
             if (!docSnap.exists()) {
                 throw { code: "table-not-exists" };
             }
-            if(code !== data.user.table){
+            if (code !== data.user.table) {
                 throw { code: "table-doesnt-match" };
             }
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, data.user.id);
-            await updateDoc(userRef, { restoStatus: "Sentado", modifiedDate: new Date() });
+            await updateDoc(userRef, {
+                restoStatus: "Sentado",
+                modifiedDate: new Date(),
+            });
             showMessage({
                 type: "success",
                 message: "Exito",
-                description: "Te acabas de sentar en la mesa, ya podés hacer tu pedido",
+                description:
+                    "Te acabas de sentar en la mesa, ya podés hacer tu pedido",
             });
             dispatch(refreshUserData());
         } catch (error: any) {
-            console.log(error)
+            console.log(error);
             errorHandler(error.code);
             dispatch(fetchLoadingFinish());
         }
-    }
+    };
 
     const handleSignToRestaurant = () => {
         navigation.navigate(Screens.QR_SCANNER, {
             screen: Screens.QR_BUTTON,
-            params: { goBack:signToRestaurant, description:"Escaneá el código QR para solicitar acceso a nuestro local" },
+            params: {
+                goBack: signToRestaurant,
+                description:
+                    "Escaneá el código QR para solicitar acceso a nuestro local",
+            },
         });
     };
 
     const handleSitOnTable = () => {
         navigation.navigate(Screens.QR_SCANNER, {
             screen: Screens.QR_BUTTON,
-            params: { goBack:sitOnTable, description:"Escaneá el código QR de la mesa que te fue asignada" },
+            params: {
+                goBack: sitOnTable,
+                description:
+                    "Escaneá el código QR de la mesa que te fue asignada",
+            },
         });
     };
 
     const goToOrder = () => {
         navigation.navigate(Screens.ADD_ORDER);
     };
+
+    const goBackQr = async (code: any) => {
+        try {
+            const collectionRef = collection(db, "tables");
+            const docRef = doc(collectionRef, code);
+            const docSnap = await getDoc(docRef);
+            if (!docSnap.exists()) {
+                throw { code: "table-not-exists" };
+            }
+            if (code !== data.user.table) {
+                throw { code: "table-doesnt-match" };
+            }
+            setTableButtons(true);
+        } catch (error: any) {
+            console.log(error);
+            errorHandler(error.code);
+            dispatch(fetchLoadingFinish());
+        }
+    };
+
+    const goToQr = () => {
+        navigation.navigate(Screens.QR_SCANNER, {
+            screen: Screens.QR_BUTTON,
+            params: {
+                goBack: goBackQr,
+                description:
+                    "Escaneá el código QR de la mesa que te fue asignada para acceder al estado de la mesa, los juegos y la encuesta",
+            },
+        });
+    };
+
+    const getTableStatus = async () => {
+        try {
+            dispatch(fetchLoadingStart());
+            const querySnapshot = await getDocs(
+                query(collection(db, "orders"), where("table","==",data.user.table))
+            );
+            querySnapshot.forEach(doc =>{
+                const res: any = { ...doc.data()};
+                showMessage({
+                    duration:3000,
+                    type: "success",
+                    message: "Exito",
+                    description:
+                        `El estado de tu pedido es: ${res.orderStatus}`
+                });
+            })
+        } catch (error: any) {
+            console.log(error);
+            errorHandler(error.code);
+        } finally{
+            dispatch(fetchLoadingFinish());
+        }
+    }
 
     return (
         <StyledView colors={["#6190E8", "#A7BFE8"]}>
@@ -127,7 +197,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 <MarginVertical>
                     <CardButton>Ver encuestas antigüas</CardButton>
                 </MarginVertical>
-                <MarginVertical>
+                {!tableButtons && <MarginVertical>
                     {!data.user.restoStatus && (
                         <CardButton onPress={handleSignToRestaurant}>
                             Ingresar al local
@@ -148,7 +218,32 @@ const ClientHomeScreen = ({ navigation }: any) => {
                             Realizar pedido
                         </CardButton>
                     )}
-                </MarginVertical>
+                </MarginVertical>}
+                    {!tableButtons && (data.user.restoStatus === "Pendiente" ||
+                        (data.user.restoStatus === "Pedido aceptado") && (
+                            <CardButton onPress={goToQr}>
+                                Escanear QR de la mesa
+                            </CardButton>
+                        ))}
+                    {tableButtons && (
+                        <>
+                        <MarginVertical>
+                            <CardButton onPress={goToQr}>
+                                Realizar encuesta
+                            </CardButton>
+                        </MarginVertical>
+                        <MarginVertical>
+                            <CardButton onPress={goToQr}>
+                                Ir a los juegos
+                            </CardButton>
+                        </MarginVertical>
+                        <MarginVertical>
+                            <CardButton onPress={getTableStatus}>
+                                Estado de la mesa
+                            </CardButton>
+                        </MarginVertical>
+                        </>
+                    )}
             </ScrollView>
         </StyledView>
     );
