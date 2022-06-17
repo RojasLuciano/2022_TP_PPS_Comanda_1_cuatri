@@ -19,7 +19,7 @@ import { StyledView } from "./ChatScreen.styled";
 import { useFocusEffect } from "@react-navigation/native";
 
 const ChatScreen = ({ navigation, route }: any) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
   const userData: any = useSelector<any>((store) => store.auth);
   //table = userData.user.table;
 
@@ -41,7 +41,7 @@ const ChatScreen = ({ navigation, route }: any) => {
   }, []);
 
   const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
+    setMessages((previousMessages:any) =>
       GiftedChat.append(previousMessages, messages)
     );
     const { _id, createdAt, text, user } = messages[0];
