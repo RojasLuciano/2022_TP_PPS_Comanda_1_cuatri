@@ -7,34 +7,38 @@ import Divider from "../../atoms/Divider/Divider.component";
 import Button from "../../atoms/Button/Button.component";
 
 interface OrderDetailsProps {
-    index: string;
+    index?: string;
     client: string;
-    products: any[];
-    total:number | string;
+    products?: any[];
+    total?:number | string;
     onPress:()=>void;
+    title?:string;
+    onPressText?:string;
+    description?:string;
 }
 
-const OrderDetails: FC<OrderDetailsProps> = ({ index, client, products, total, onPress }) => {
+const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, total, onPress, onPressText, description }) => {
     const groupBy = (xs: any, key: any) => {
         return xs.reduce(function (rv: any, x: any) {
             (rv[x[key]] = rv[x[key]] || []).push(x);
             return rv;
         }, {});
     };
-    const newList = groupBy(products, 'name');
+    const newList = products && groupBy(products, 'name');
     return (
         <StyledView>
-            <Heading level="L">Pedido {index.substring(0,6)}</Heading>
+            <Heading level="L">{title || "Pedido" + index?.substring(0,6)}</Heading>
             <Heading>{client}</Heading>
-            <Divider/>
-            {Object.keys(newList).map((product:any,index)=>
+            {<Divider/>}
+            {products && Object.keys(newList).map((product:any,index)=>
                 <Paragraph textAlign="left" key={index}>
                     - {newList[product].length} {product}
                 </Paragraph>
             )}
-            <Divider/>
-            <Heading textAlign="right" level="L">{total}</Heading>
-            <Button size="M" variant="secondary" onPress={onPress}>Aceptar</Button>
+            {products && <Divider/>}
+            {total&&<Heading textAlign="right" level="L">{total}</Heading>}
+            {description && <View style={{marginVertical:10}}><Paragraph>{description}</Paragraph></View>}
+            <Button size="M" variant="secondary" onPress={onPress}>{onPressText || 'Aceptar'}</Button>
         </StyledView>
     );
 };

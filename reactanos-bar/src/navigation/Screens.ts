@@ -17,5 +17,7 @@ export enum Screens{
     GRAPHIC_SCREEN="Graficos",
     GUESS_THE_NUMBER="Adivina el numero",
     ADD_ORDER="Agregar pedido",
-    ORDER_LIST="Listar pedidos"
+    ORDER_LIST="Listar pedidos",
+    PENDING_ORDER_LIST="Tomar comanda",
+    PENDING_ORDER="Realizar pedido individual"
 }

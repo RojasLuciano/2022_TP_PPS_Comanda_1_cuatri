@@ -24,7 +24,7 @@ import { IStore } from "../../../redux/store";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { successHandler } from '../../../utils/SuccessHandler';
 
-const AddOrderScreen = ({navigation}) => {
+const AddOrderScreen = ({navigation}:any) => {
     const dispatch = useDispatch();
     const [data, setData] = useState<any>([]);
     const [products, setProducts] = useState<any>([]);
@@ -38,6 +38,7 @@ const AddOrderScreen = ({navigation}) => {
 
     const handleProduct = (product:any,add:boolean) => {
         if(add){
+            product.status = "Pendiente";
             setProducts([...products,product])
         }else{
             const index = products.findIndex((prevProduct:any) => prevProduct.id === product.id)

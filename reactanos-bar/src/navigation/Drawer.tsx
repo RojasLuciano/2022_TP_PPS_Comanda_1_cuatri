@@ -22,6 +22,7 @@ import GraphicScreen from '../components/screens/GraphicScreen/GraphicScreen';
 import GuessTheNumberScreen from '../components/screens/GuessTheNumberScreen/GuesstheNumberScreen';
 import AddOrderScreen from '../components/screens/AddOrderScreen/AddOrderScreen.component';
 import WaitingOrderListScreen from '../components/screens/WaitingOrderListScreen/WaitingOrderListScreen.component';
+import CompleteOrderStack from './stacks/CompleteOrderStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -56,6 +57,7 @@ const DrawerStack = () => {
           <Drawer.Screen name={Screens.GUESS_THE_NUMBER} component={GuessTheNumberScreen} />
           <Drawer.Screen name={Screens.ADD_ORDER} component={AddOrderScreen} />
           <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
+          <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{headerShown:false}} />
         </Drawer.Navigator>
     );
 } 
