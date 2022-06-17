@@ -3,10 +3,10 @@ import generateStore from './src/redux/store';
 import InitApp from './src/InitApp';
 import FlashMessage from 'react-native-flash-message';
 import {NativeBaseProvider} from 'native-base';
-import { LogBox } from 'react-native';
+import { ImageBackground, LogBox } from 'react-native';
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
-import LottieView from 'lottie-react-native';
+import AnimatedLottieView from 'lottie-react-native';
 import { StyleSheet } from 'react-native';
 
 const ignoreWarns = [
@@ -40,13 +40,14 @@ export default function App() {
     }, 4000);
   }, [])
   
-  if (!lottieLoad) {
+  if(!lottieLoad){
     return (
-      <LottieView
+    <ImageBackground style={{height:'100%', width:'100%'}} source={require('./assets/splashWithoutLogo.png')}>
+      <AnimatedLottieView
         autoPlay
-        style={styles.splash}
         source={require('./assets/icon.json')}
-      />)
+        />
+    </ImageBackground>)
   }
 
   return (
@@ -58,9 +59,3 @@ export default function App() {
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  splash: {    
-    backgroundColor: '#fff',    
-  },
-});
