@@ -203,6 +203,7 @@ const GraphicScreen = ({ navigation }: any) => {
                         data={AttentionPieChartData}
                         width={350}
                         height={150}
+                        backgroundColor="transparent"
                         chartConfig={{
                             backgroundGradientFrom: "#72a7e8",
                             backgroundGradientFromOpacity: 0,
