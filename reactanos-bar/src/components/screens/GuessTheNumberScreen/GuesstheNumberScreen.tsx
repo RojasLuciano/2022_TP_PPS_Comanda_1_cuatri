@@ -34,7 +34,7 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
             dispatch(fetchLoadingStart());
             setSecretNumberHandler();
             dispatch(fetchLoadingFinish());
-        }, [])
+        }, []) 
     );
 
     const setSecretNumberHandler = async () => {
