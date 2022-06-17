@@ -9,7 +9,7 @@ interface CarouselProps{
 const Carousel:FC<CarouselProps> = ({images}) => {
   return (
     <StyledView>
-        <SliderBox images={images}  sliderBoxHeight={300} parentWidth={200} />
+        <SliderBox images={images} sliderBoxHeight={250} parentWidth={250} />
     </StyledView>
   )
 }

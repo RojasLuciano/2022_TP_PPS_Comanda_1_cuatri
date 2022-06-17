@@ -27,7 +27,7 @@ const ControlledCurrency = React.forwardRef((props:ControlledInputProps,ref:Ref<
             <MaskInput style={styles.input} placeholderTextColor="gray" ref={ref}
                 value={value} placeholder={props.placeholder} keyboardType="number-pad"
                 onChangeText={(masked, unmasked) => {
-                    onChange(masked);
+                    onChange(unmasked);
                 }}
                 mask={mask}
               />
