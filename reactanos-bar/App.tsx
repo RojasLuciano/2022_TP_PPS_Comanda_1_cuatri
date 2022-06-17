@@ -6,7 +6,7 @@ import {NativeBaseProvider} from 'native-base';
 import { LogBox } from 'react-native';
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
-import AnimatedLottieView from 'lottie-react-native';
+import LottieView from 'lottie-react-native';
 import { StyleSheet } from 'react-native';
 
 const ignoreWarns = [
@@ -42,7 +42,7 @@ export default function App() {
   
   if (!lottieLoad) {
     return (
-      <AnimatedLottieView duration={4000}
+      <LottieView
         autoPlay
         style={styles.splash}
         source={require('./assets/icon.json')}
