@@ -11,6 +11,7 @@ import AddProductStack from './stacks/AddProductStack';
 import AddClientScreen from '../components/screens/AddClient/AddClientScreen.component';
 import AddEmployeeScreen from '../components/screens/AddEmployee/AddEmployeeScreen.component';
 import ClientListScreen from '../components/screens/ClientListScreen/ClientListScreen.component';
+import ChatScreen from '../components/screens/ChatScreen/ChatScreen.component';
 import QRStack from './stacks/QRStack';
 import ClientHomeScreen from '../components/screens/ClientHomeScreen/ClientHomeScreen.component';
 import ClientHomeStack from './stacks/ClientHomeStack';
@@ -39,7 +40,6 @@ const DrawerStack = () => {
     return (
         //  <Drawer.Navigator initialRouteName={Screens.ADD_PRODUCTS} drawerContent={props => <CustomDrawerContent {...props} />}>  
          <Drawer.Navigator initialRouteName={Screens.GUESS_THE_NUMBER} drawerContent={props => <CustomDrawerContent {...props} />}>  
-
          <Drawer.Screen name={Screens.GRAPHIC_SCREEN} component={GraphicScreen} />
           <Drawer.Screen name={Screens.ADD_PRODUCTS} component={AddProductStack} options={{headerShown:false}} />
           <Drawer.Screen name={Screens.ADD_ADMINS} component={AddAdminsScreen} />
@@ -47,6 +47,8 @@ const DrawerStack = () => {
           <Drawer.Screen name={Screens.ADD_CLIENT} component={AddClientScreen} />
           <Drawer.Screen name={Screens.ADD_EMPLOYEE} component={AddEmployeeScreen} />
           <Drawer.Screen name={Screens.CLIENT_LIST} component={ClientListScreen} />
+          <Drawer.Screen name={Screens.CHAT} component={ChatScreen} />
+          <Drawer.Screen name={Screens.QR_BUTTON} component={QRStack} options={{headerShown:false}} />
           <Drawer.Screen name={Screens.CLIENT_HOME} component={ClientHomeStack} options={{headerShown:false}} />
           <Drawer.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListStack} options={{headerShown:false}} />
           <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />

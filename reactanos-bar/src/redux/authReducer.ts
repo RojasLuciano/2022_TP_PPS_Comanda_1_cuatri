@@ -5,7 +5,7 @@ import { errorHandler } from '../utils/ErrorsHandler';
 import { auth, db } from '../InitApp';
 import { FormData } from "../models/login/formData.types";
 import { fetchLoadingStart, fetchLoadingFinish } from './loaderReducer';
-import { collection, doc, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { authHandler } from "../utils/AuthHandler";
 import { IStore } from './store';
 
@@ -56,7 +56,6 @@ const fetchSuccess = (payload:any) => ({
     type:LOGIN_SUCCESS,
     payload
 })
-
 
 const fetchError = (payload:any) => ({
     type:LOGIN_ERROR,

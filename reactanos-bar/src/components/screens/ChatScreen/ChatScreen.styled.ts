@@ -1,16 +1,18 @@
 import { LinearGradient } from "expo-linear-gradient";
 import styled from "styled-components/native";
+import { Dimensions } from "react-native";
 
 export const StyledView = styled.ScrollView`
     height:100%;
 `
 
 export const StyledLinearGradient = styled(LinearGradient)`
-    height:100%;
-    padding:5%;
+min-height: ${Dimensions.get('window').height}px;
+align-items:center;
+padding:5%;
 `
 
 export const StyledMargin = styled.View`
-    margin-vertical:15px;
+    margin-vertical:1px;
     width:100%;
 `
