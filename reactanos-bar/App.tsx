@@ -5,6 +5,9 @@ import FlashMessage from 'react-native-flash-message';
 import {NativeBaseProvider} from 'native-base';
 import { LogBox } from 'react-native';
 import 'react-native-gesture-handler';
+import React, { useEffect } from 'react';
+import AnimatedLottieView from 'lottie-react-native';
+import { StyleSheet } from 'react-native';
 
 const ignoreWarns = [
   "Setting a timer for a long period of time",
@@ -16,6 +19,7 @@ const ignoreWarns = [
   "Found screens with the same name nested inside one another. Check:",
   "Require cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."
 ];
+
 const warn = console.warn;
 console.warn = (...arg) => {
   for (let i = 0; i < ignoreWarns.length; i++) {
@@ -27,7 +31,24 @@ console.warn = (...arg) => {
 LogBox.ignoreLogs(ignoreWarns);
 
 export default function App() {
+  const [lottieLoad, setLottieLoad] = React.useState(false);
   const store = generateStore();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLottieLoad(true)
+    }, 4000);
+  }, [])
+  
+  if (!lottieLoad) {
+    return (
+      <AnimatedLottieView duration={4000}
+        autoPlay
+        style={styles.splash}
+        source={require('./assets/icon.json')}
+      />)
+  }
+
   return (
     <Provider store={store}>
       <NativeBaseProvider>
@@ -37,3 +58,9 @@ export default function App() {
     </Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  splash: {    
+    backgroundColor: '#fff',    
+  },
+});
