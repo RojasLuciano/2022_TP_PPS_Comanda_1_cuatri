@@ -21,6 +21,7 @@ import {
 import { StyledView } from "./ClientListScreen.styled";
 import UserCard from "../../molecules/UserCard/UserCard.component";
 import { Client } from "../../../models/user/client.types";
+import emailjs  from '@emailjs/browser';
 
 const ClientListScreen = () => {
     const [data, setData] = useState<Client[]>([]);
@@ -61,11 +62,21 @@ const ClientListScreen = () => {
         }
     };
 
-    const handleAccept = async (id:string) => {
+    const handleEmail = (email:string ) => {
+        emailjs.send("service_10cobij","template_rxzzjck",{ // template_rxzzjck se pueden armar distintos templates desde la web https://dashboard.emailjs.com/admin/templates
+            from_name: "ReactanosBar", // sender name
+            to_email: email, // receiver
+            }
+            ,'ckH9NEh-8v8u37NFr'
+            );
+    }
+
+    const handleAccept = async (id:string, email:string) => {
         dispatch(fetchLoadingStart())
         try {
             const ref = doc(db, "users", id);
             await updateDoc(ref, {status:"Activo"})
+            handleEmail(email);
             getDocuments();
         } catch (error) {
             console.log(error)
@@ -85,7 +96,7 @@ const ClientListScreen = () => {
                         image={item.image}
                         dni={item.dni}
                         email={item.email}
-                        onPress={() => handleAccept(item.id)}
+                        onPress={() => handleAccept(item.id, item.email)}
                         user="Cliente"
                         state="Pendiente"
                     />
