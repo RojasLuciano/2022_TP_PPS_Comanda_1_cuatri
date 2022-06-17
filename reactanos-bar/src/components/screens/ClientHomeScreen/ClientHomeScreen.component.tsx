@@ -149,6 +149,11 @@ const ClientHomeScreen = ({ navigation }: any) => {
         });
     };
 
+    const goToOlderPolls = () => {
+        navigation.navigate(Screens.GRAPHIC_SCREEN, {
+        });
+    };
+
     const goToPoll = () => {
         navigation.navigate(Screens.ADD_POLL, {
         });
@@ -206,7 +211,9 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     </Paragraph>
                 </MarginVertical>
                 <MarginVertical>
-                    <CardButton>Ver encuestas antigüas</CardButton>
+                    <CardButton
+                    onPress={goToOlderPolls}
+                    >Ver encuestas antigüas</CardButton>
                 </MarginVertical>
                 {!tableButtons && <MarginVertical>
                     {!data.user.restoStatus && (

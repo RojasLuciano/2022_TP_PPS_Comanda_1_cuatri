@@ -28,7 +28,7 @@ const GraphicScreen = ({ navigation }: any) => {
 
     // Obtains data from database
     const [pollsCalification, setPollsCalifications] = useState<any>([]);
-    const [promedio, setPromedio] = React.useState(0);
+    const [promedio, setPromedio] = React.useState(0); 
 
     // que te ha parecido la atencion
     const [greatFood, setgreatFood] = React.useState(0);
@@ -78,7 +78,7 @@ const GraphicScreen = ({ navigation }: any) => {
     // Data filtered by user table
     const getDataForGraph = async () => {
         pollsCalification.filter((poll: { PollTable: string; }) => poll.PollTable === data.user.table).map((poll_: any) => {
-            if (poll_.PollTasteFood === "great") {
+            if (poll_.PollTasteFood === "great") { 
                 setgreatFood(prevCount => prevCount + 1);
             }
             if (poll_.PollTasteFood === "good") {
