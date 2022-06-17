@@ -99,6 +99,10 @@ const ClientHomeScreen = ({ navigation }: any) => {
         });
     };
 
+    const goToOrder = () => {
+        navigation.navigate(Screens.ADD_ORDER);
+    };
+
     return (
         <StyledView colors={["#6190E8", "#A7BFE8"]}>
             <ScrollView
@@ -137,6 +141,11 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     {data.user.restoStatus === "Asignado" && (
                         <CardButton onPress={handleSitOnTable}>
                             Sentarse en la mesa
+                        </CardButton>
+                    )}
+                    {data.user.restoStatus === "Sentado" && (
+                        <CardButton onPress={goToOrder}>
+                            Realizar pedido
                         </CardButton>
                     )}
                 </MarginVertical>

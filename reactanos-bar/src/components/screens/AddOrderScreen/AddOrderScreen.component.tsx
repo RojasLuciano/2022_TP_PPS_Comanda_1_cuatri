@@ -14,7 +14,7 @@ import {
     fetchLoadingStart,
 } from "../../../redux/loaderReducer";
 import { sleep, currencyFormat } from '../../../utils/utils';
-import { addDoc, collection, getDocs, query } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../../InitApp";
 import { getDownloadURL, ref } from "firebase/storage";
 import { useFocusEffect } from "@react-navigation/native";
@@ -24,7 +24,7 @@ import { IStore } from "../../../redux/store";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { successHandler } from '../../../utils/SuccessHandler';
 
-const AddOrderScreen = () => {
+const AddOrderScreen = ({navigation}) => {
     const dispatch = useDispatch();
     const [data, setData] = useState<any>([]);
     const [products, setProducts] = useState<any>([]);
@@ -60,11 +60,10 @@ const AddOrderScreen = () => {
             querySnapshot.forEach(async (doc) => {
                 const res: any = { ...doc.data(), id: doc.id };
                 let images: any = [];
-                console.log(res);
-                res.images.forEach(async (image: any) => {
-                    const imageUrl = await getDownloadURL(ref(storage, image));
-                    images.push(imageUrl);
-                });
+                // res.images.forEach(async (image: any) => {
+                //     const imageUrl = await getDownloadURL(ref(storage, image));
+                //     images.push(imageUrl);
+                // });
                 await sleep(2000);
                 setData((arr: any) => [...arr, { ...res, id: doc.id, images }]);
             });
@@ -81,9 +80,16 @@ const AddOrderScreen = () => {
             dispatch(fetchLoadingStart())
             await addDoc(collection(db, "orders"), {
                 products,
-                ...userData.user
+                ...userData.user,
+                totalTime:products.reduce((a:any,b:any)=> a+parseInt(b.elaborationTime),0),
+                totalAmount:products.reduce((a:any,b:any)=> a+parseFloat(b.price.replace(/,/g, '.')),0),
+                creationDate: new Date()
               });
-              successHandler('order-created')
+            const ref = doc(db, "users", userData.user.id);
+            await updateDoc(ref, {restoStatus:"Pedido realizado"})
+            setProducts([]);
+            navigation.goBack();
+            successHandler('order-created')
         } catch (error) {
             console.log(error)
             errorHandler('order-error')

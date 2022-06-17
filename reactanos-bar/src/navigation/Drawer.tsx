@@ -21,6 +21,7 @@ import AddPollScreen from '../components/screens/AddPollScreen/AddPollScreen';
 import GraphicScreen from '../components/screens/GraphicScreen/GraphicScreen';
 import GuessTheNumberScreen from '../components/screens/GuessTheNumberScreen/GuesstheNumberScreen';
 import AddOrderScreen from '../components/screens/AddOrderScreen/AddOrderScreen.component';
+import WaitingOrderListScreen from '../components/screens/WaitingOrderListScreen/WaitingOrderListScreen.component';
 
 const Drawer = createDrawerNavigator();
 
@@ -49,12 +50,12 @@ const DrawerStack = () => {
           <Drawer.Screen name={Screens.ADD_EMPLOYEE} component={AddEmployeeScreen} />
           <Drawer.Screen name={Screens.CLIENT_LIST} component={ClientListScreen} />
           <Drawer.Screen name={Screens.CHAT} component={ChatScreen} />
-          <Drawer.Screen name={Screens.QR_BUTTON} component={QRStack} options={{headerShown:false}} />
           <Drawer.Screen name={Screens.CLIENT_HOME} component={ClientHomeStack} options={{headerShown:false}} />
           <Drawer.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListStack} options={{headerShown:false}} />
           <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />
           <Drawer.Screen name={Screens.GUESS_THE_NUMBER} component={GuessTheNumberScreen} />
           <Drawer.Screen name={Screens.ADD_ORDER} component={AddOrderScreen} />
+          <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         </Drawer.Navigator>
     );
 } 

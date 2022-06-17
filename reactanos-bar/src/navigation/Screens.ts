@@ -16,5 +16,6 @@ export enum Screens{
     ADD_POLL = "Agregar encuesta",
     GRAPHIC_SCREEN="Graficos",
     GUESS_THE_NUMBER="Adivina el numero",
-    ADD_ORDER="Agregar pedido"
+    ADD_ORDER="Agregar pedido",
+    ORDER_LIST="Listar pedidos"
 }
