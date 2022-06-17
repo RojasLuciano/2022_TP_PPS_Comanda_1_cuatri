@@ -26,13 +26,15 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
     const [lifes, setLifes] = useState(3);
     const [message, setMessage] = useState('Enviar');
     const [noLifesMessage, setNoLifesMessage] = useState('');
+    const discount = [15, 10, 20];
+    const random = Math.floor(Math.random() * discount.length);  
 
     useFocusEffect(
         useCallback(() => {
             dispatch(fetchLoadingStart());
             setSecretNumberHandler();
             dispatch(fetchLoadingFinish());
-        }, [])
+        }, []) 
     );
 
     const setSecretNumberHandler = async () => {
@@ -47,7 +49,7 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
                 throw { code: "empty-fields" };
             }
             if (guess === secretNumber.toString()) {
-                setNoLifesMessage('Felicidades, ganaste un 15% de descuento!.');
+                setNoLifesMessage('Ganaste un descuento de ' + discount[random] + '%');
                 setGuess('');
                 applyDiscount();
                 await sleep(1500);
@@ -72,7 +74,7 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
         try {
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, data.user.id);
-            await updateDoc(userRef, { discount: 15 });
+            await updateDoc(userRef, { discount: discount[random] });
         } catch (error) {
             console.log(error);
         }
