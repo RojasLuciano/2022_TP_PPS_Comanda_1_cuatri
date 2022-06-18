@@ -1,4 +1,4 @@
-import React, { FC, useRef, MutableRefObject } from "react";
+import React, { FC, useRef, MutableRefObject, useState } from "react";
 import { StyledMargin, StyledView } from "./AddProductsController.styled";
 import Button from "../../atoms/Button/Button.component";
 import ControlledInput from "../../molecules/ControlledInput/ControlledInput.component";
@@ -15,6 +15,7 @@ const AddProductsController:FC<AddProductsControllerProps> = ({onPress, control}
     const descInput:MutableRefObject<any> = useRef();
     const timeInput:MutableRefObject<any> = useRef();
     const priceInput:MutableRefObject<any>= useRef();
+    const sectorInput:MutableRefObject<any>= useRef();
 
     return (
         <StyledView>
@@ -31,6 +32,9 @@ const AddProductsController:FC<AddProductsControllerProps> = ({onPress, control}
                 <StyledMargin>
                     <ControlledCurrency ref={priceInput} placeholder="Precio" control={control} name="price" />
                 </StyledMargin>
+                <StyledMargin>
+                <ControlledInput ref={sectorInput} onSubmitEditing={()=>sectorInput.current.focus()} placeholder="Sector" variant="rounded" control={control} name="sector" />
+                </StyledMargin>
             </View>
             <Button onPress={onPress}>Agregar</Button>
         </StyledView>
@@ -38,3 +42,5 @@ const AddProductsController:FC<AddProductsControllerProps> = ({onPress, control}
 };
 
 export default AddProductsController;
+
+

@@ -4,7 +4,7 @@ import { Screens } from "../../../navigation/Screens";
 import { StyledView } from "./LoginScreen.styled";
 import { FC } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ImageBackground } from 'react-native';
+import { Alert, ImageBackground } from 'react-native';
 import LoginController from "../../organisms/LoginController/LoginController.component";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -12,6 +12,7 @@ import { handleLogin } from "../../../redux/authReducer";
 import { FormData } from "../../../models/login/formData.types";
 import { validateInputs } from '../../../utils/utils';
 import { errorHandler } from '../../../utils/ErrorsHandler';
+import Button from "../../atoms/Button/Button.component";
 
 type LoginScreenProps = NativeStackScreenProps<LoginStackParamList, Screens.LOGIN>;
 
@@ -38,7 +39,7 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
 	return (
 		<StyledView >
             <ImageBackground style={{height:'100%', width:'100%', justifyContent:'flex-end'}} source={require('../../../../assets/loginBg.png')}>
-                <LoginController onSubmit={handleSubmit(handleSignIn)} control={control} />
+               <LoginController onSubmit={handleSubmit(handleSignIn)} control={control} />
             </ImageBackground>
         </StyledView>
 	);

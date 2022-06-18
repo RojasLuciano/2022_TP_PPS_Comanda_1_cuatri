@@ -56,16 +56,16 @@ const WaitingOrderListScreen = ({ navigation }: any) => {
             });
             await sleep(1000);
         } catch (error) {
-            console.log(error);
+            console.log("WaitingOrderListScreen getDocuments ",error);
         } finally {
             dispatch(fetchLoadingFinish());
         }
     };
 
     const handleAccept = async (orderId: string, userId: string) => {
+        console.log("WaitingOrderListScreen: orderId", orderId," userId ",userId);
         try {
             dispatch(fetchLoadingStart());
-            console.log(orderId, userId)
             const orderCollection = collection(db, "orders");
             const orderRef = doc(orderCollection, orderId);
             await updateDoc(orderRef, { orderStatus: "Asignado" });
@@ -80,6 +80,7 @@ const WaitingOrderListScreen = ({ navigation }: any) => {
             setData([]);
             await getDocuments();
         } catch (error: any) {
+            console.log("WaitingOrderListScreen handleAccept ",error);
             errorHandler(error.code);
         } finally {
             dispatch(fetchLoadingFinish());

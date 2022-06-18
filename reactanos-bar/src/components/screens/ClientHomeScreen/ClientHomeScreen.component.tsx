@@ -55,7 +55,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             });
             dispatch(refreshUserData());
         } catch (error: any) {
-            console.log(error);
+            console.log("ClientHomeScreen signToRestaurant",error);
             errorHandler(error.code);
             dispatch(fetchLoadingFinish());
         }
@@ -87,7 +87,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             });
             dispatch(refreshUserData());
         } catch (error: any) {
-            console.log(error);
+            console.log("ClientHomeScreen sitOnTable",error);
             errorHandler(error.code);
             dispatch(fetchLoadingFinish());
         }
@@ -105,6 +105,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
     };
 
     const handleSitOnTable = () => {
+        console.log("ClientHomeScreen handleSitOnTable");
         navigation.navigate(Screens.QR_SCANNER, {
             screen: Screens.QR_BUTTON,
             params: {
@@ -116,6 +117,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
     };
 
     const goToOrder = () => {
+        console.log("ClientHomeScreen goToOrder");
         navigation.navigate(Screens.ADD_ORDER);
     };
 
@@ -132,7 +134,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             }
             setTableButtons(true);
         } catch (error: any) {
-            console.log(error);
+            console.log("ClientHomeScreen goBackQr ",error);
             errorHandler(error.code);
             dispatch(fetchLoadingFinish());
         }
@@ -182,7 +184,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 });
             })
         } catch (error: any) {
-            console.log(error);
+            console.log("ClientHomeScreen getOrderStatus ",error);
             errorHandler(error.code);
         } finally{
             dispatch(fetchLoadingFinish());

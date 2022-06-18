@@ -60,17 +60,18 @@ const WaitingClientListScreen = ({navigation}:any) => {
             });
             await sleep(1000);
         } catch (error) {
-            console.log(error);
+            console.log("WaitingClientListScreen getDocuments ",error);
         } finally {
             dispatch(fetchLoadingFinish());
         }
     };
 
     const handleAccept = async (value:string, id:string) => {
+        const tableCode = value.replace(/[^0-9]/g, "");
         try {
             dispatch(fetchLoadingStart())
             const collectionRef = collection(db, "tables");
-            const docRef = doc(collectionRef, value);
+            const docRef = doc(collectionRef,tableCode);
             const docSnap = await getDoc(docRef);
             if (!docSnap.exists()) {
                 throw { code: "table-not-exists" };
@@ -82,11 +83,12 @@ const WaitingClientListScreen = ({navigation}:any) => {
             await updateDoc(docRef, {status:"Ocupada"})
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, id);
-            await updateDoc(userRef, {table:value, restoStatus:"Asignado"})
+            await updateDoc(userRef, {table: tableCode, restoStatus:"Asignado"})
             showMessage({type:'success', message:'Exito', description:'Cliente asignado exitosamente'})
             setData([]);
             await getDocuments();
         } catch (error:any) {
+            console.log("WaitingClientListScreen handleAccept ",error);
             errorHandler(error.code)            
         } finally{
             dispatch(fetchLoadingFinish())

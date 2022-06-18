@@ -27,7 +27,7 @@ const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, t
     const newList = products && groupBy(products, 'name');
     return (
         <StyledView>
-            <Heading level="L">{title || "Pedido" + index?.substring(0,6)}</Heading>
+            <Heading level="L">{title || "Pedido #" + index?.substring(0,6)}</Heading>
             <Heading>{client}</Heading>
             {<Divider/>}
             {products && Object.keys(newList).map((product:any,index)=>
