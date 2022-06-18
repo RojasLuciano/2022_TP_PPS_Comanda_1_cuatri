@@ -23,6 +23,7 @@ import GuessTheNumberScreen from '../components/screens/GuessTheNumberScreen/Gue
 import AddOrderScreen from '../components/screens/AddOrderScreen/AddOrderScreen.component';
 import WaitingOrderListScreen from '../components/screens/WaitingOrderListScreen/WaitingOrderListScreen.component';
 import CompleteOrderStack from './stacks/CompleteOrderStack';
+import SectorListScreen from '../components/screens/SectorListScreen/SectorListScreen.component';
 
 const Drawer = createDrawerNavigator();
 
@@ -58,6 +59,7 @@ const DrawerStack = () => {
           <Drawer.Screen name={Screens.ADD_ORDER} component={AddOrderScreen} />
           <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
           <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{headerShown:false}} />
+          <Drawer.Screen name={Screens.SECTOR_LIST} component={SectorListScreen} />
         </Drawer.Navigator>
     );
 } 

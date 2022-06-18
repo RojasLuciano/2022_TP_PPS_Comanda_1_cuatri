@@ -8,7 +8,7 @@ import Button from "../../atoms/Button/Button.component";
 
 interface OrderDetailsProps {
     index?: string;
-    client: string;
+    client?: string;
     products?: any[];
     total?:number | string;
     onPress:()=>void;

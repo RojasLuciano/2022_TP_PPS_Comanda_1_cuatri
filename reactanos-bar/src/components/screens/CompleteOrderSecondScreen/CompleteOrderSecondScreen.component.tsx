@@ -42,7 +42,7 @@ const CompleteOrderSecondScreen = ({ navigation, route }: any) => {
                 productsBuffer.push(product);
             }
         })
-        console.log("CompleteOrderSecondScreen useEffect ",productsBuffer)
+        console.log("CompleteOrderSecondScreen useEffect",productsBuffer)
         setProducts(productsBuffer);
     },[])
 

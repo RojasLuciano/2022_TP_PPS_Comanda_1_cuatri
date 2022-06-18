@@ -66,12 +66,6 @@ const CompleteOrderFirstScreen = ({ navigation }: any) => {
         navigation.navigate(Screens.PENDING_ORDER,{order});
     };
 
-    const formatAmount = (price: any) => {
-        const total = parseFloat(price.toString().replace(/,/g, "."));
-        return total !== 0
-            ? currencyFormat(total.toFixed(2).toString())
-            : total;
-    };
 
     return (
         <StyledView colors={["#6190E8", "#A7BFE8"]}>
