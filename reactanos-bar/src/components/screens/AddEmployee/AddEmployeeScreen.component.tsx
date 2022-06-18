@@ -4,13 +4,12 @@ import {
     StyledMargin,
     StyledView,
 } from "./AddEmployeeScreen.styled";
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 import ControlledInput from "../../molecules/ControlledInput/ControlledInput.component";
 import { useForm } from 'react-hook-form';
 import ControlledPassword from '../../molecules/ControlledPassword/ControlledPassword.component';
 import ImageButton from "../../atoms/ImageButton/ImageButton.component";
 import Button from '../../atoms/Button/Button.component';
-import Spinner from '../../atoms/Spinner/Spinner.component';
 import { addDoc, collection } from "firebase/firestore";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { auth, db, storage } from '../../../InitApp';
@@ -21,7 +20,7 @@ import { showMessage } from 'react-native-flash-message';
 import * as ImagePicker from "expo-image-picker";
 import { getBlob } from '../../../utils/utils';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
 import Select from '../../molecules/Select/Select.component';
 
@@ -45,9 +44,6 @@ const AddEmployeeScreen = () => {
     const passInput: MutableRefObject<any> = useRef();
     const dispatch = useDispatch();
     const [type, setType] = useState("");
-
-
-
 
     // //HARDCODEO
     // useEffect(() => {
@@ -112,14 +108,14 @@ const AddEmployeeScreen = () => {
             } else {
                 await addDoc(collection(db, "employee"), {
                     lastName: values.lastName,
-                    name: values.name, 
+                    name: values.name,
                     dni: values.dni,
                     profile: values.profile,
                     email: values.email,
                     image: "",
                     creationDate: new Date()
-            });
-        }
+                });
+            }
             showMessage({
                 type: "success",
                 message: "Exito",
@@ -139,9 +135,8 @@ const AddEmployeeScreen = () => {
             errorHandler(error.code);
         } finally {
             dispatch(fetchLoadingFinish());
-                }
+        }
     }
-
 
     const handleCamera = async (type) => {
         let result = await ImagePicker.launchCameraAsync({
@@ -154,18 +149,17 @@ const AddEmployeeScreen = () => {
         }
     };
 
-    const handleSelectType = (value:string) => {
+    const handleSelectType = (value: string) => {
         setType(value);
-        setValue("profile",value);
+        setValue("profile", value);
     }
 
     const data = [
-        {label:"Cocinero", value:"cook"},
-        {label:"Repartidor", value:"deliveryman"},
-        {label:"Mozo", value:"waiter"},
-        {label:"Metre", value:"meter"},
+        { label: "Cocinero", value: "cook" },
+        { label: "Repartidor", value: "deliveryman" },
+        { label: "Mozo", value: "waiter" },
+        { label: "Metre", value: "meter" },
     ]
-
 
     useEffect(() => {
         (async () => {
@@ -211,7 +205,6 @@ const AddEmployeeScreen = () => {
                         />
                     </StyledMargin>
 
-
                     <StyledMargin>
                         <ControlledInput
                             variant="rounded"
@@ -232,7 +225,7 @@ const AddEmployeeScreen = () => {
                     </StyledMargin>
 
                     <StyledMargin>
-                    <Select value={type} onChange={handleSelectType} placeholder="Tipo de empleado" data={data} />
+                        <Select value={type} onChange={handleSelectType} placeholder="Tipo de empleado" data={data} />
                     </StyledMargin>
 
                     <StyledMargin>
@@ -283,8 +276,21 @@ const AddEmployeeScreen = () => {
                 </StyledLinearGradient>
             </StyledView> : <BarCodeScanner
                 onBarCodeScanned={scanned && openQR ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
+                style={{
+                    flex: 1,
+                    backgroundColor: 'black',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <View style={{
+                    width: 200,
+                    height: 200,
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                    borderRadius: 30
+                }}></View>
+            </BarCodeScanner>
     )
 }
 export default AddEmployeeScreen

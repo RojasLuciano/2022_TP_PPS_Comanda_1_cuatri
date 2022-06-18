@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import React, { useState } from 'react'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 
@@ -16,8 +16,20 @@ const QRScannerScreen = ({route, navigation}:any) => {
   return (
     <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleScanQR}
-        style={StyleSheet.absoluteFillObject}
-    />
+    style={{        
+      flex: 1,
+      backgroundColor: 'black',                
+      alignItems: 'center',
+      justifyContent: 'center',  }}
+  >
+    <View style={{
+      width: 200,
+      height: 200,
+      borderColor: '#fff',
+      borderWidth: 2,
+      borderRadius: 30
+    }}></View>
+  </BarCodeScanner>
   )
 }
 

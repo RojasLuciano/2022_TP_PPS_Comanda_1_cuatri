@@ -1,4 +1,3 @@
-import { View, Text, Image, PixelRatio, Dimensions, Platform } from 'react-native';
 import React, { FC } from 'react'
 import QRCode from "react-qr-code";
 import { StyledQR, StyledTextContainer, StyledView } from './QRCodeScreen.styled';
