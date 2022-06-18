@@ -59,7 +59,7 @@ const AddAdminsScreen = ({navigation}) => {
     // }, []);
 
 
-    const verifyCuil = (cuit) => {
+    const verifyCuil = (cuit : any) => {
         if (cuit.length !== 11) {
           return false;
         }
