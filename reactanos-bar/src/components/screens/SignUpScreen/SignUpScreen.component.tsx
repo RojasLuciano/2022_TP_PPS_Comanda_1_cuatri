@@ -14,7 +14,7 @@ const SignUpScreen:FC<SignUpScreenProps> = ({navigation}) => {
 	return (
 		<StyledView >
             <ImageBackground style={{height:'100%', width:'100%', justifyContent:'flex-end'}} source={require('../../../../assets/loginBg.png')}>
-                <AddClientScreen />             
+                <AddClientScreen/>
             </ImageBackground>
         </StyledView>
 	);

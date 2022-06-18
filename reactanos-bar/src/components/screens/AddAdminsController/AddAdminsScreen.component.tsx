@@ -4,7 +4,7 @@ import {
     StyledMargin,
     StyledView,
 } from "./AddAdminsScreen.styled";
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 import ControlledInput from "../../molecules/ControlledInput/ControlledInput.component";
 import { useForm } from 'react-hook-form';
 import ControlledPassword from '../../molecules/ControlledPassword/ControlledPassword.component';
@@ -308,10 +308,22 @@ const AddAdminsScreen = ({navigation}) => {
 
                     <Button onPress={handleSubmit(onSubmit)}>Crear usuario</Button>
                 </StyledLinearGradient>
-            </StyledView> : <BarCodeScanner
-                onBarCodeScanned={scanned && openQR ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
+            </StyledView> :     <BarCodeScanner
+      onBarCodeScanned={scanned && openQR ? undefined : handleBarCodeScanned}
+      style={{        
+        flex: 1,
+        backgroundColor: 'black',                
+        alignItems: 'center',
+        justifyContent: 'center',  }}
+    >
+      <View style={{
+        width: 200,
+        height: 200,
+        borderColor: '#fff',
+        borderWidth: 2,
+        borderRadius: 30
+      }}></View>
+    </BarCodeScanner>
     )
 }
 export default AddAdminsScreen

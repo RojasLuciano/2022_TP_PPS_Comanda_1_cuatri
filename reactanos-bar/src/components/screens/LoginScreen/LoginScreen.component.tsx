@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { LoginStackParamList } from '../../../navigation/stacks/LoginStack';
 import { Screens } from "../../../navigation/Screens";
 import { StyledView } from "./LoginScreen.styled";
@@ -19,6 +19,11 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
     const {control, handleSubmit, getValues, setValue} = useForm<FormData>();
 	const dispatch = useDispatch();
 
+    const handleFastSignIn = (data:FormData) => {
+        setValue("email", data.email);
+        setValue("password", data.password);
+    }
+
 	const handleSignIn = () => {
         try {
             const values = getValues();
@@ -32,7 +37,7 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
 	return (
 		<StyledView >
             <ImageBackground style={{height:'100%', width:'100%', justifyContent:'flex-end'}} source={require('../../../../assets/loginBg.png')}>
-                <LoginController onSubmit={handleSubmit(handleSignIn)} control={control} />              
+                <LoginController fastSignIn={handleFastSignIn} onSubmit={handleSubmit(handleSignIn)} control={control} />              
             </ImageBackground>
         </StyledView>
 	);

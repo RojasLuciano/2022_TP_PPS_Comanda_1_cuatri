@@ -7,7 +7,6 @@ import { ImageBackground, LogBox } from 'react-native';
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import AnimatedLottieView from 'lottie-react-native';
-import { StyleSheet } from 'react-native';
 
 const ignoreWarns = [
   "Setting a timer for a long period of time",

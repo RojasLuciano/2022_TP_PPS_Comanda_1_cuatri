@@ -13,5 +13,11 @@ export const StyledAccess = styled.View`
     justifyContent: center;
     alignItems: center;    
 `
+export const StyledSocials = styled.View`
+    flexDirection: row;
+    width: 10%;
+    justifyContent: center;
+    alignItems: center;    
+`
 
 
