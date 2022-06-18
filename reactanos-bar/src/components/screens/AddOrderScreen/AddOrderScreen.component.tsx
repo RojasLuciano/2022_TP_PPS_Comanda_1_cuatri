@@ -29,6 +29,7 @@ const AddOrderScreen = ({navigation}:any) => {
     const [data, setData] = useState<any>([]);
     const [products, setProducts] = useState<any>([]);
     const userData:AuthTypes = useSelector<IStore, any>(store=>store.auth);
+    const [orderStatusPending, setOrderStatus] = useState("Pendiente");
 
     useFocusEffect(
         useCallback(() => {
@@ -70,13 +71,15 @@ const AddOrderScreen = ({navigation}:any) => {
             });
             await sleep(2000);
         } catch (error) {
-            console.log(error);
+            console.log("AddOrderScreen getDocuments",error);
         } finally {
             dispatch(fetchLoadingFinish());
         }
     };
 
     const registerOrder = async () => {
+       console.log("AddOrderScreen registerOrder ");
+       
         try {
             dispatch(fetchLoadingStart())
             await addDoc(collection(db, "orders"), {
@@ -84,7 +87,8 @@ const AddOrderScreen = ({navigation}:any) => {
                 ...userData.user,
                 totalTime:products.reduce((a:any,b:any)=> a+parseInt(b.elaborationTime),0),
                 totalAmount:products.reduce((a:any,b:any)=> a+parseFloat(b.price.replace(/,/g, '.')),0),
-                creationDate: new Date()
+                creationDate: new Date(),
+                orderStatus:orderStatusPending
               });
             const ref = doc(db, "users", userData.user.id);
             await updateDoc(ref, {restoStatus:"Pedido realizado"})
@@ -92,7 +96,7 @@ const AddOrderScreen = ({navigation}:any) => {
             navigation.goBack();
             successHandler('order-created')
         } catch (error) {
-            console.log(error)
+            console.log("AddOrderScreen registerOrder ",error);
             errorHandler('order-error')
         } finally{
             dispatch(fetchLoadingFinish())

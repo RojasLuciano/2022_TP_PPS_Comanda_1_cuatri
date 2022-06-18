@@ -20,12 +20,14 @@ import { Screens } from "../../../navigation/Screens";
 interface TableData {
     tableNumber: number;
     clientsQuantity: number;
+
 }
 
 const AddTableScreen = ({ navigation }: any) => {
     const { control, getValues, reset } = useForm<TableData>();
     const data: AuthTypes = useSelector<IStore, any>((store) => store.auth);
     const [tableType, setTableType] = useState("");
+    const[statusTable, setStatus] = useState("Desocupada");
     const dispatch = useDispatch();
 
     useFocusEffect(
@@ -47,6 +49,7 @@ const AddTableScreen = ({ navigation }: any) => {
             }
             await setDoc(doc(collectionRef, values.tableNumber.toString()), {
                 type: tableType,
+                status: statusTable,
                 creationDate: new Date(),
                 ...values,
             });
@@ -59,6 +62,7 @@ const AddTableScreen = ({ navigation }: any) => {
             });
             clear();
         } catch (e: any) {
+            console.log("AddTableScreen registerTable ",e);
             errorHandler(e.code);
         } finally {
             dispatch(fetchLoadingFinish());

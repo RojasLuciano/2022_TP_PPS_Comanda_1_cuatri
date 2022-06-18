@@ -56,7 +56,7 @@ const CompleteOrderFirstScreen = ({ navigation }: any) => {
             });
             await sleep(1000);
         } catch (error) {
-            console.log(error);
+            console.log("CompleteOrderFirstScreen getDocuments ",error);
         } finally {
             dispatch(fetchLoadingFinish());
         }

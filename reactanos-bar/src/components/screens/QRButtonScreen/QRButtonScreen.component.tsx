@@ -14,6 +14,7 @@ const QRButtonScreen = ({ navigation, route }: any) => {
     };
 
     const handlePressQR = () => {
+        console.log("QRButtonScreen handlePressQR");
         navigation.navigate(Screens.QR_SCANNER, { goBack });
     };
 
