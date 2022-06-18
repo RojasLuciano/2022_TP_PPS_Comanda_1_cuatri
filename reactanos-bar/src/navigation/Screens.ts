@@ -1,5 +1,6 @@
 export enum Screens{
     LOGIN='Login',
+    SIGNUP='Registro',
     HOME='Home',
     ADD_PRODUCTS='Agregar producto',
     ADD_ADMINS='Agregar admin/supervisor',

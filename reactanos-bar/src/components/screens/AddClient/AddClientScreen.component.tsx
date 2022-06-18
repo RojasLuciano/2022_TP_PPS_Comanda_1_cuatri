@@ -177,8 +177,8 @@ const AddClientScreen = () => {
             ) : (
               <Image
                 style={{
-                  height: 185,
-                  width: 185,
+                  height: '80%',
+                  width: '45%',
                   borderRadius: 20,
                   alignSelf: "center",
                 }}

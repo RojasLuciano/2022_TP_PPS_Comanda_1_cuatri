@@ -19,12 +19,6 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
     const {control, handleSubmit, getValues, setValue} = useForm<FormData>();
 	const dispatch = useDispatch();
 
-    useEffect(() => {
-        setValue("email", "admin@gmail.com");
-        setValue("password", "Admin1234");
-    }, [])
-
-
 	const handleSignIn = () => {
         try {
             const values = getValues();
@@ -38,7 +32,7 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
 	return (
 		<StyledView >
             <ImageBackground style={{height:'100%', width:'100%', justifyContent:'flex-end'}} source={require('../../../../assets/loginBg.png')}>
-                <LoginController onSubmit={handleSubmit(handleSignIn)} control={control} />
+                <LoginController onSubmit={handleSubmit(handleSignIn)} control={control} />              
             </ImageBackground>
         </StyledView>
 	);
