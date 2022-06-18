@@ -133,7 +133,6 @@ const AddPollScreen = ({ navigation }: any) => {
     return (
         <StyledLinearGradient colors={["#6190E8", "#A7BFE8"]}>
             <StyledView contentContainerStyle={{ alignItems: 'center' }}>
-
                 {data.user.pollfilled ? (
                     <StyledMargin>
                         <Heading
@@ -144,11 +143,7 @@ const AddPollScreen = ({ navigation }: any) => {
                         >
                             Ya completaste la encuesta!.{'\n'} Gracias por tu participación.
                         </Heading>
-                    </StyledMargin>
-
-                   
-
-                    
+                    </StyledMargin>  
                 ) :
                     <StyledView contentContainerStyle={{ alignItems: 'center' }}>
                         <Modal
@@ -208,7 +203,6 @@ const AddPollScreen = ({ navigation }: any) => {
                                     </Radio>
                                 </Radio.Group>
                             </StyledMargin>
-
                             <StyledMargin>
                                 <StyledParagraph
                                     level="L"
@@ -219,7 +213,6 @@ const AddPollScreen = ({ navigation }: any) => {
                                     •  ¿Que te ha parecido la atencion?
                                 </StyledParagraph>
                             </StyledMargin>
-
                             <StyledMargin>
                                 <Box alignItems="center" w="100%">
                                     <Slider
@@ -235,9 +228,7 @@ const AddPollScreen = ({ navigation }: any) => {
                                         <Slider.Thumb />
                                     </Slider>
                                 </Box>
-
                             </StyledMargin>
-
                             <StyledMargin>
                                 <StyledParagraph
                                     level="L"
@@ -248,7 +239,6 @@ const AddPollScreen = ({ navigation }: any) => {
                                     •  ¿Metodo favorito de pago?
                                 </StyledParagraph>
                             </StyledMargin>
-
                             <Checkbox
                                 value={"creditOrDebit"}
                                 onChange={() => {
@@ -258,7 +248,6 @@ const AddPollScreen = ({ navigation }: any) => {
                             >
                                 Tarjeta de crédito o débito
                             </Checkbox>
-
                             <Checkbox
                                 value={"cash"}
                                 onChange={() => {
@@ -277,7 +266,6 @@ const AddPollScreen = ({ navigation }: any) => {
                             >
                                 Otro
                             </Checkbox>
-
                             <StyledMargin>
                                 <StyledParagraph
                                     level="L"
@@ -288,7 +276,6 @@ const AddPollScreen = ({ navigation }: any) => {
                                     •  Dejanos tu opinion sobre el servicio
                                 </StyledParagraph>
                             </StyledMargin>
-
                             <StyledMargin>
                                 <ControlledInput onSubmitEditing={() => opinion.current.focus()} placeholder="Tu respuesta nos ayuda a mejorar" variant="rounded" control={control} name="PollsOpinion" />
                             </StyledMargin>
