@@ -18,6 +18,7 @@ import GuessTheNumberScreen from '../components/screens/GuessTheNumberScreen/Gue
 import AddOrderScreen from '../components/screens/AddOrderScreen/AddOrderScreen.component';
 import WaitingOrderListScreen from '../components/screens/WaitingOrderListScreen/WaitingOrderListScreen.component';
 import CompleteOrderStack from './stacks/CompleteOrderStack';
+import SectorListScreen from '../components/screens/SectorListScreen/SectorListScreen.component';
 
 const Drawer = createDrawerNavigator();
 
