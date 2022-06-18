@@ -46,19 +46,6 @@ const AddAdminsScreen = ({navigation}) => {
     const [type, setType] = useState("");
     const dispatch = useDispatch();
 
-    //HARDCODEO
-    // useEffect(() => {
-    //     setValue("lastName", "rojas");
-    //     setValue("name", "lucho");
-    //     setValue("dni", "37933047");
-    //     setValue("cuil", "23379330479");
-    //     setValue("profile", "admin");
-    //     setValue("email", "rojas"+ Math.floor(Math.random()*100) + 1 +"@gmail.com"); 
-    //     setValue("password", "roja$1");
-    //     setValue("passwordRepeat", "roja$1");
-    // }, []);
-
-
     const verifyCuil = (cuit : any) => {
         if (cuit.length !== 11) {
           return false;
@@ -77,11 +64,9 @@ const AddAdminsScreen = ({navigation}) => {
           verif = 0;
         } else if (verif === 10) {
           verif = 9;
-        }
-      
+        }      
         return digito === verif;
-      };
-      
+      };      
       
     const data = [
         {label:"Dueño", value:"admin"},
@@ -150,7 +135,7 @@ const AddAdminsScreen = ({navigation}) => {
             const fileName = image.substring(image.lastIndexOf("/") + 1);
             const fileRef = ref(storage, "images/" + fileName);
             await uploadBytes(fileRef, blob);
-            await addDoc(collection(db, "employee"), { //Verificar
+            await addDoc(collection(db, "users"), {
                 lastName: values.lastName,
                 name: values.name,
                 dni: values.dni,
@@ -158,7 +143,9 @@ const AddAdminsScreen = ({navigation}) => {
                 profile: values.profile,
                 email: values.email,
                 image: fileRef.fullPath,
-                creationDate: new Date()
+                creationDate: new Date(),
+                status: "Activo",
+                pollfilled: false,
             });
             showMessage({
                 type: "success",

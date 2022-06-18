@@ -23,6 +23,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch } from "react-redux";
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
 import Select from '../../molecules/Select/Select.component';
+import { CircularProgress } from 'native-base';
 
 type NewEmployee = {
     lastName: string;
@@ -32,6 +33,7 @@ type NewEmployee = {
     email: string;
     password: string;
     passwordRepeat: string;
+    cuil: string;
 }
 
 const AddEmployeeScreen = () => {
@@ -91,7 +93,10 @@ const AddEmployeeScreen = () => {
                     profile: values.profile,
                     email: values.email,
                     image: fileRef.fullPath,
-                    creationDate: new Date()
+                    creationDate: new Date(),
+                    cuil: values.cuil,
+                    status: "Activo",
+                    pollfilled: false,
                 });
             } else {
                 await addDoc(collection(db, "users"), {
@@ -101,7 +106,10 @@ const AddEmployeeScreen = () => {
                     profile: values.profile,
                     email: values.email,
                     image: "",
-                    creationDate: new Date()
+                    creationDate: new Date(),
+                    cuil: values.cuil,
+                    status: "Activo",
+                    pollfilled: false,
                 });
             }
             showMessage({
