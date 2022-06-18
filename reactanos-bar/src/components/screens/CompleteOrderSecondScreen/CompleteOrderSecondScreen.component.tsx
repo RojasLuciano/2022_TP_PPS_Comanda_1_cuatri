@@ -37,12 +37,11 @@ const CompleteOrderSecondScreen = ({ navigation, route }: any) => {
         const {order} = route.params;
         let productsBuffer:any=[];
         order.products.forEach((product:any) => {
-            console.log(product.profile)
-            if(product.profile === userData.user.profile && product.status === "Pendiente" ){
+            if(product.sector.replace(/["']/g, "") === userData.user.profile && product.status === "Pendiente" ){
                 productsBuffer.push(product);
             }
         })
-        console.log("CompleteOrderSecondScreen useEffect ",productsBuffer)
+        console.log("CompleteOrderSecondScreen useEffect",productsBuffer)
         setProducts(productsBuffer);
     },[])
 

@@ -13,6 +13,8 @@ export type ClientHomeStackParamList = {
 };
 const Stack = createStackNavigator<ClientHomeStackParamList>();
 
+//Esta pantalla es Tomar comanda
+
 const CompleteOrderStack = () => {
   return (
     <Stack.Navigator initialRouteName={Screens.PENDING_ORDER_LIST}  >
