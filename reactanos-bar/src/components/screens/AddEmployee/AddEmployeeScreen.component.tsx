@@ -23,6 +23,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch } from "react-redux";
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
 import Select from '../../molecules/Select/Select.component';
+import { CircularProgress } from 'native-base';
 
 type NewEmployee = {
     lastName: string;
@@ -32,10 +33,10 @@ type NewEmployee = {
     email: string;
     password: string;
     passwordRepeat: string;
+    cuil: string;
 }
 
 const AddEmployeeScreen = () => {
-    const [loading, setLoading] = useState(false);
     const [image, setImage] = useState("");
     const { control, handleSubmit, getValues, formState: { errors }, reset, setValue } = useForm<NewEmployee>();
     const [scanned, setScanned] = useState(false);
@@ -44,17 +45,6 @@ const AddEmployeeScreen = () => {
     const passInput: MutableRefObject<any> = useRef();
     const dispatch = useDispatch();
     const [type, setType] = useState("");
-
-    // //HARDCODEO
-    // useEffect(() => {
-    //     setValue("lastName", "rojas");
-    //     setValue("name", "luchoE");
-    //     setValue("dni", "37933047");
-    //     setValue("cuil", "24379330479");
-    //     setValue("email", "rojas" + Math.floor(Math.random() * 100) + 1 + "@gmail.com");
-    //     setValue("password", "roja$1");
-    //     setValue("passwordRepeat", "roja$1");
-    // }, []);
 
     const handleBarCodeScanned = ({ data }) => {
         setScanned(true);
@@ -96,24 +86,30 @@ const AddEmployeeScreen = () => {
                 const fileName = image.substring(image.lastIndexOf("/") + 1);
                 const fileRef = ref(storage, "images/" + fileName);
                 await uploadBytes(fileRef, blob);
-                await addDoc(collection(db, "employee"), {
+                await addDoc(collection(db, "users"), {
                     lastName: values.lastName,
                     name: values.name,
                     dni: values.dni,
                     profile: values.profile,
                     email: values.email,
                     image: fileRef.fullPath,
-                    creationDate: new Date()
+                    creationDate: new Date(),
+                    cuil: values.cuil,
+                    status: "Activo",
+                    pollfilled: false,
                 });
             } else {
-                await addDoc(collection(db, "employee"), {
+                await addDoc(collection(db, "users"), {
                     lastName: values.lastName,
                     name: values.name,
                     dni: values.dni,
                     profile: values.profile,
                     email: values.email,
                     image: "",
-                    creationDate: new Date()
+                    creationDate: new Date(),
+                    cuil: values.cuil,
+                    status: "Activo",
+                    pollfilled: false,
                 });
             }
             showMessage({
@@ -138,7 +134,7 @@ const AddEmployeeScreen = () => {
         }
     }
 
-    const handleCamera = async (type) => {
+    const handleCamera = async () => {
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [4, 3],
