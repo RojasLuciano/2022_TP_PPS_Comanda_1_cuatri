@@ -11,17 +11,27 @@ import {
     fetchLoadingFinish,
     fetchLoadingStart,
 } from "../../../redux/loaderReducer";
-import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    updateDoc,
+    where,
+} from "firebase/firestore";
 import { db } from "../../../InitApp";
 import { showMessage } from "react-native-flash-message";
 import { errorHandler } from "../../../utils/ErrorsHandler";
 import { RefreshControl, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { sleep } from "../../../utils/utils";
 
 const ClientHomeScreen = ({ navigation }: any) => {
     const data: AuthTypes = useSelector<IStore, any>((store) => store.auth);
     const dispatch = useDispatch();
     const [tableButtons, setTableButtons] = useState(false);
+    const [orderStatus, setOrderStatus] = useState("");
 
     useFocusEffect(
         useCallback(() => {
@@ -55,7 +65,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             });
             dispatch(refreshUserData());
         } catch (error: any) {
-            console.log("ClientHomeScreen signToRestaurant",error);
+            console.log("ClientHomeScreen signToRestaurant", error);
             errorHandler(error.code);
             dispatch(fetchLoadingFinish());
         }
@@ -87,7 +97,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             });
             dispatch(refreshUserData());
         } catch (error: any) {
-            console.log("ClientHomeScreen sitOnTable",error);
+            console.log("ClientHomeScreen sitOnTable", error);
             errorHandler(error.code);
             dispatch(fetchLoadingFinish());
         }
@@ -129,12 +139,32 @@ const ClientHomeScreen = ({ navigation }: any) => {
             if (!docSnap.exists()) {
                 throw { code: "table-not-exists" };
             }
+            if (code != data.user.table) {
+                throw { code: "table-doesnt-match" };
+            }
+            await handleOrderStatus();
+            setTableButtons(true);
+        } catch (error: any) {
+            console.log("ClientHomeScreen goBackQr ", error);
+            errorHandler(error.code);
+            dispatch(fetchLoadingFinish());
+        }
+    };
+
+    const goBackFinish = async (code: any) => {
+        try {
+            const collectionRef = collection(db, "tables");
+            const docRef = doc(collectionRef, code);
+            const docSnap = await getDoc(docRef);
+            if (!docSnap.exists()) {
+                throw { code: "table-not-exists" };
+            }
             if (code !== data.user.table) {
                 throw { code: "table-doesnt-match" };
             }
-            setTableButtons(true);
+            navigation.navigate(Screens.FINISH_TABLE);
         } catch (error: any) {
-            console.log("ClientHomeScreen goBackQr ",error);
+            console.log("ClientHomeScreen goBackQr ", error);
             errorHandler(error.code);
             dispatch(fetchLoadingFinish());
         }
@@ -151,45 +181,60 @@ const ClientHomeScreen = ({ navigation }: any) => {
         });
     };
 
-    const goToOlderPolls = () => {
-        navigation.navigate(Screens.GRAPHIC_SCREEN, {
+    const goToFinishTable = () => {
+        navigation.navigate(Screens.QR_SCANNER, {
+            screen: Screens.QR_BUTTON,
+            params: {
+                goBack: goBackFinish,
+                description:
+                    "Escaneá el código QR de la mesa que te fue asignada para poder visualizar la cuenta",
+            },
         });
+    };
+
+    const goToOlderPolls = () => {
+        navigation.navigate(Screens.GRAPHIC_SCREEN, {});
     };
 
     const goToPoll = () => {
-        navigation.navigate(Screens.ADD_POLL, {
-        });
+        navigation.navigate(Screens.ADD_POLL, {});
     };
 
     const goToGames = () => {
-        navigation.navigate(Screens.GUESS_THE_NUMBER, {
-        });
+        navigation.navigate(Screens.GUESS_THE_NUMBER, {});
     };
 
-
-    const getOrderStatus = async () => {
+    const handleOrderStatus = async () => {
+        dispatch(fetchLoadingStart());
         try {
-            dispatch(fetchLoadingStart());
             const querySnapshot = await getDocs(
-                query(collection(db, "orders"), where("table","==",data.user.table))
+                query(
+                    collection(db, "orders"),
+                    where("email", "==", data.user.email)
+                )
             );
-            querySnapshot.forEach(doc =>{
-                const res: any = { ...doc.data()};
-                showMessage({
-                    duration:3000,
-                    type: "success",
-                    message: "Exito",
-                    description:
-                        `El estado de tu pedido es: ${res.orderStatus}`
-                });
-            })
+            querySnapshot.forEach((doc) => {
+                const res: any = { ...doc.data() };
+                setOrderStatus(res.orderStatus);
+                console.log(doc.data());
+            });
+            await sleep(1000);
         } catch (error: any) {
-            console.log("ClientHomeScreen getOrderStatus ",error);
+            console.log("ClientHomeScreen getOrderStatus ", error);
             errorHandler(error.code);
-        } finally{
+        } finally {
             dispatch(fetchLoadingFinish());
         }
-    }
+    };
+
+    const getOrderStatus = async () => {
+        showMessage({
+            duration: 3000,
+            type: "success",
+            message: "Exito",
+            description: `El estado de tu pedido es: ${orderStatus}`,
+        });
+    };
 
     return (
         <StyledView colors={["#6190E8", "#A7BFE8"]}>
@@ -213,57 +258,70 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     </Paragraph>
                 </MarginVertical>
                 <MarginVertical>
-                    <CardButton
-                    onPress={goToOlderPolls}
-                    >Ver encuestas antigüas</CardButton>
+                    <CardButton onPress={goToOlderPolls}>
+                        Ver encuestas antigüas
+                    </CardButton>
                 </MarginVertical>
-                {!tableButtons && <MarginVertical>
-                    {!data.user.restoStatus && (
-                        <CardButton onPress={handleSignToRestaurant}>
-                            Ingresar al local
-                        </CardButton>
-                    )}
-                    {data.user.restoStatus === "Pendiente" && (
-                        <CardButton disabled>
-                            Estás pendiente para ingresar
-                        </CardButton>
-                    )}
-                    {data.user.restoStatus === "Asignado" && (
-                        <CardButton onPress={handleSitOnTable}>
-                            Sentarse en la mesa
-                        </CardButton>
-                    )}
-                    {data.user.restoStatus === "Sentado" && (
-                        <CardButton onPress={goToOrder}>
-                            Realizar pedido
-                        </CardButton>
-                    )}
-                </MarginVertical>}
-                    {!tableButtons && (data.user.restoStatus === "Pendiente" ||
-                        (data.user.restoStatus === "Pedido aceptado") && (
+                {!tableButtons && (
+                    <MarginVertical>
+                        {!data.user.restoStatus && (
+                            <CardButton onPress={handleSignToRestaurant}>
+                                Ingresar al local
+                            </CardButton>
+                        )}
+                        {data.user.restoStatus === "Pendiente" && (
+                            <CardButton disabled>
+                                Estás pendiente para ingresar
+                            </CardButton>
+                        )}
+                        {data.user.restoStatus === "Asignado" && (
+                            <CardButton onPress={handleSitOnTable}>
+                                Sentarse en la mesa
+                            </CardButton>
+                        )}
+                        {data.user.restoStatus === "Sentado" && (
+                            <CardButton onPress={goToOrder}>
+                                Realizar pedido
+                            </CardButton>
+                        )}
+                    </MarginVertical>
+                )}
+                {!tableButtons &&
+                    (data.user.restoStatus === "Pendiente" ||
+                        (data.user.restoStatus === "Pedido aceptado" && (
                             <CardButton onPress={goToQr}>
                                 Escanear QR de la mesa
                             </CardButton>
-                        ))}
-                    {tableButtons && (
-                        <>
+                        )))}
+                {tableButtons && (
+                    <>
+                        {orderStatus !== "Pagado" && orderStatus !== "Pago confirmado" && (
+                            <>
+                                <MarginVertical>
+                                    <CardButton onPress={goToPoll}>
+                                        Realizar encuesta
+                                    </CardButton>
+                                </MarginVertical>
+                                <MarginVertical>
+                                    <CardButton onPress={goToGames}>
+                                        Ir a los juegos
+                                    </CardButton>
+                                </MarginVertical>
+                            </>
+                        )}
                         <MarginVertical>
-                            <CardButton onPress={goToPoll}>
-                                Realizar encuesta
-                            </CardButton>
+                            {orderStatus === "Pedido terminado" ? (
+                                <CardButton onPress={goToFinishTable}>
+                                    Pedir la cuenta
+                                </CardButton>
+                            ) : (
+                                <CardButton onPress={getOrderStatus}>
+                                    Estado del pedido
+                                </CardButton>
+                            )}
                         </MarginVertical>
-                        <MarginVertical>
-                            <CardButton onPress={goToGames}>
-                                Ir a los juegos
-                            </CardButton>
-                        </MarginVertical>
-                        <MarginVertical>
-                            <CardButton onPress={getOrderStatus}>
-                                Estado del pedido
-                            </CardButton>
-                        </MarginVertical>
-                        </>
-                    )}
+                    </>
+                )}
             </ScrollView>
         </StyledView>
     );

@@ -20,5 +20,7 @@ export enum Screens{
     ADD_ORDER="Agregar pedido",
     ORDER_LIST="Listar pedidos",
     PENDING_ORDER_LIST="Tomar comanda",
-    PENDING_ORDER="Realizar pedido individual"
+    PENDING_ORDER="Realizar pedido individual",
+    FINISH_TABLE="Pedir la cuenta",
+    COLLECT_TABLE_MONEY="Cobrar cuenta"
 }

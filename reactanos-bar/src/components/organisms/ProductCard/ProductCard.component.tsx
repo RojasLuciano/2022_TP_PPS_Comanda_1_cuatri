@@ -25,7 +25,7 @@ const ProductCard:FC<ProductCardProps> = ({images,name,description,price,quantit
       <Carousel images={images} />
       <StyledRow>
         <Heading>{name}</Heading>
-        <Heading>{currencyFormat(price)}</Heading>
+        {/* <Heading>{currencyFormat(price)}</Heading> */}
       </StyledRow>
       <StyledRow>
         <Paragraph textAlign='left'>{description}</Paragraph>
