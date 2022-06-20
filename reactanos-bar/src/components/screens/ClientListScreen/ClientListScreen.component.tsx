@@ -76,7 +76,9 @@ const ClientListScreen = () => {
         try {
             const ref = doc(db, "users", id);
             await updateDoc(ref, {status:statusChange})
-            handleEmail(email);
+            if(statusChange === "Activo"){
+                handleEmail(email);
+            }
             getDocuments();
         } catch (error) {
             console.log(error)
