@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, useCallback, useRef, useState } from "react";
 import {
     StyledLinearGradient,
     StyledMargin,
@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { uploadImages, validateInputs } from '../../../utils/utils';
 import { errorHandler } from "../../../utils/ErrorsHandler";
 import { db } from "../../../InitApp";
-import { addDoc, collection, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 import { AuthTypes } from "../../../redux/authReducer";
 import { IStore } from "../../../redux/store";
@@ -23,7 +23,7 @@ import Button from "../../atoms/Button/Button.component";
 import { StyledParagraph } from "../../atoms/Paragraph/Paragraph.styled";
 import ControlledInput from "../../molecules/ControlledInput/ControlledInput.component";
 import Select from "../../molecules/Select/Select.component";
-import { Box, Slider, Checkbox, Radio, View } from "native-base";
+import { Box, Slider, Checkbox, Radio } from "native-base";
 import { Screens } from "../../../navigation/Screens";
 import Heading from "../../atoms/Heading/Heading.component";
 
@@ -113,7 +113,7 @@ const AddPollScreen = ({ navigation }: any) => {
         let result: any = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.4,
         });
         if (!result.cancelled) {
             if (images.length < 2) {

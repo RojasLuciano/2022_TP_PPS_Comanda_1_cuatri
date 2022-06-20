@@ -21,9 +21,10 @@ const ChatScreen = ({ navigation, route }: any) => {
   const userData: any = useSelector<any>((store) => store.auth);
 
   useLayoutEffect(() => {
-    let table = userData.user?.table || route.params.table;
+    let table = userData.user?.profile === "cliente" ? userData.user?.table : route.params?.table;
+
     const unsubscribe = onSnapshot(
-      query(collection(db, "chatMeza" + table), orderBy("createdAt", "desc")),
+      query(collection(db, "chatMesa" + table), orderBy("createdAt", "desc")),
       (snapshot) =>
         setMessages(
           snapshot.docs.map((doc) => ({
@@ -42,9 +43,9 @@ const ChatScreen = ({ navigation, route }: any) => {
       GiftedChat.append(previousMessages, messages)
     );
     const { _id, createdAt, text, user } = messages[0];
-    let table = userData.user?.table || route.params.table;
+    let table = userData.user?.profile === "cliente" ? userData.user?.table : route.params?.table;
 
-    addDoc(collection(db, "chatMeza" + table), {
+    addDoc(collection(db, "chatMesa" + table), {
       _id,
       createdAt,
       text,

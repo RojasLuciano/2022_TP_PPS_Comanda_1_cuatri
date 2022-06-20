@@ -20,9 +20,12 @@ import { showMessage } from 'react-native-flash-message';
 import * as ImagePicker from "expo-image-picker";
 import { getBlob } from '../../../utils/utils';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useFocusEffect } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
+import { handleLogin } from '../../../redux/authReducer';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { LoginStackParamList } from '../../../navigation/stacks/LoginStack';
 
 type NewClient = {
   lastName: string;
@@ -39,11 +42,25 @@ const AddClientScreen = () => {
   const [scanned, setScanned] = useState(false);
   const [openQR, setOpenQR] = useState(false);
   const [show, setShow] = useState(false);
-
   const dispatch = useDispatch();
   const passInput: MutableRefObject<any> = useRef();
+  const userData: any = useSelector<any>((store) => store.auth);
+  const navigation = useNavigation<NativeStackNavigationProp<LoginStackParamList>>()
 
-  const handleBarCodeScanned = ({ data }) => {
+  const handlerSignUp = () => {
+    navigation.goBack();
+  }
+
+  const handleSignIn = (email: string, password: string) => {
+    try {
+      const values = { email, password };
+      dispatch(handleLogin(values));
+    } catch (error: any) {
+      errorHandler(error.code)
+    }
+  }
+
+  const handleBarCodeScanned = ({ data }: any) => {
     setScanned(true);
     setOpenQR(false);
     const dataSplit = data.split('@')
@@ -55,6 +72,11 @@ const AddClientScreen = () => {
   const handleOpenQR = () => {
     setScanned(false);
     setOpenQR(true);
+  }
+
+  const generateRandomString = (num: number) => {
+    const result = Math.random().toString(36).substring(0, num);
+    return result + "@reactanosbar.com";
   }
 
   const onSubmit = async (guest: boolean) => {
@@ -104,21 +126,37 @@ const AddClientScreen = () => {
           pollfilled: false,
           table: 0,
         });
+        if (userData.user.email === undefined) {
+          handlerSignUp();
+        }
+
       } else {
         const blob: any = await getBlob(image);
         const fileName = image.substring(image.lastIndexOf("/") + 1);
         const fileRef = ref(storage, "images/" + fileName);
+        const emailGuest = generateRandomString(10);
         await uploadBytes(fileRef, blob);
         await addDoc(collection(db, "users"), {
           name: values.name,
+          lastName: values.lastName,
           image: fileRef.fullPath,
           creationDate: new Date(),
           profile: "invitado",
           pollfilled: false,
           table: 0,
+          restoStatus: "Pendiente",
+          status: "Activo",
+          email: emailGuest,
         });
+        await createUserWithEmailAndPassword(
+          auth,
+          emailGuest,
+          "123456"
+        );
+        if (userData.user.email === undefined) {
+          handleSignIn(emailGuest, "123456");
+        }
       }
-
       showMessage({
         type: "success",
         message: "Exito",
@@ -139,11 +177,11 @@ const AddClientScreen = () => {
     }
   }
 
-  const handleCamera = async (type: any) => {
+  const handleCamera = async () => {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.4,
     });
     if (!result.cancelled) {
       setImage(result["uri"]);
@@ -257,18 +295,19 @@ const AddClientScreen = () => {
           />
         </StyledMargin>
         <Button onPress={() => onSubmit(false)}>Crear usuario</Button>
-        <Button onPress={() => onSubmit(true)}>Invitado</Button>
+        {userData.user.email === undefined && <Button onPress={() => onSubmit(true)}>Invitado</Button>}
       </StyledLinearGradient>
     </StyledView>
   ) : (
 
     <BarCodeScanner
       onBarCodeScanned={scanned && openQR ? undefined : handleBarCodeScanned}
-      style={{        
+      style={{
         flex: 1,
-        backgroundColor: 'black',                
+        backgroundColor: 'black',
         alignItems: 'center',
-        justifyContent: 'center',  }}
+        justifyContent: 'center',
+      }}
     >
       <View style={{
         width: 200,

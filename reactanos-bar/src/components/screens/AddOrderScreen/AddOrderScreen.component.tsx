@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import React, { useCallback, useState } from "react";
 import {
     StyledCard,
@@ -15,8 +15,7 @@ import {
 } from "../../../redux/loaderReducer";
 import { sleep, currencyFormat } from '../../../utils/utils';
 import { addDoc, collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
-import { db, storage } from "../../../InitApp";
-import { getDownloadURL, ref } from "firebase/storage";
+import { db } from "../../../InitApp";
 import { useFocusEffect } from "@react-navigation/native";
 import Divider from "../../atoms/Divider/Divider.component";
 import { AuthTypes } from "../../../redux/authReducer";
@@ -62,10 +61,6 @@ const AddOrderScreen = ({navigation}:any) => {
             querySnapshot.forEach(async (doc) => {
                 const res: any = { ...doc.data(), id: doc.id };
                 let images: any = [];
-                // res.images.forEach(async (image: any) => {
-                //     const imageUrl = await getDownloadURL(ref(storage, image));
-                //     images.push(imageUrl);
-                // });
                 await sleep(2000);
                 setData((arr: any) => [...arr, { ...res, id: doc.id, images }]);
             });
