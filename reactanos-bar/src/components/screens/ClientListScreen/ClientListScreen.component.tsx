@@ -71,11 +71,11 @@ const ClientListScreen = () => {
             );
     }
 
-    const handleAccept = async (id:string, email:string) => {
+    const handleAccept = async (id:string, email:string, statusChange:string) => {
         dispatch(fetchLoadingStart())
         try {
             const ref = doc(db, "users", id);
-            await updateDoc(ref, {status:"Activo"})
+            await updateDoc(ref, {status:statusChange})
             handleEmail(email);
             getDocuments();
         } catch (error) {
@@ -96,7 +96,8 @@ const ClientListScreen = () => {
                         image={item.image}
                         dni={item.dni}
                         email={item.email}
-                        onPress={() => handleAccept(item.id, item.email)}
+                        onPressActive={() => handleAccept(item.id, item.email,"Activo")}
+                        onPressCancel={() => handleAccept(item.id, item.email,"Cancelado")}
                         user="Cliente"
                         state="Pendiente"
                     />
