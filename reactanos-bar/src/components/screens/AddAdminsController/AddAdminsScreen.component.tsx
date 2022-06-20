@@ -28,7 +28,7 @@ import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderRedu
 type NewUser = {
     lastName: string;
     name: string;
-    dni: number;
+    dni: number | null;
     cuil: string;
     profile: string;
     email: string;
@@ -36,7 +36,7 @@ type NewUser = {
     passwordRepeat: string;
 }
 
-const AddAdminsScreen = ({navigation}) => {
+const AddAdminsScreen = ({navigation}:any) => {
     const [image, setImage] = useState("");
     const { control, handleSubmit, getValues, formState: { errors }, reset, setValue } = useForm<NewUser>();
     const [scanned, setScanned] = useState(false);
@@ -79,7 +79,7 @@ const AddAdminsScreen = ({navigation}) => {
 
       React.useEffect(
         () =>
-          navigation.addListener('beforeRemove', (e) => {
+          navigation.addListener('beforeRemove', (e:any) => {
             e.preventDefault();
           }),
         []
@@ -170,11 +170,11 @@ const AddAdminsScreen = ({navigation}) => {
         }
     }
 
-    const handleCamera = async (type) => {
+    const handleCamera = async (type : any) => {
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.4,
         });
         if (!result.cancelled) {
             setImage(result["uri"]);
@@ -196,7 +196,7 @@ const AddAdminsScreen = ({navigation}) => {
                         alignContent: 'center',
                     }}>
                         {!image ?
-                            <ImageButton source={require('../../../../assets/add-camera.png')} onPress={handleCamera} /> :
+                            <ImageButton source={require('../../../../assets/add-camera.png')} onPress={()=>handleCamera} /> :
                             <Image style={{
                                 height: 185,
                                 width: 185,

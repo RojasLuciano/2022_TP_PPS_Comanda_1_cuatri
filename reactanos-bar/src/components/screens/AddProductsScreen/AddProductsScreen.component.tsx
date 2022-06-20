@@ -72,7 +72,7 @@ const AddProductsScreen = ({navigation}:any) => {
         let result: any = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.4,
         });
         if (!result.cancelled) {
           if(images.length<2){

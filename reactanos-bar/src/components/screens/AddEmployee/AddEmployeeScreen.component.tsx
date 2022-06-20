@@ -23,12 +23,11 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch } from "react-redux";
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
 import Select from '../../molecules/Select/Select.component';
-import { CircularProgress } from 'native-base';
 
 type NewEmployee = {
     lastName: string;
     name: string;
-    dni: number;
+    dni?: number | undefined | null;
     profile: string;
     email: string;
     password: string;
@@ -46,7 +45,7 @@ const AddEmployeeScreen = () => {
     const dispatch = useDispatch();
     const [type, setType] = useState("");
 
-    const handleBarCodeScanned = ({ data }) => {
+    const handleBarCodeScanned = ({ data }:any) => {
         setScanned(true);
         setOpenQR(false);
         const dataSplit = data.split('@')
@@ -138,7 +137,7 @@ const AddEmployeeScreen = () => {
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.4,
         });
         if (!result.cancelled) {
             setImage(result["uri"]);

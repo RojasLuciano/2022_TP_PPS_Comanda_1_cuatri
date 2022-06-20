@@ -7,4 +7,5 @@ export interface Client {
     name: string;
     id: string;
     state: string;
+    profile: string;
 }
