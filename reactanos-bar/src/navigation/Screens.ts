@@ -12,6 +12,7 @@ export enum Screens{
     QR_BUTTON='Escanear QR',
     QR_SCANNER="QRScannerScreen",
     CHAT='Hablá con nosotros',
+    LIST_CHAT='Listado de chats',
     CLIENT_HOME="Principal Clientes",
     WAITING_CLIENT_LIST="Lista de espera",
     ADD_POLL = "Agregar encuesta",
@@ -22,5 +23,6 @@ export enum Screens{
     PENDING_ORDER_LIST="Tomar comanda",
     PENDING_ORDER="Realizar pedido individual",
     FINISH_TABLE="Pedir la cuenta",
-    COLLECT_TABLE_MONEY="Cobrar cuenta"
+    COLLECT_TABLE_MONEY="Cobrar cuenta",
+    SECTOR_LIST="Lista de sectores"
 }

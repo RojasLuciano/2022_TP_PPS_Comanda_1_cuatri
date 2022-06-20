@@ -25,6 +25,8 @@ import { showMessage } from "react-native-flash-message";
 import { RefreshControl } from "react-native";
 import OrderDetails from "../../organisms/OrderDetails/OrderDetails.component";
 
+//Esta pantalla es listar pedidos.
+
 const WaitingOrderListScreen = ({ navigation }: any) => {
     const [data, setData] = useState<any[]>([]);
     const dispatch = useDispatch();

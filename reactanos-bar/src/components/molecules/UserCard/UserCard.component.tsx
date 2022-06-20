@@ -1,6 +1,6 @@
-import { View, Text } from "react-native";
 import React, { FC } from "react";
 import {
+    StyledGroup,
     StyledImageContainer,
     StyledInfoContainer,
     StyledView,
@@ -9,6 +9,7 @@ import Button from "../../atoms/Button/Button.component";
 import Heading from "../../atoms/Heading/Heading.component";
 import Paragraph from "../../atoms/Paragraph/Paragraph.component";
 import { Avatar } from "native-base";
+import { View } from 'react-native'
 
 interface UserCardProps {
     name?: string;
@@ -21,6 +22,8 @@ interface UserCardProps {
     state?: string;
     table?:string;
     total?:string;
+    onPressActive: () => void;
+    onPressCancel?: () => void;
 }
 
 const UserCard: FC<UserCardProps> = ({
@@ -33,7 +36,8 @@ const UserCard: FC<UserCardProps> = ({
     user,
     state,
     table,
-    total
+    total,
+    onPressActive, onPressCancel
 }) => {
     return (
         <StyledView>
@@ -86,9 +90,10 @@ const UserCard: FC<UserCardProps> = ({
                         </>
                     )}
                 </View>
-                <Button variant="secondary" size="M" onPress={onPress}>
-                    Aceptar
-                </Button>
+                <StyledGroup>
+                    <Button variant='primary' onPress={onPress || onPressActive} size="M" marginH="M">Aceptar</Button>
+                    {onPressCancel && <Button variant='secondary' size="M" onPress={onPressCancel}>Retirar</Button>}
+                </StyledGroup>
             </StyledInfoContainer>
         </StyledView>
     );

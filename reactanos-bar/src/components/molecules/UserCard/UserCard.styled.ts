@@ -23,3 +23,11 @@ export const StyledInfoContainer = styled.View`
     align-items:center;
     justify-content:space-between;
 `
+
+export const StyledGroup = styled.View`
+    flexDirection: row;
+    width: 45%;
+    margin-left: -5%;
+    justifyContent: center;
+    alignItems: center;    
+`

@@ -4,7 +4,6 @@ import {
     doc,
     getDoc,
     getDocs,
-    orderBy,
     query,
     updateDoc,
     where,
@@ -42,7 +41,7 @@ const WaitingClientListScreen = ({navigation}:any) => {
         setData([]);
         try {
             const querySnapshot = await getDocs(
-                query(collection(db, "users"), where("profile","in",["cliente", "invitado"]), where("restoStatus", "==", "Pendiente"), orderBy("modifiedDate"))
+                query(collection(db, "users"), where("profile","in",["cliente", "invitado"]), where("restoStatus", "==", "Pendiente"))
             );
             querySnapshot.forEach(async (doc) => {
                 const res: any = { ...doc.data(), id: doc.id };
@@ -99,6 +98,19 @@ const WaitingClientListScreen = ({navigation}:any) => {
         navigation.navigate(Screens.QR_SCANNER, {goBack:(value:string) => handleAccept(value,id)})
     }
 
+    const handleCancel = async (id:string, statusChange:string) => {
+        dispatch(fetchLoadingStart())
+        try {
+            const ref = doc(db, "users", id);
+            await updateDoc(ref, {status:statusChange})
+            getDocuments();
+        } catch (error) {
+            console.log(error)
+        } finally{
+            dispatch(fetchLoadingFinish())
+        }
+    }
+
     return (
         <StyledView colors={["#6190E8", "#A7BFE8"]}>
             <ScrollView style={{ width: "100%" }} refreshControl={
@@ -110,10 +122,11 @@ const WaitingClientListScreen = ({navigation}:any) => {
                         name={item.name}
                         lastName={item.lastName}
                         image={item.image}
-                        dni={item.dni}
-                        email={item.email}
-                        onPress={() => goToScanner(item.id)}
-                        user="Cliente"
+                        dni={item.profile === "cliente" ? item.dni : "No registrado"}
+                        email={item.profile === "cliente" ? item.email : "No registrado"}
+                        onPressActive={() => goToScanner(item.id)}
+                        onPressCancel={() => handleCancel(item.id, "Cancelado")}                        
+                        user= {item.profile === "invitado" ? "Invitado" : "Cliente"}
                         state="Pendiente"
                     />
                 ))}
