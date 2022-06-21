@@ -22,5 +22,7 @@ export enum Screens{
     ORDER_LIST="Listar pedidos",
     PENDING_ORDER_LIST="Tomar comanda",
     PENDING_ORDER="Realizar pedido individual",
-    SECTOR_LIST="Lista de sectores",
+    FINISH_TABLE="Pedir la cuenta",
+    COLLECT_TABLE_MONEY="Cobrar cuenta",
+    SECTOR_LIST="Lista de sectores"
 }

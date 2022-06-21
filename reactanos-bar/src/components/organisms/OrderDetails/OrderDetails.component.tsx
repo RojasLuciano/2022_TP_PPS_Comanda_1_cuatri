@@ -11,7 +11,7 @@ interface OrderDetailsProps {
     client?: string;
     products?: any[];
     total?:number | string;
-    onPress:()=>void;
+    onPress?:()=>void;
     title?:string;
     onPressText?:string;
     description?:string;
@@ -38,7 +38,7 @@ const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, t
             {products && <Divider/>}
             {total&&<Heading textAlign="right" level="L">{total}</Heading>}
             {description && <View style={{marginVertical:10}}><Paragraph>{description}</Paragraph></View>}
-            <Button size="M" variant="secondary" onPress={onPress}>{onPressText || 'Aceptar'}</Button>
+            {onPress && <Button size="M" variant="secondary" onPress={onPress}>{onPressText || 'Aceptar'}</Button>}
         </StyledView>
     );
 };

@@ -15,6 +15,9 @@ export const successHandler = (error:any) => {
         case 'order-created':
             message="Pedido registrado exitosamente";
         break;
+        case 'order-paid':
+            message="Pagaste la cuenta, por favor esperá a que confirmen el pago";
+        break;
         case 'guessed-number':
             message="Has adivinado";
         break;

@@ -18,7 +18,9 @@ import GuessTheNumberScreen from '../components/screens/GuessTheNumberScreen/Gue
 import AddOrderScreen from '../components/screens/AddOrderScreen/AddOrderScreen.component';
 import WaitingOrderListScreen from '../components/screens/WaitingOrderListScreen/WaitingOrderListScreen.component';
 import CompleteOrderStack from './stacks/CompleteOrderStack';
+import CollectMoneyScreen from '../components/screens/CollectTableMoneyScreen/CollectTableMoneyScreen.component';
 import ChatStack from './stacks/ChatStack';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -39,18 +41,9 @@ const DrawerStack = () => {
   const userData: any = useSelector<any>((store) => store.auth);
   if (userData.user.profile === "cliente") {
     return (
-      <Drawer.Navigator initialRouteName={Screens.GUESS_THE_NUMBER} drawerContent={props => <CustomDrawerContent {...props} />}>
-        {userData.user.table != 0 && <Drawer.Screen name={Screens.CHAT} component={ChatScreen} />}
-        <Drawer.Screen name={Screens.CLIENT_HOME} component={ClientHomeStack} options={{ headerShown: false }} />
-        <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />
-        <Drawer.Screen name={Screens.GUESS_THE_NUMBER} component={GuessTheNumberScreen} />
-        <Drawer.Screen name={Screens.ADD_ORDER} component={AddOrderScreen} />
-      </Drawer.Navigator>
-    );
-  } 
-  if (userData.user.profile === "invitado") {
-    return (
-      <Drawer.Navigator initialRouteName={Screens.GUESS_THE_NUMBER} drawerContent={props => <CustomDrawerContent {...props} />}>
+      //  <Drawer.Navigator initialRouteName={Screens.ADD_PRODUCTS} drawerContent={props => <CustomDrawerContent {...props} />}>  
+      <Drawer.Navigator initialRouteName={Screens.CLIENT_HOME} drawerContent={props => <CustomDrawerContent {...props} />}>
+        <Drawer.Screen name={Screens.GRAPHIC_SCREEN} component={GraphicScreen} />
         {userData.user.table != 0 && <Drawer.Screen name={Screens.CHAT} component={ChatScreen} />}
         <Drawer.Screen name={Screens.CLIENT_HOME} component={ClientHomeStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />
@@ -123,6 +116,7 @@ const DrawerStack = () => {
         <Drawer.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
+        <Drawer.Screen name={Screens.COLLECT_TABLE_MONEY} component={CollectMoneyScreen} />
       </Drawer.Navigator>
     );
   }
