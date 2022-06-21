@@ -23,7 +23,6 @@ import ChatStack from './stacks/ChatStack';
 import CompleteOrderSecondScreen from '../components/screens/CompleteOrderSecondScreen/CompleteOrderSecondScreen.component';
 import CompleteOrderFirstScreen from '../components/screens/CompleteOrderFirstScreen/CompleteOrderFirstScreen.component';
 
-
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props: any) {

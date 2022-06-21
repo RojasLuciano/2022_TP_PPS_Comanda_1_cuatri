@@ -6,7 +6,7 @@ import { Control } from "react-hook-form";
 import ControlledInput from "../../molecules/ControlledInput/ControlledInput.component";
 import ControlledPassword from "../../molecules/ControlledPassword/ControlledPassword.component";
 import { MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity, Text, View, Linking } from "react-native";
+import { TouchableOpacity, Text, Linking } from "react-native";
 import { Screens } from "../../../navigation/Screens";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -16,7 +16,7 @@ import SocialButton from "../../atoms/SocialButton/SocialButton.component";
 interface LoginControllerProps {
     control: Control<any, any>;
     onSubmit: () => void;
-    fastSignIn: (data:any) => void;
+    fastSignIn: (data: any) => void;
 }
 
 const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSignIn }) => {
@@ -25,7 +25,7 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
     const navigation = useNavigation<NativeStackNavigationProp<LoginStackParamList>>()
 
     const handlerSignUp = () => {
-        navigation.navigate(Screens.SIGNUP);   
+        navigation.navigate(Screens.SIGNUP);
     }
 
     const handleInstagram = async () => {
@@ -44,7 +44,7 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
                     placeholder="Correo electrónico"
                     keyboardType="email-address"
                     control={control}
-                    name="email" 
+                    name="email"
                 />
                 <ControlledPassword
                     icon={<MaterialIcons name="lock" />}
@@ -69,20 +69,20 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
             </TouchableOpacity>
             <StyledAccess>
                 <Button
-                    onPress={()=>fastSignIn({email:"cliente@gmail.com", password:"123456"})}
+                    onPress={() => fastSignIn({ email: "cliente@gmail.com", password: "123456" })}
                     size='M'
                 >
                     <Text>Cliente</Text>
                 </Button>
                 <Button
-                    onPress={()=>fastSignIn({email:"admin@reactanosbar.com", password:"123456"})}
+                    onPress={() => fastSignIn({ email: "admin@reactanosbar.com", password: "123456" })}
                     size='M'
                     marginH="M"
                 >
                     <Text>Admin</Text>
                 </Button>
                 <Button
-                    onPress={()=>fastSignIn({email:"empleado@reactanosbar.com", password:"123456"})}
+                    onPress={() => fastSignIn({ email: "empleado@reactanosbar.com", password: "123456" })}
                     size='M'
                 >
                     <Text>Empleado</Text>

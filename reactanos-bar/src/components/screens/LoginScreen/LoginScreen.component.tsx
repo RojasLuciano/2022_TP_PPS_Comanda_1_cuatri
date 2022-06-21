@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { LoginStackParamList } from '../../../navigation/stacks/LoginStack';
 import { Screens } from "../../../navigation/Screens";
 import { StyledView } from "./LoginScreen.styled";
@@ -13,6 +13,7 @@ import { FormData } from "../../../models/login/formData.types";
 import { validateInputs } from '../../../utils/utils';
 import { errorHandler } from '../../../utils/ErrorsHandler';
 
+
 type LoginScreenProps = NativeStackScreenProps<LoginStackParamList, Screens.LOGIN>;
 
 const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
@@ -23,12 +24,6 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
         setValue("email", data.email);
         setValue("password", data.password);
     }
-
-    // useEffect(() => {
-        // setValue("email", "empleado@reactanosbar.com");
-        // setValue("password", "123456");
-        // handleSignIn();
-    // }, [])
 
 	const handleSignIn = () => {
         try {
