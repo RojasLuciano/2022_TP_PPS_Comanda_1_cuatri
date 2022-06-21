@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { Screens } from './Screens';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,7 @@ import ChatStack from './stacks/ChatStack';
 import CompleteOrderSecondScreen from '../components/screens/CompleteOrderSecondScreen/CompleteOrderSecondScreen.component';
 import CompleteOrderFirstScreen from '../components/screens/CompleteOrderFirstScreen/CompleteOrderFirstScreen.component';
 import DeliverOrderTableListScreen from '../components/screens/DeliverOrderTableListScreen/DeliverOrderTableListScreen.component';
+import { notificationsConfiguration } from '../utils/pushNotifications';
 
 const Drawer = createDrawerNavigator();
 
@@ -41,6 +42,11 @@ function CustomDrawerContent(props: any) {
 
 const DrawerStack = () => {
   const userData: any = useSelector<any>((store) => store.auth);
+
+  useEffect(() => {
+    notificationsConfiguration(userData.user);
+  },[])
+
   if (userData.user.profile === "cliente") {
     return (
       //  <Drawer.Navigator initialRouteName={Screens.ADD_PRODUCTS} drawerContent={props => <CustomDrawerContent {...props} />}>  

@@ -40,7 +40,7 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
 	return (
 		<StyledView >
             <ImageBackground style={{height:'100%', width:'100%', justifyContent:'flex-end'}} source={require('../../../../assets/loginBg.png')}>
-                <Button onPress={() => sendPushNotification({title:"Prueba", description:"Esto es una prueba"})}>Push</Button>
+                <Button onPress={() => sendPushNotification({title:"Puto el que lee", description:"Hola cliente", profile:"cliente"})}>Push</Button>
                 <LoginController fastSignIn={handleFastSignIn} onSubmit={handleSubmit(handleSignIn)} control={control} />              
             </ImageBackground>
         </StyledView>

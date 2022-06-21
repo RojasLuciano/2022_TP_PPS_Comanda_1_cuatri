@@ -1,16 +1,18 @@
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import { collection, doc, getDocs, query, setDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { Platform } from 'react-native';
 import { db } from '../InitApp';
+import { sleep } from './utils';
 interface Notification{
     title:string;
     description:string;
+    profile:string;
 }
 
 let tokens:string[]=[];
 
-export const notificationsConfiguration = () => {
+export const notificationsConfiguration = (user:any) => {
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
           shouldShowAlert: true,
@@ -18,8 +20,7 @@ export const notificationsConfiguration = () => {
           shouldSetBadge: true,
         }),
       });
-    registerForPushNotificationsAsync();
-    getTokens();
+    registerForPushNotificationsAsync(user);
     // const MY_TASK_NAME = 'BACKGROUND-NOTIFICATION-TASK';
     // Notifications.registerTaskAsync(MY_TASK_NAME)
     //     registerForPushNotificationsAsync().then((token) =>
@@ -44,38 +45,42 @@ export const notificationsConfiguration = () => {
     // };
 }
 
-export const sendPushNotification = async ({title, description}:Notification) =>  {
+export const sendPushNotification = async ({title, description, profile}:Notification) =>  {
     try {
-        tokens.map(async token => {
-            const message = {
-              to: token,
-              title: title,
-              body: description,
-              sound: "default"
-            };
-            await fetch('https://exp.host/--/api/v2/push/send', {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(message),
-            });
-        })
+      const q = query(collection(db, "pushTokens"), where("profile","==",profile));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach(async (doc) => {
+                const message = {
+                  to: doc.data().token,
+                  title: title,
+                  body: description,
+                  sound: "default"
+                };
+                console.log(doc.data().token)
+                await fetch('https://exp.host/--/api/v2/push/send', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(message),
+                });
+                console.log('prueba')
+            })
     } catch (error) {
       console.log(error)              
     }
 }
 
-const getTokens = async () => {
-    const q = query(collection(db, "pushTokens"));
+const getTokens = async (profile:string) => {
+    const q = query(collection(db, "pushTokens"), where("profile","==",profile));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
         tokens.push(doc.data().token)
     });
 }
 
-const registerForPushNotificationsAsync = async () => {
+const registerForPushNotificationsAsync = async (user:any) => {
     if (Device.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
@@ -92,6 +97,7 @@ const registerForPushNotificationsAsync = async () => {
             await setDoc(doc(collectionRef, token), {
                 token,
                 creationDate: new Date(),
+                profile: user.profile
             });
     } else {
       alert('Must use physical device for Push Notifications');
