@@ -39,11 +39,12 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
 
     const setSecretNumberHandler = async () => {
         await sleep(500);
-        setSecretNumber(Math.floor(Math.random() * 20));
+        setSecretNumber(Math.floor(Math.random() * 20) + 1);
     }
 
     const checkGuessHandler = async () => {
         try {
+            console.log('NumeroGanador ', secretNumber);
             await sleep(500);
             if (guess === "" || guess === undefined) {
                 throw { code: "empty-fields" };
@@ -58,12 +59,18 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
                     screen: Screens.CLIENT_HOME,
                 });
             } else {
-                setNoLifesMessage('No adivinaste, intenta de nuevo!.');
+                if(secretNumber > parseInt(guess)) {
+                    setNoLifesMessage('El numero es mayor.');
+                }
+                if(secretNumber < parseInt(guess)) {
+                    setNoLifesMessage('El numero es menor');
+                }
                 setLifes(prevCount => prevCount - 1);
                 setGuess('');
                 await sleep(500);
             }
         } catch (error: any) {
+            console.log("GuessTheNumberScreen checkGuessHandler ", error);
             errorHandler(error.code);
         } finally {
             dispatch(fetchLoadingFinish());
@@ -76,7 +83,7 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
             const userRef = doc(userCollection, data.user.id);
             await updateDoc(userRef, { discount: discount[random] });
         } catch (error) {
-            console.log(error);
+            console.log("GuessTheNumberScreen applyDiscount ", error);
         }
     }
 

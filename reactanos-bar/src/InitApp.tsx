@@ -11,6 +11,9 @@ import DrawerStack from "./navigation/Drawer";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { notificationsConfiguration } from "./utils/pushNotifications";
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

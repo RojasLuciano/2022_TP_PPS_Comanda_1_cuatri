@@ -20,6 +20,8 @@ import WaitingOrderListScreen from '../components/screens/WaitingOrderListScreen
 import CompleteOrderStack from './stacks/CompleteOrderStack';
 import CollectMoneyScreen from '../components/screens/CollectTableMoneyScreen/CollectTableMoneyScreen.component';
 import ChatStack from './stacks/ChatStack';
+import CompleteOrderSecondScreen from '../components/screens/CompleteOrderSecondScreen/CompleteOrderSecondScreen.component';
+import CompleteOrderFirstScreen from '../components/screens/CompleteOrderFirstScreen/CompleteOrderFirstScreen.component';
 
 
 const Drawer = createDrawerNavigator();
@@ -96,8 +98,9 @@ const DrawerStack = () => {
   }
   if (userData.user.profile === "cook") {
     return (
-      <Drawer.Navigator initialRouteName={Screens.ORDER_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
-        <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />  
+      <Drawer.Navigator initialRouteName={Screens.PENDING_ORDER_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
+           <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderFirstScreen} /> 
+          <Drawer.Screen name={Screens.PENDING_ORDER} component={CompleteOrderSecondScreen} />
       </Drawer.Navigator>
     );
   }
@@ -108,15 +111,14 @@ const DrawerStack = () => {
       </Drawer.Navigator>
     );
   }
-  if (userData.user.profile === "waiter") {
+  if (userData.user.profile === "waiter") { //mozo
     return (
       <Drawer.Navigator initialRouteName={Screens.GUESS_THE_NUMBER} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.CLIENT_LIST} component={ClientListScreen} />
-        <Drawer.Screen name={Screens.LIST_CHAT} component={ChatStack} options={{ headerShown: false }}/>
+        {/* <Drawer.Screen name={Screens.CHAT} component={ChatScreen} /> // Realizar lista de chats */}  
         <Drawer.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
-        <Drawer.Screen name={Screens.COLLECT_TABLE_MONEY} component={CollectMoneyScreen} />
       </Drawer.Navigator>
     );
   }

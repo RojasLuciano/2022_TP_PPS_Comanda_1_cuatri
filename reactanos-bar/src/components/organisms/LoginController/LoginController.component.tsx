@@ -70,7 +70,6 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
             <StyledAccess>
                 <Button
                     onPress={()=>fastSignIn({email:"cliente@gmail.com", password:"123456"})}
-                    
                     size='M'
                 >
                     <Text>Cliente</Text>

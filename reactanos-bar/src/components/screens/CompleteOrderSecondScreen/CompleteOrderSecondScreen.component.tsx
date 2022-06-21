@@ -77,6 +77,7 @@ const CompleteOrderSecondScreen = ({ navigation, route }: any) => {
             type: "success",
             duration: 2000,
         });
+        navigation.goBack();
         }
         catch (error) {
             console.log("CompleteOrderSecondScreen makeAnOrder ", error);
