@@ -12,6 +12,8 @@ import { handleLogin } from "../../../redux/authReducer";
 import { FormData } from "../../../models/login/formData.types";
 import { validateInputs } from '../../../utils/utils';
 import { errorHandler } from '../../../utils/ErrorsHandler';
+import Button from "../../atoms/Button/Button.component";
+import { sendPushNotification } from "../../../utils/pushNotifications";
 
 
 type LoginScreenProps = NativeStackScreenProps<LoginStackParamList, Screens.LOGIN>;
@@ -38,6 +40,7 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
 	return (
 		<StyledView >
             <ImageBackground style={{height:'100%', width:'100%', justifyContent:'flex-end'}} source={require('../../../../assets/loginBg.png')}>
+                <Button onPress={() => sendPushNotification({title:"Prueba", description:"Esto es una prueba"})}>Push</Button>
                 <LoginController fastSignIn={handleFastSignIn} onSubmit={handleSubmit(handleSignIn)} control={control} />              
             </ImageBackground>
         </StyledView>
