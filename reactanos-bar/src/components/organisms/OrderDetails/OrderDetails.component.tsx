@@ -15,9 +15,10 @@ interface OrderDetailsProps {
     title?:string;
     onPressText?:string;
     description?:string;
+    showStatus?:boolean;
 }
 
-const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, total, onPress, onPressText, description }) => {
+const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, total, onPress, onPressText, description, showStatus=false }) => {
     const groupBy = (xs: any, key: any) => {
         return xs.reduce(function (rv: any, x: any) {
             (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -31,9 +32,14 @@ const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, t
             <Heading>{client}</Heading>
             {<Divider/>}
             {products && Object.keys(newList).map((product:any,index)=>
-                <Paragraph textAlign="left" key={index}>
-                    - {newList[product].length} {product}
-                </Paragraph>
+                <View key={index} style={{flex:1, flexDirection:'row', justifyContent:'space-between'}}>
+                    <Paragraph textAlign="left" >
+                        - {newList[product].length} {product}
+                    </Paragraph>
+                    {showStatus && <Paragraph textAlign="right">
+                        {newList[product][index]['status']}
+                    </Paragraph>}
+                </View>
             )}
             {products && <Divider/>}
             {total&&<Heading textAlign="right" level="L">{total}</Heading>}

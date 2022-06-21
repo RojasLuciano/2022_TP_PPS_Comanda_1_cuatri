@@ -68,6 +68,10 @@ export const errorHandler = (error: any) => {
             message = "Ocurrió un error al generar el pedido"
             Vibration.vibrate(1000);
             break;
+        case 'order-not-ready':
+            message = "El pedido no está listo para llevar a la mesa"
+            Vibration.vibrate(1000);
+            break;
         default:
             message = "Ha ocurrido un error, por favor reintente nuevamente"
             Vibration.vibrate(1000);

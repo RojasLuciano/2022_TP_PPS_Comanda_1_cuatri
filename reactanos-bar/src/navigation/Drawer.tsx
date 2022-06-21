@@ -22,6 +22,7 @@ import CollectMoneyScreen from '../components/screens/CollectTableMoneyScreen/Co
 import ChatStack from './stacks/ChatStack';
 import CompleteOrderSecondScreen from '../components/screens/CompleteOrderSecondScreen/CompleteOrderSecondScreen.component';
 import CompleteOrderFirstScreen from '../components/screens/CompleteOrderFirstScreen/CompleteOrderFirstScreen.component';
+import DeliverOrderTableListScreen from '../components/screens/DeliverOrderTableListScreen/DeliverOrderTableListScreen.component';
 
 const Drawer = createDrawerNavigator();
 
@@ -71,6 +72,7 @@ const DrawerStack = () => {
         <Drawer.Screen name={Screens.ADD_ORDER} component={AddOrderScreen} />
         <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
+        <Drawer.Screen name={Screens.DELIVER_ORDER_TABLE} component={DeliverOrderTableListScreen} />
       </Drawer.Navigator>
     );
   }
@@ -92,6 +94,7 @@ const DrawerStack = () => {
         <Drawer.Screen name={Screens.ADD_ORDER} component={AddOrderScreen} />
         <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
+        <Drawer.Screen name={Screens.DELIVER_ORDER_TABLE} component={DeliverOrderTableListScreen} />
       </Drawer.Navigator>
     );
   }
@@ -118,6 +121,7 @@ const DrawerStack = () => {
         <Drawer.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
+        <Drawer.Screen name={Screens.DELIVER_ORDER_TABLE} component={DeliverOrderTableListScreen} />
       </Drawer.Navigator>
     );
   }
