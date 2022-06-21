@@ -26,7 +26,7 @@ const AddProductsController:FC<AddProductsControllerProps> = ({onPress, control,
 
     const data = [
         {label:"Cocina", value:"cook"},
-        {label:"Bar", value:"waiter"},
+        {label:"Bar", value:"bartender"},
     ]
 
     return (

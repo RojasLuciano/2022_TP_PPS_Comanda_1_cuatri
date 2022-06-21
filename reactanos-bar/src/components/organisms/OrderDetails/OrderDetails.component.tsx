@@ -37,7 +37,7 @@ const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, t
                         - {newList[product].length} {product}
                     </Paragraph>
                     {showStatus && <Paragraph textAlign="right">
-                        {newList[product][index]['status']}
+                        {newList[product][0]?.status}
                     </Paragraph>}
                 </View>
             )}
