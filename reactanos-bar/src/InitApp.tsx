@@ -41,7 +41,6 @@ const InitApp = () => {
 
     useEffect(() => {
         playSound(sound);
-        notificationsConfiguration();
     }, [])
 
     return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { Screens } from './Screens';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,7 @@ import ChatStack from './stacks/ChatStack';
 import CompleteOrderSecondScreen from '../components/screens/CompleteOrderSecondScreen/CompleteOrderSecondScreen.component';
 import CompleteOrderFirstScreen from '../components/screens/CompleteOrderFirstScreen/CompleteOrderFirstScreen.component';
 import DeliverOrderTableListScreen from '../components/screens/DeliverOrderTableListScreen/DeliverOrderTableListScreen.component';
+import { notificationsConfiguration } from '../utils/pushNotifications';
 
 const Drawer = createDrawerNavigator();
 
@@ -42,6 +43,11 @@ function CustomDrawerContent(props: any) {
 const DrawerStack = () => {
   const userData: any = useSelector<any>((store) => store.auth);
   if (userData.user.profile === "invitado" || userData.user.profile === "cliente") {
+
+  useEffect(() => {
+    notificationsConfiguration(userData.user);
+  },[])
+  
     return (
       <Drawer.Navigator initialRouteName={Screens.CLIENT_HOME} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.CLIENT_HOME} component={ClientHomeStack} options={{ headerShown: false }} />

@@ -15,6 +15,7 @@ import {
 import { db } from "../../../InitApp";
 import { useSelector } from "react-redux";
 import { StyledView } from "./ChatScreen.styled";
+import { sendPushNotification } from "../../../utils/pushNotifications";
 
 const ChatScreen = ({ navigation, route }: any) => {
   const [messages, setMessages] = useState<any>([]);
@@ -38,13 +39,15 @@ const ChatScreen = ({ navigation, route }: any) => {
     return unsubscribe;
   }, []);
 
-  const onSend = useCallback((messages = []) => {
+  const onSend = useCallback(async (messages = []) => {
     setMessages((previousMessages:any) =>
       GiftedChat.append(previousMessages, messages)
     );
     const { _id, createdAt, text, user } = messages[0];
     let table = userData.user?.profile === "cliente" ? userData.user?.table : route.params?.table;
-
+    if(userData.user?.profile === "cliente"){
+      await sendPushNotification({title:"Consulta", description:"Tenés un nuevo mensaje de un cliente", profile:"waiter"})
+    }
     addDoc(collection(db, "chatMesa" + table), {
       _id,
       createdAt,
