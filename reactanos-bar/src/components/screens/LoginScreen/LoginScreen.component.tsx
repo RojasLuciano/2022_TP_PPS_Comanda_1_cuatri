@@ -24,11 +24,11 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
         setValue("password", data.password);
     }
 
-    useEffect(() => {
-        setValue("email", "admin@reactanosbar.com");
-        setValue("password", "123456");
-        handleSignIn();
-    }, [])
+    // useEffect(() => {
+    //     setValue("email", "admin@reactanosbar.com");
+    //     setValue("password", "123456");
+    //     handleSignIn();
+    // }, [])
 
 	const handleSignIn = () => {
         try {

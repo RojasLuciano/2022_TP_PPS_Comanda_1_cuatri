@@ -78,7 +78,7 @@ const AddEmployeeScreen = () => {
         }
         dispatch(fetchLoadingStart());
         try {
-            await createUserWithEmailAndPassword(auth, values.email, values.email);
+            await createUserWithEmailAndPassword(auth, values.email, values.password);
 
             if (image !== "") {
                 const blob: any = await getBlob(image);

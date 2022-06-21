@@ -54,7 +54,7 @@ const DrawerStack = () => {
   } 
   if (userData.user.profile === "admin") {
     return (
-      <Drawer.Navigator initialRouteName={Screens.GRAPHIC_SCREEN} drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Navigator initialRouteName={Screens.CLIENT_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.GRAPHIC_SCREEN} component={GraphicScreen} />
         <Drawer.Screen name={Screens.ADD_PRODUCTS} component={AddProductStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.ADD_ADMINS} component={AddAdminsScreen} />
