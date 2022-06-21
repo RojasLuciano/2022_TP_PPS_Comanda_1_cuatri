@@ -11,7 +11,13 @@ import DrawerStack from "./navigation/Drawer";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { notificationsConfiguration } from "./utils/pushNotifications";
+
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 import { Audio } from "expo-av";
+
 
 const audioPlayer = new Audio.Sound();
 const app = initializeApp(firebaseConfig);

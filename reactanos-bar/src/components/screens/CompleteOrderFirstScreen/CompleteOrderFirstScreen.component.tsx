@@ -65,7 +65,7 @@ const CompleteOrderFirstScreen = ({ navigation }: any) => {
     const goToOrder = async (order:any) => {
         navigation.navigate(Screens.PENDING_ORDER,{order});
     };
-
+ 
 
     return (
         <StyledView colors={["#6190E8", "#A7BFE8"]}>
