@@ -5,17 +5,29 @@ import ControlledInput from "../../molecules/ControlledInput/ControlledInput.com
 import { Control } from "react-hook-form";
 import ControlledCurrency from "../../molecules/ControlledCurrency/ControlledCurrency.component";
 import { View } from "react-native";
+import Select from "../../molecules/Select/Select.component";
 
 interface AddProductsControllerProps{
   control: Control<any,any>
   onPress:()=>void;
+  onChangeProfile: (value:string)=>void;
 }
 
-const AddProductsController:FC<AddProductsControllerProps> = ({onPress, control}) => {
+const AddProductsController:FC<AddProductsControllerProps> = ({onPress, control,onChangeProfile}) => {
     const descInput:MutableRefObject<any> = useRef();
     const timeInput:MutableRefObject<any> = useRef();
     const priceInput:MutableRefObject<any>= useRef();
-    const sectorInput:MutableRefObject<any>= useRef();
+    const [profile, setProfile] = useState("");
+
+    const handleSelectProfile = (value:string) => {
+        setProfile(value);
+        onChangeProfile(value);
+    }
+
+    const data = [
+        {label:"Cocina", value:"cook"},
+        {label:"Bar", value:"waiter"},
+    ]
 
     return (
         <StyledView>
@@ -33,7 +45,7 @@ const AddProductsController:FC<AddProductsControllerProps> = ({onPress, control}
                     <ControlledCurrency ref={priceInput} placeholder="Precio" control={control} name="price" />
                 </StyledMargin>
                 <StyledMargin>
-                <ControlledInput ref={sectorInput} onSubmitEditing={()=>sectorInput.current.focus()} placeholder="Sector" variant="rounded" control={control} name="sector" />
+                    <Select value={profile} onChange={handleSelectProfile} placeholder="Seleccione el sector" data={data} />
                 </StyledMargin>
             </View>
             <Button onPress={onPress}>Agregar</Button>

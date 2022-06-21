@@ -26,6 +26,7 @@ import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderRedu
 import { handleLogin } from '../../../redux/authReducer';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LoginStackParamList } from '../../../navigation/stacks/LoginStack';
+import { sendPushNotification } from '../../../utils/pushNotifications';
 
 type NewClient = {
   lastName: string;
@@ -162,6 +163,7 @@ const AddClientScreen = () => {
         message: "Exito",
         description: "Usuario creado exitosamente",
       });
+      await sendPushNotification({title:"Registro", description:"Se registró un nuevo cliente", profile:["supervisor","admin"]})
       reset();
       setValue("lastName", "")
       setValue("name", "")

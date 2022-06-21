@@ -26,6 +26,7 @@ import { errorHandler } from "../../../utils/ErrorsHandler";
 import { RefreshControl, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { sleep } from "../../../utils/utils";
+import { sendPushNotification } from "../../../utils/pushNotifications";
 
 const ClientHomeScreen = ({ navigation }: any) => {
     const data: AuthTypes = useSelector<IStore, any>((store) => store.auth);
@@ -63,6 +64,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 message: "Exito",
                 description: "Ahora estás pendiente de ingresar al local",
             });
+            await sendPushNotification({title:"Lista de espera", description:"Hay un cliente nuevo en la lista de espera", profile:"waiter"})
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen signToRestaurant", error);

@@ -34,6 +34,7 @@ const AddProductsScreen = ({navigation}:any) => {
     const {control, getValues, reset} = useForm<ProductData>();
     const data:AuthTypes = useSelector<IStore, any>(store=>store.auth);
     const dispatch = useDispatch();
+    const [profile, setProfile] = useState("");
 
     useFocusEffect(
         useCallback(() => {
@@ -50,12 +51,13 @@ const AddProductsScreen = ({navigation}:any) => {
                 user: data.user.email,
                 creationDate: new Date(),
                 images:imagesRef,
+                profile,
                 ...values
             });
             navigation.navigate(Screens.QRCode, {
                 title: "Producto creado exitosamente",
                 subtitle:
-                    "El producto ya está cargado en nuestras bases de datos, de todas formas asegurate de guardar el código QR que te brindamos",
+                    "Asegurate de guardar el código QR que te brindamos",
                 code: JSON.stringify({productCode:docRef.path}),
             });
             successHandler('product-created');
@@ -104,7 +106,7 @@ const AddProductsScreen = ({navigation}:any) => {
                 {images.length<1 ? 
                     <ImageButton source={require('../../../../assets/add-photo.png')} onPress={handleCamera} /> :
                     <Carousel images={images} />}
-                <AddProductsController onPress={uploadProduct} control={control} />
+                <AddProductsController onChangeProfile={setProfile} onPress={uploadProduct} control={control} />
             </StyledView>
         </StyledLinearGradient>
     );
