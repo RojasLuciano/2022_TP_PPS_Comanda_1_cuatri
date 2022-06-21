@@ -5,20 +5,18 @@ import {
     StyledView,
 } from "./GraphicScreen.styled";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthTypes } from "../../../redux/authReducer";
+import { AuthTypes, refreshUserData } from "../../../redux/authReducer";
 import { IStore } from "../../../redux/store";
 import { StyledParagraph } from "../../atoms/Paragraph/Paragraph.styled";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../../../InitApp";
 import {
     BarChart,
     PieChart,
     ProgressChart,
 } from "react-native-chart-kit";
-import Button from "../../atoms/Button/Button.component";
-import { useFocusEffect } from "@react-navigation/native";
 import { fetchLoadingFinish, fetchLoadingStart } from "../../../redux/loaderReducer";
-import { sleep } from "../../../utils/utils";
+import { useFocusEffect } from "@react-navigation/native";
 
 const GraphicScreen = ({ navigation }: any) => {
 
@@ -27,7 +25,6 @@ const GraphicScreen = ({ navigation }: any) => {
     const fill = 'rgb(134, 65, 244)'
 
     // Obtains data from database
-    const [pollsCalification, setPollsCalifications] = useState<any>([]);
     const [promedio, setPromedio] = React.useState(0); 
 
     // que te ha parecido la atencion
@@ -50,68 +47,63 @@ const GraphicScreen = ({ navigation }: any) => {
     let promedioDeEncuestas = 0;
 
     useFocusEffect(
-        useCallback(() => {
-            getPollsCalifications();
-            getDataForGraph();
+        useCallback(() => {            
+            onRefresh();
+            getPollsCalifications().then(() => {;
+            }).catch(error => {console.log(error)})
         }, [])
     );
 
-
+    const onRefresh = () => {
+        dispatch(refreshUserData());
+    };
+    
     const getPollsCalifications = async () => {
-        dispatch(fetchLoadingStart());
-        setPollsCalifications([]);
         try {
-            const q = query(collection(db, "polls"));
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach(async (doc) => {
-                const res: any = { ...doc.data(), id: doc.id };
-                setPollsCalifications((arr: any) => [...arr, { ...res, id: doc.id }]);
-            });
-            await sleep(1000);
+            resetData();
+            const querySnapshot = await (await getDocs(query(collection(db, "polls"), orderBy('creationDate', 'desc'), orderBy('PollTable', 'asc')))); 
+            querySnapshot.forEach(async (doc) => {  
+                dispatch(fetchLoadingStart());                
+                if (doc.data().PollTasteFood === "great") { 
+                    setgreatFood(prevCount => prevCount + 1);
+                }
+                if (doc.data().PollTasteFood === "good") {
+                    setgoodFood(prevCount => prevCount + 1);
+                }
+                if (doc.data().PollTasteFood === "bad") {
+                    setbadFood(prevCount => prevCount + 1);
+                }
+                if (doc.data().PollPrice === "dissatisfied") {
+                    setPriceDissatisfied(prevCount => prevCount + 1);
+                }
+                if (doc.data().PollPrice === "satisfied") {
+                    setPriceSatisfied(prevCount => prevCount + 1);
+                }
+                if (doc.data().PollPrice === "normal") {
+                    setPriceNormal(prevCount => prevCount + 1);
+                }
+                if (doc.data().PollsOpinion != 0){
+                    promedioDeEncuestas++;
+                }
+                if (doc.data().PollOther) {
+                    setother(prevCount => prevCount + 1);
+                }
+                if (doc.data().PollCash) {
+                    setcash(prevCount => prevCount + 1);
+                }
+                if (doc.data().PollCreditOrDebit) {
+                    setcreditOrDebit(prevCount => prevCount + 1);
+                }
+                setFood(prevCount => prevCount + doc.data().PollAttention);                
+            }); 
+            setPromedio(food / promedioDeEncuestas); 
         } catch (error) {
             console.log(error)
         } finally {
             dispatch(fetchLoadingFinish());
         }
-    };
-    
-    // Data filtered by user table
-    const getDataForGraph = async () => {
-        pollsCalification.filter((poll: { PollTable: string; }) => poll.PollTable === data.user.table).map((poll_: any) => {
-            if (poll_.PollTasteFood === "great") { 
-                setgreatFood(prevCount => prevCount + 1);
-            }
-            if (poll_.PollTasteFood === "good") {
-                setgoodFood(prevCount => prevCount + 1);
-            }
-            if (poll_.PollTasteFood === "bad") {
-                setbadFood(prevCount => prevCount + 1);
-            }
-            if (poll_.PollPrice === "dissatisfied") {
-                setPriceDissatisfied(prevCount => prevCount + 1);
-            }
-            if (poll_.PollPrice === "satisfied") {
-                setPriceSatisfied(prevCount => prevCount + 1);
-            }
-            if (poll_.PollPrice === "normal") {
-                setPriceNormal(prevCount => prevCount + 1);
-            }
-            if (poll_.PollTasteFood != 0)
-                promedioDeEncuestas++;
-
-            if (poll_.PollOther) {
-                setother(prevCount => prevCount + 1);
-            }
-            if (poll_.PollCash) {
-                setcash(prevCount => prevCount + 1);
-            }
-            if (poll_.PollCreditOrDebit) {
-                setcreditOrDebit(prevCount => prevCount + 1);
-            }
-            setFood(prevCount => prevCount + poll_.PollAttention);
-        })
-        setPromedio(food / promedioDeEncuestas); 
-    }
+    };    
+   
     const resetData = () => {
         setgreatFood(0);
         setgoodFood(0);
@@ -124,6 +116,7 @@ const GraphicScreen = ({ navigation }: any) => {
         setcash(0);
         setcreditOrDebit(0);
     }
+
     const AttentionPieChartData = [
         {
             name: "Muy Buena",
@@ -147,6 +140,7 @@ const GraphicScreen = ({ navigation }: any) => {
             legendFontSize: 15
         },
     ]
+
     const PriceBarChartData = {
         labels: ["Insatisfecho", "Satisfecho", "Normal"],
         datasets: [
@@ -260,8 +254,6 @@ const GraphicScreen = ({ navigation }: any) => {
                         Nuestro promedio de atencion es de un {(Math.round(promedio * 100) / 100).toFixed(1)} %
                     </StyledParagraph>
                 </StyledMargin>
-                <Button onPress={resetData}>reset</Button>
-
             </StyledView>
         </StyledLinearGradient>
     );

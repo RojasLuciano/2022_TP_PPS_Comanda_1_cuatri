@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LoginStackParamList } from '../../../navigation/stacks/LoginStack';
 import { Screens } from "../../../navigation/Screens";
 import { StyledView } from "./LoginScreen.styled";
@@ -23,6 +23,12 @@ const LoginScreen:FC<LoginScreenProps> = ({navigation}) => {
         setValue("email", data.email);
         setValue("password", data.password);
     }
+
+    useEffect(() => {
+        setValue("email", "admin@reactanosbar.com");
+        setValue("password", "123456");
+        handleSignIn();
+    }, [])
 
 	const handleSignIn = () => {
         try {
