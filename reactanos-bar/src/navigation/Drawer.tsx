@@ -21,7 +21,6 @@ import CompleteOrderStack from './stacks/CompleteOrderStack';
 import CollectMoneyScreen from '../components/screens/CollectTableMoneyScreen/CollectTableMoneyScreen.component';
 import ChatStack from './stacks/ChatStack';
 
-
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props: any) {
