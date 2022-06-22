@@ -218,7 +218,6 @@ const ClientHomeScreen = ({ navigation }: any) => {
             querySnapshot.forEach((doc) => {
                 const res: any = { ...doc.data() };
                 setOrderStatus(res.orderStatus);
-                console.log(doc.data());
             });
             await sleep(1000);
         } catch (error: any) {
@@ -289,12 +288,12 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     </MarginVertical>
                 )}
                 {!tableButtons &&
-                    (data.user.restoStatus === "Pendiente" ||
-                        (data.user.restoStatus === "Pedido aceptado" && (
+                    ((data.user.restoStatus === "Pendiente" || data.user.restoStatus === "Pedido terminado" ||
+                        data.user.restoStatus === "Pedido aceptado") && (
                             <CardButton onPress={goToQr}>
                                 Escanear QR de la mesa
                             </CardButton>
-                        )))}
+                        ))}
                 {tableButtons && (
                     <>
                         {orderStatus !== "Pagado" && orderStatus !== "Pago confirmado" && (
