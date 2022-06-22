@@ -41,6 +41,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
     );
 
     const onRefresh = () => {
+        handleOrderStatus();
         dispatch(refreshUserData());
     };
 
