@@ -65,7 +65,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 message: "Exito",
                 description: "Ahora estás pendiente de ingresar al local",
             });
-            await sendPushNotification({title:"Lista de espera", description:"Hay un cliente nuevo en la lista de espera", profile:"waiter"})
+            await sendPushNotification({title:"Lista de espera", description:"Hay un cliente nuevo en la lista de espera", profile:"meter"})
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen signToRestaurant", error);
