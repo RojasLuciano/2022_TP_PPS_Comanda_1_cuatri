@@ -93,8 +93,8 @@ const FinishTableScreen = ({navigation}:any) => {
 
     const formatAmount = (tip:any="") => {
         let totalBuffer = data?.products?.reduce((a:any,b:any)=> a+parseFloat(b.price.replace(/,/g, '.')),0)
-        if(data.discount){
-            totalBuffer=totalBuffer-(totalBuffer*(data.discount/100));
+        if(userData.user.discount){
+            totalBuffer=totalBuffer-(totalBuffer*(userData.user.discount/100));
         }
         if(tip){
             setTip(tip);
@@ -112,13 +112,13 @@ const FinishTableScreen = ({navigation}:any) => {
                         title={`${product.name}`}
                         description={product.description}
                         client={`Importe: ${currencyFormat(product.price)}`}
-                    />
+                    /> 
                 ))}
             </ScrollView>
             <StyledCard>
                 <StyledRow>
                     <Heading>Descuento aplicado:</Heading>
-                    <Heading level="L">{data.discount || '0'}%</Heading>
+                    <Heading level="L">{userData.user.discount || '0'}%</Heading>
                 </StyledRow>
                 <StyledRow>
                     <Heading>Propina:</Heading>

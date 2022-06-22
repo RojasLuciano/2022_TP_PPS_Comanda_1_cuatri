@@ -242,7 +242,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
         <StyledView colors={["#6190E8", "#A7BFE8"]}>
             <ScrollView
                 refreshControl={
-                    <RefreshControl refreshing={false} onRefresh={onRefresh} />
+                    <RefreshControl refreshing={false} onRefresh={handleOrderStatus} />
                 }
             >
                 <Heading bold level="L" color="white">
