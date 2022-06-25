@@ -49,23 +49,8 @@ const AddAdminsScreen = ({navigation}:any) => {
     const verifyCuil = (cuit : any) => {
         if (cuit.length !== 11) {
           return false;
-        }
-      
-        let acumulado = 0;
-        let digitos = cuit.split('');
-        let digito = parseInt(digitos.pop());
-      
-        for (let i = 0; i < digitos.length; i++) {
-          acumulado += digitos[9 - i] * (2 + (i % 6));
-        }
-      
-        let verif = 11 - (acumulado % 11);
-        if (verif === 11) {
-          verif = 0;
-        } else if (verif === 10) {
-          verif = 9;
-        }      
-        return digito === verif;
+        }  
+        return true;
       };      
       
     const data = [
@@ -170,7 +155,7 @@ const AddAdminsScreen = ({navigation}:any) => {
         }
     }
 
-    const handleCamera = async (type : any) => {
+    const handleCamera = async () => {
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [4, 3],
@@ -196,7 +181,7 @@ const AddAdminsScreen = ({navigation}:any) => {
                         alignContent: 'center',
                     }}>
                         {!image ?
-                            <ImageButton source={require('../../../../assets/add-camera.png')} onPress={()=>handleCamera} /> :
+                            <ImageButton source={require('../../../../assets/add-camera.png')} onPress={handleCamera} /> :
                             <Image style={{
                                 height: 185,
                                 width: 185,

@@ -11,4 +11,5 @@ export const StyledView = styled.View`
     shadow-offset: 4px 10px
     shadow-opacity:0.4;
     shadow-radius:10px;
+    marginTop:5%;
 `

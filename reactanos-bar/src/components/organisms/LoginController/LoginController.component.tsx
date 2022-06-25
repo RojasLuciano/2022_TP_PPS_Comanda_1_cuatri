@@ -1,17 +1,18 @@
 import React, { FC, MutableRefObject, useRef, useState } from "react";
 import InputGroup from "../../molecules/InputGroup/InputGroup.component";
 import Button from "../../atoms/Button/Button.component";
-import { StyledAccess, StyledSocials, StyledView } from "./LoginController.styled";
+import SocialButton from "../../atoms/SocialButton/SocialButton.component";
+import { StyledSocials, StyledView } from "./LoginController.styled";
 import { Control } from "react-hook-form";
 import ControlledInput from "../../molecules/ControlledInput/ControlledInput.component";
 import ControlledPassword from "../../molecules/ControlledPassword/ControlledPassword.component";
 import { MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity, Text, Linking } from "react-native";
+import { TouchableOpacity, Text, Linking, View, Image, FlatList } from "react-native";
 import { Screens } from "../../../navigation/Screens";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { LoginStackParamList } from "../../../navigation/stacks/LoginStack";
-import SocialButton from "../../atoms/SocialButton/SocialButton.component";
+import { imageHandler } from "./LoginController.handle"
 
 interface LoginControllerProps {
     control: Control<any, any>;
@@ -23,6 +24,61 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
     const passInput: MutableRefObject<any> = useRef();
     const [show, setShow] = useState(false);
     const navigation = useNavigation<NativeStackNavigationProp<LoginStackParamList>>()
+
+    const emailConstructor = (email: string) => {
+        return email.toLocaleLowerCase() + "@reactanosbar.com"
+    }
+
+    const LOGIN_NAMES = [
+        {
+            id: 1,
+            name: 'administrador',
+        },
+        {
+            id: 2,
+            name: 'supervisor',
+        },
+        {
+            id: 3,
+            name: 'cocinero',
+        },
+        {
+            id: 4,
+            name: 'mozo',
+        },
+        {
+            id: 5,
+            name: 'metre',
+        },
+        {
+            id: 6,
+            name: 'cliente',
+        }
+    ];
+
+    const ItemRender = ({ name }: any) => (
+        <TouchableOpacity
+            onPress={() => fastSignIn({ email: emailConstructor(name), password: "123456" })}
+        >
+            <Image
+                source={imageHandler(name)}
+                resizeMode="center"
+                style={{ height: 90, width: 90, marginTop: 15 }}
+            />
+        </TouchableOpacity>
+    );
+
+    const Separator = () => {
+        return (
+            <View
+                style={{
+                    height: 1,
+                    width: 1,
+                    backgroundColor: "white",                    
+                }}
+            />
+        );
+    }
 
     const handlerSignUp = () => {
         navigation.navigate(Screens.SIGNUP);
@@ -37,6 +93,16 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
 
     return (
         <StyledView>
+            <StyledSocials>
+                <SocialButton
+                    source={require("../../../../assets/ig.png")}
+                    onPress={handleInstagram}
+                />
+                <SocialButton
+                    source={require("../../../../assets/fb.png")}
+                    onPress={handleFacebook}
+                />
+            </StyledSocials>
             <InputGroup>
                 <ControlledInput
                     icon={<MaterialIcons name="person" />}
@@ -67,37 +133,12 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
             >
                 <Text>Si no tenés cuenta, ¡Registrate acá!</Text>
             </TouchableOpacity>
-            <StyledAccess>
-                <Button
-                    onPress={() => fastSignIn({ email: "cliente@gmail.com", password: "123456" })}
-                    size='M'
-                >
-                    <Text>Cliente</Text>
-                </Button>
-                <Button
-                    onPress={() => fastSignIn({ email: "admin@reactanosbar.com", password: "123456" })}
-                    size='M'
-                    marginH="M"
-                >
-                    <Text>Admin</Text>
-                </Button>
-                <Button
-                    onPress={() => fastSignIn({ email: "metre@reactanos.com", password: "123456" })}
-                    size='M'
-                >
-                    <Text>Empleado</Text>
-                </Button>
-            </StyledAccess>
-            <StyledSocials>
-                <SocialButton
-                    source={require("../../../../assets/ig.png")}
-                    onPress={handleInstagram}
-                />
-                <SocialButton
-                    source={require("../../../../assets/fb.png")}
-                    onPress={handleFacebook}
-                />
-            </StyledSocials>
+            <FlatList
+                data={LOGIN_NAMES}
+                renderItem={({ item }) => <ItemRender name={item.name} />}
+                ItemSeparatorComponent={Separator}
+                horizontal={true}
+            />
         </StyledView>
     );
 };

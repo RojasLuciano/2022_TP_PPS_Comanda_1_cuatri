@@ -73,6 +73,8 @@ const DrawerStack = () => {
       <Drawer.Navigator initialRouteName={Screens.GRAPHIC_SCREEN} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.ADD_EMPLOYEE} component={AddEmployeeScreen} />
         <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />
+        <Drawer.Screen name={Screens.ADD_ADMINS} component={AddAdminsScreen} />
+
         <Drawer.Screen name={Screens.ADD_PRODUCTS} component={AddProductStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.GRAPHIC_SCREEN} component={GraphicScreen} />
         <Drawer.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListStack} options={{ headerShown: false }} />
