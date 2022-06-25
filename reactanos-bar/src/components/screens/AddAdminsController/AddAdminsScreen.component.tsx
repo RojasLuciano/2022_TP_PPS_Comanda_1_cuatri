@@ -22,9 +22,11 @@ import { getBlob } from '../../../utils/utils';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useFocusEffect } from '@react-navigation/native';
 import Select from '../../molecules/Select/Select.component';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
 import { successHandler } from '../../../utils/SuccessHandler';
+import { ConfigurationTypes } from '../../../redux/configurationReducer';
+import { IStore } from '../../../redux/store';
 
 type NewUser = {
     lastName: string;
@@ -45,6 +47,7 @@ const AddAdminsScreen = ({navigation}:any) => {
     const [show, setShow] = useState(false);
     const passInput: MutableRefObject<any> = useRef();
     const [type, setType] = useState("");
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
     const dispatch = useDispatch();
 
     const verifyCuil = (cuit : any) => {
@@ -125,7 +128,7 @@ const AddAdminsScreen = ({navigation}:any) => {
             return;
         }
         if (values.password !== values.passwordRepeat) {
-            errorHandler('pass-diff');
+            errorHandler('pass-diff', configuration.vibration);
             return;
         }
         dispatch(fetchLoadingStart());
@@ -161,7 +164,7 @@ const AddAdminsScreen = ({navigation}:any) => {
             setType("");
             setImage("");
         } catch (error: any) {
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
         } finally {
             dispatch(fetchLoadingFinish());
         }

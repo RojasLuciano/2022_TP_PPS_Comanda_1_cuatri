@@ -12,7 +12,7 @@ import {
 import { db } from "../../../InitApp";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import { currencyFormat, sleep } from "../../../utils/utils";
 import {
     fetchLoadingFinish,
@@ -25,12 +25,15 @@ import { RefreshControl } from "react-native";
 import OrderDetails from "../../organisms/OrderDetails/OrderDetails.component";
 import { sendPushNotification } from "../../../utils/pushNotifications";
 import { successHandler } from "../../../utils/SuccessHandler";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
+import { IStore } from "../../../redux/store";
 
 //Esta pantalla es listar pedidos.
 
 const WaitingOrderListScreen = ({ navigation }: any) => {
     const [data, setData] = useState<any[]>([]);
     const dispatch = useDispatch();
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -82,7 +85,7 @@ const WaitingOrderListScreen = ({ navigation }: any) => {
             await getDocuments();
         } catch (error: any) {
             console.log("WaitingOrderListScreen handleAccept ",error);
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
         } finally {
             dispatch(fetchLoadingFinish());
         }

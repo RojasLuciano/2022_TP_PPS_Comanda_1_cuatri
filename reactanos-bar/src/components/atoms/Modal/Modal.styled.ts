@@ -3,7 +3,6 @@ import styled from "styled-components/native";
 export const StyledView = styled.View`
     background-color:white; 
     width:300px;
-    align-items:center; 
     justify-content:space-between;
     border-radius:20px;
     padding-horizontal:30px;
@@ -13,6 +12,14 @@ export const StyledView = styled.View`
 export const StyledFullWidth = styled.View`
     width:100%;
     padding-vertical:10px;
+`
+
+export const StyledRow = styled.View`
+    width:100%;
+    padding-vertical:5px;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
 `
 
 export const StyledModalView = styled.View`

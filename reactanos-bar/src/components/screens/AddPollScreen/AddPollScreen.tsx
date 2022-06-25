@@ -26,6 +26,7 @@ import Select from "../../molecules/Select/Select.component";
 import { Box, Slider, Checkbox, Radio } from "native-base";
 import { Screens } from "../../../navigation/Screens";
 import Heading from "../../atoms/Heading/Heading.component";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
 
 interface PollData {
     name: string;
@@ -47,6 +48,7 @@ const AddPollScreen = ({ navigation }: any) => {
     const [cash, setcash] = useState(false);
     const [other, setother] = useState(false);
     const [userAlreadyFilledPoll, setUserAlreadyFilledPoll] = useState(false);
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     const dataAttention = [
         { label: "Muy buena", value: "great" },
@@ -103,7 +105,7 @@ const AddPollScreen = ({ navigation }: any) => {
             OtherReset();
         } catch (e: any) {
             console.log(e);
-            errorHandler(e.code);
+            errorHandler(e.code, configuration.vibration);
         } finally {
             dispatch(fetchLoadingFinish());
         }

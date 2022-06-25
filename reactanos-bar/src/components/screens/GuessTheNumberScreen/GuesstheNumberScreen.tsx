@@ -17,6 +17,7 @@ import Heading from "../../atoms/Heading/Heading.component";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../InitApp";
 import { Screens } from "../../../navigation/Screens";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
 
 const GuessTheNumberScreen = ({ navigation }: any) => {
     const data: AuthTypes = useSelector<IStore, any>(store => store.auth);
@@ -28,6 +29,7 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
     const [noLifesMessage, setNoLifesMessage] = useState('');
     const discount = [15, 10, 20];
     const random = Math.floor(Math.random() * discount.length);  
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -71,7 +73,7 @@ const GuessTheNumberScreen = ({ navigation }: any) => {
             }
         } catch (error: any) {
             console.log("GuessTheNumberScreen checkGuessHandler ", error);
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
         } finally {
             dispatch(fetchLoadingFinish());
         }
