@@ -6,7 +6,11 @@ import Heading from "../../atoms/Heading/Heading.component";
 import { Screens } from "../../../navigation/Screens";
 import { IStore } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthTypes, handleLogout, refreshUserData } from "../../../redux/authReducer";
+import {
+    AuthTypes,
+    handleLogout,
+    refreshUserData,
+} from "../../../redux/authReducer";
 import {
     fetchLoadingFinish,
     fetchLoadingStart,
@@ -22,13 +26,13 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../InitApp";
 import { showMessage } from "react-native-flash-message";
-import { errorHandler } from '../../../utils/ErrorsHandler';
+import { errorHandler } from "../../../utils/ErrorsHandler";
 import { RefreshControl, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { sleep } from "../../../utils/utils";
 import { sendPushNotification } from "../../../utils/pushNotifications";
-import { successHandler } from '../../../utils/SuccessHandler';
-import Modal from '../../atoms/Modal/Modal.component';
+import { successHandler } from "../../../utils/SuccessHandler";
+import Modal from "../../atoms/Modal/Modal.component";
 import { ConfigurationTypes } from "../../../redux/configurationReducer";
 
 const ClientHomeScreen = ({ navigation }: any) => {
@@ -37,14 +41,16 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const [tableButtons, setTableButtons] = useState(false);
     const [orderStatus, setOrderStatus] = useState("");
     const [orderId, setOrderId] = useState("");
-    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
+    const configuration: ConfigurationTypes = useSelector<IStore, any>(
+        (store) => store.configuration
+    );
 
     useFocusEffect(
         useCallback(() => {
             onRefresh();
         }, [])
     );
-        
+
     const onRefresh = () => {
         handleOrderStatus();
         dispatch(refreshUserData());
@@ -65,9 +71,13 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 restoStatus: "Pendiente",
                 modifiedDate: new Date(),
             });
-            await sendPushNotification({title:"Lista de espera", description:"Hay un cliente nuevo en la lista de espera", profile:"meter"})
+            await sendPushNotification({
+                title: "Lista de espera",
+                description: "Hay un cliente nuevo en la lista de espera",
+                profile: "meter",
+            });
             await sleep(1000);
-            successHandler('waiting-list');
+            successHandler("waiting-list");
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen signToRestaurant", error);
@@ -94,7 +104,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 restoStatus: "Sentado",
                 modifiedDate: new Date(),
             });
-            successHandler("sit-on-table")
+            successHandler("sit-on-table");
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen sitOnTable", error);
@@ -175,18 +185,18 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const finishOrder = async () => {
         dispatch(fetchLoadingStart());
         try {
-            setOrderStatus("")
+            setOrderStatus("");
             const orderCollection = collection(db, "orders");
             const orderRef = doc(orderCollection, orderId);
             await updateDoc(orderRef, { orderStatus: "Terminado" });
             await sleep(1000);
             onRefresh();
         } catch (error) {
-            errorHandler('', configuration.vibration)
-        } finally{
+            errorHandler("", configuration.vibration);
+        } finally {
             dispatch(fetchLoadingFinish());
         }
-    }
+    };
 
     const goToQr = () => {
         navigation.navigate(Screens.QR_SCANNER, {
@@ -236,8 +246,8 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 const res: any = { ...doc.data() };
                 setOrderStatus(res.orderStatus);
                 setOrderId(doc.id);
-                if(res.orderStatus==='Cobrado'){
-                    setTableButtons(false)
+                if (res.orderStatus === "Cobrado") {
+                    setTableButtons(false);
                 }
             });
             await sleep(1000);
@@ -265,7 +275,13 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     <RefreshControl refreshing={false} onRefresh={onRefresh} />
                 }
             >
-                <Modal isVisible={orderStatus==='Cobrado'} title="¡Gracias por visitarnos!" onPrimary={finishOrder} subtitle="Esperamos que nuestros servicios hayan sido de tu agrado"  onPrimaryText="Cerrar sesión"></Modal>
+                <Modal
+                    isVisible={orderStatus === "Cobrado"}
+                    title="¡Gracias por visitarnos!"
+                    onPrimary={finishOrder}
+                    subtitle="Esperamos que nuestros servicios hayan sido de tu agrado"
+                    onPrimaryText="Cerrar sesión"
+                ></Modal>
                 <Heading bold level="L" color="white">
                     ¡Bienvenido a nuestro local!
                 </Heading>
@@ -285,13 +301,13 @@ const ClientHomeScreen = ({ navigation }: any) => {
                         Ver encuestas antigüas
                     </CardButton>
                 </MarginVertical>
-                    {orderStatus === "Pagado" && (
-                        <MarginVertical>
-                            <CardButton disabled>
-                                Esperá a que confirmen el pago
-                            </CardButton>
-                        </MarginVertical>
-                    )}
+                {orderStatus === "Pagado" && (
+                    <MarginVertical>
+                        <CardButton disabled>
+                            Esperá a que confirmen el pago
+                        </CardButton>
+                    </MarginVertical>
+                )}
                 {!tableButtons && (
                     <MarginVertical>
                         {!data.user.restoStatus && (
@@ -317,26 +333,36 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     </MarginVertical>
                 )}
                 {!tableButtons &&
-                    ((orderStatus === 'Pendiente' || data.user.restoStatus === "Pedido terminado" ||
+                    (orderStatus === "Pendiente" ||
+                        data.user.restoStatus === "Pedido terminado" ||
                         data.user.restoStatus === "Pedido aceptado") && (
-                            <CardButton onPress={goToQr}>
-                                Escanear QR de la mesa
-                            </CardButton>
-                        ))}
+                        <CardButton onPress={goToQr}>
+                            Escanear QR de la mesa
+                        </CardButton>
+                    )}
                 {tableButtons && (
                     <>
                         {orderStatus !== "Pagado" && orderStatus !== "Cobrado" && (
                             <>
-                                {!data.user.pollfilled && orderStatus == 'Pedido terminado' && <MarginVertical>
-                                    <CardButton onPress={goToPoll}>
-                                        Realizar encuesta
-                                    </CardButton>
-                                </MarginVertical>}
-                                    {!data.user.discount &&<CardButton onPress={goToGames}>
+                                {!data.user.pollfilled &&
+                                    orderStatus == "Pedido terminado" && (
+                                        <MarginVertical>
+                                            <CardButton onPress={goToPoll}>
+                                                Realizar encuesta
+                                            </CardButton>
+                                        </MarginVertical>
+                                    )}
+                                {!data.user.discount && (
+                                    <CardButton onPress={goToGames}>
                                         Ir a los juegos
-                                    </CardButton>}
+                                    </CardButton>
+                                )}
                                 <MarginVertical>
-                                    <CardButton onPress={()=>navigation.navigate(Screens.CHAT)}>
+                                    <CardButton
+                                        onPress={() =>
+                                            navigation.navigate(Screens.CHAT)
+                                        }
+                                    >
                                         Hacer una consulta
                                     </CardButton>
                                 </MarginVertical>
@@ -347,13 +373,19 @@ const ClientHomeScreen = ({ navigation }: any) => {
                                 </MarginVertical>
                             </>
                         )}
-                            {orderStatus === "Pedido terminado" && (
-                                <MarginVertical>
-                                    <CardButton onPress={goToFinishTable}>
-                                        Pedir la cuenta
-                                    </CardButton>
-                                </MarginVertical>
-                            )}
+                        {orderStatus === "Pedido terminado" ? (
+                            <MarginVertical>
+                                <CardButton onPress={goToFinishTable}>
+                                    Pedir la cuenta
+                                </CardButton>
+                            </MarginVertical>
+                        ) : (
+                            <MarginVertical>
+                                <CardButton onPress={getOrderStatus}>
+                                    Estado del pedido
+                                </CardButton>
+                            </MarginVertical>
+                        )}
                     </>
                 )}
             </ScrollView>

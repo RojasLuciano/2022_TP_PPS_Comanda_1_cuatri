@@ -25,10 +25,6 @@ const ListChatEmployeeScreen = ({ navigation }: any) => {
         }, [])
     );
 
-    const onRefresh = () => {
-        getDocuments();
-    }
-
     const handleChat = (table: any) => {
         navigation.navigate(Screens.CHAT, { table });
     };
@@ -66,7 +62,7 @@ const ListChatEmployeeScreen = ({ navigation }: any) => {
     return (
         <StyledLinearGradient colors={["#6190E8", "#A7BFE8"]}>
             <StyledView style={{ width: "100%" }} refreshControl={
-                    <RefreshControl refreshing={false} onRefresh={onRefresh} />
+                    <RefreshControl refreshing={false} onRefresh={getDocuments} />
                 }>
                 {data.map((item: any) => (
                     <Button
