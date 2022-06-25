@@ -61,11 +61,8 @@ O- Generar reservas agendadas: Alan / Ezequiel / Luciano
 ### Asignacion de mesa desde metre
 <img src="./reactanos-bar/docs/captures/AsignaciondeMesa.gif" width="245"/>
 
-Vista desde metre, error al asignar merror.
+### Vista desde metre, error al asignar mesa
 <img src="./reactanos-bar/docs/captures/QRMesaOcupada.png" width="245"/>
-
-
-
 
 ### Lecture QR Cliente/Invitado.
 <img src="./reactanos-bar/docs/captures/QRDeMesaIncorrecto.png" width="245"/> 
