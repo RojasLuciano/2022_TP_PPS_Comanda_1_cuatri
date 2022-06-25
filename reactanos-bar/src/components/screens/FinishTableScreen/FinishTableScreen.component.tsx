@@ -28,6 +28,8 @@ import { useForm } from "react-hook-form";
 import MaskInput, { createNumberMask } from "react-native-mask-input";
 import { Input } from "native-base";
 import { ConfigurationTypes } from "../../../redux/configurationReducer";
+import { Screens } from "../../../navigation/Screens";
+import { showMessage } from "react-native-flash-message";
 
 const FinishTableScreen = ({navigation}:any) => {
     const dispatch = useDispatch();
@@ -42,6 +44,7 @@ const FinishTableScreen = ({navigation}:any) => {
 
     useFocusEffect(
         useCallback(() => {
+            formatAmount()
             getDocuments();
         }, [])
     );
@@ -84,7 +87,7 @@ const FinishTableScreen = ({navigation}:any) => {
             const ref = doc(db, "orders", data.id);
             await updateDoc(ref, {orderStatus:"Pagado", tip})
             navigation.goBack();
-            successHandler('order-created')
+            successHandler('order-paid')
         } catch (error) {
             console.log("FinishTableScreen registerOrder ",error);
             errorHandler('order-error', configuration.vibration)
@@ -93,13 +96,31 @@ const FinishTableScreen = ({navigation}:any) => {
         }
     }
 
-    const formatAmount = (tip:any="") => {
+    const goBackFinish = (code:string) =>{
+        try {
+            if(isNaN(parseInt(code))){
+                throw ({code: 'invalid-qr'})
+            }
+            setTip(code);
+        } catch (error:any) {
+            errorHandler(error.code, configuration.vibration);
+        }
+    }
+
+    const handleTip = () => {
+        navigation.navigate(Screens.QR_SCANNER,
+            {
+                goBack: goBackFinish,
+            }
+        );
+    }
+
+    const formatAmount = () => {
         let totalBuffer = data?.products?.reduce((a:any,b:any)=> a+parseFloat(b.price.replace(/,/g, '.')),0)
         if(userData.user.discount){
             totalBuffer=totalBuffer-(totalBuffer*(userData.user.discount/100));
         }
         if(tip){
-            setTip(tip);
             totalBuffer+=parseInt(tip)
         }
         setTotal(totalBuffer);
@@ -124,13 +145,17 @@ const FinishTableScreen = ({navigation}:any) => {
                 </StyledRow>
                 <StyledRow>
                     <Heading>Propina:</Heading>
-                    <MaskInput placeholderTextColor="gray"
+                        {!tip ? <View style={{width:50}}><Button size="M" onPress={handleTip} variant="secondary">+</Button></View>:
+                            <Heading onPress={handleTip} level="L">{currencyFormat(tip.toString())}</Heading>
+                        }
+                    
+                    {/* <MaskInput placeholderTextColor="gray"
                         value={tip} placeholder="$ 0" keyboardType="number-pad"
                         onChangeText={(masked, unmasked) => {
                             formatAmount(unmasked);
                         }}
                         mask={mask}
-                    />
+                    /> */}
                 </StyledRow>
                 <Divider />
                 <StyledRow>

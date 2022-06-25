@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { uploadImages, validateInputs } from "../../../utils/utils";
 import { errorHandler } from "../../../utils/ErrorsHandler";
 import { db } from "../../../InitApp";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 import { AuthTypes } from "../../../redux/authReducer";
 import { IStore } from "../../../redux/store";
@@ -101,6 +101,11 @@ const AddPollScreen = ({ navigation }: any) => {
                 creationDate: new Date(),
                 images: imagesRef,
                 ...values,
+            });
+            const userCollection = collection(db, "users");
+            const userRef = doc(userCollection, data.user.id);
+            await updateDoc(userRef, {
+                pollfilled:true
             });
             successHandler("poll-created");
             navigation.navigate(Screens.CLIENT_HOME, {

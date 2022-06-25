@@ -36,8 +36,8 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const dispatch = useDispatch();
     const [tableButtons, setTableButtons] = useState(false);
     const [orderStatus, setOrderStatus] = useState("");
-    const [discount, setDiscount] = useState("");
     const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
+    const [finished, setFinished] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -162,7 +162,12 @@ const ClientHomeScreen = ({ navigation }: any) => {
             if (code !== data.user.table) {
                 throw { code: "table-doesnt-match" };
             }
-            navigation.navigate(Screens.FINISH_TABLE);
+            navigation.navigate(Screens.FINISH_TABLE, {
+                screen: Screens.FINISH_TABLE,
+                params: {
+                    goBack: () => setFinished(true)
+                },
+            });
         } catch (error: any) {
             console.log("ClientHomeScreen goBackQr ", error);
             errorHandler(error.code, configuration.vibration);
@@ -216,9 +221,6 @@ const ClientHomeScreen = ({ navigation }: any) => {
             querySnapshot.forEach((doc) => {
                 const res: any = { ...doc.data() };
                 setOrderStatus(res.orderStatus);
-                if(res.discount){
-                    setDiscount(res.discount);
-                }
             });
             await sleep(1000);
         } catch (error: any) {
@@ -245,7 +247,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     <RefreshControl refreshing={false} onRefresh={onRefresh} />
                 }
             >
-                <Modal isVisible={orderStatus==='Cobrado'} title="¡Gracias por visitarnos!" onPrimary={()=>dispatch(handleLogout())} subtitle="Esperamos verte pronto nuevamente"  onPrimaryText="Cerrar sesión"></Modal>
+                <Modal isVisible={orderStatus==='Cobrado' && finished} title="¡Gracias por visitarnos!" onPrimary={()=>setFinished(false)} subtitle="Esperamos verte pronto nuevamente"  onPrimaryText="Cerrar sesión"></Modal>
                 <Heading bold level="L" color="white">
                     ¡Bienvenido a nuestro local!
                 </Heading>
@@ -260,9 +262,11 @@ const ClientHomeScreen = ({ navigation }: any) => {
                         Estamos a su disposición ante cualquier consulta
                     </Paragraph>
                 </MarginVertical>
+                <MarginVertical>
                     <CardButton onPress={goToOlderPolls}>
                         Ver encuestas antigüas
                     </CardButton>
+                </MarginVertical>
                     {orderStatus === "Pagado" && (
                         <MarginVertical>
                             <CardButton disabled>
@@ -305,12 +309,12 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     <>
                         {orderStatus !== "Pagado" && orderStatus !== "Cobrado" && (
                             <>
-                                <MarginVertical>
+                                {!data.user.pollfilled && orderStatus == 'Pedido terminado' && <MarginVertical>
                                     <CardButton onPress={goToPoll}>
                                         Realizar encuesta
                                     </CardButton>
-                                </MarginVertical>
-                                    {!discount &&<CardButton onPress={goToGames}>
+                                </MarginVertical>}
+                                    {!data.user.discount &&<CardButton onPress={goToGames}>
                                         Ir a los juegos
                                     </CardButton>}
                                 <MarginVertical>
@@ -318,9 +322,11 @@ const ClientHomeScreen = ({ navigation }: any) => {
                                         Hacer una consulta
                                     </CardButton>
                                 </MarginVertical>
-                                <CardButton onPress={getOrderStatus}>
-                                    Estado del pedido
-                                </CardButton>
+                                <MarginVertical>
+                                    <CardButton onPress={getOrderStatus}>
+                                        Estado del pedido
+                                    </CardButton>
+                                </MarginVertical>
                             </>
                         )}
                             {orderStatus === "Pedido terminado" && (
