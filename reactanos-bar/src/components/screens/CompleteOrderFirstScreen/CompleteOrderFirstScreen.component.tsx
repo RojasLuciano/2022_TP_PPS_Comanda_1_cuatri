@@ -19,8 +19,6 @@ import {
     fetchLoadingStart,
 } from "../../../redux/loaderReducer";
 import { StyledView } from "./CompleteOrderFirstScreen.styled";
-import { errorHandler } from "../../../utils/ErrorsHandler";
-import { showMessage } from "react-native-flash-message";
 import { RefreshControl } from "react-native";
 import OrderDetails from "../../organisms/OrderDetails/OrderDetails.component";
 import { Screens } from "../../../navigation/Screens";

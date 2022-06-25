@@ -20,10 +20,12 @@ import { showMessage } from 'react-native-flash-message';
 import * as ImagePicker from "expo-image-picker";
 import { getBlob } from '../../../utils/utils';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
 import Select from '../../molecules/Select/Select.component';
 import { successHandler } from '../../../utils/SuccessHandler';
+import { ConfigurationTypes } from '../../../redux/configurationReducer';
+import { IStore } from '../../../redux/store';
 
 type NewEmployee = {
     lastName: string;
@@ -45,6 +47,7 @@ const AddEmployeeScreen = () => {
     const passInput: MutableRefObject<any> = useRef();
     const dispatch = useDispatch();
     const [type, setType] = useState("");
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     const handleBarCodeScanned = ({ data }:any) => {
         setScanned(true);
@@ -74,7 +77,7 @@ const AddEmployeeScreen = () => {
             return;
         }
         if (values.password !== values.passwordRepeat) {
-            errorHandler('pass-diff');
+            errorHandler('pass-diff', configuration.vibration);
             return;
         }
         dispatch(fetchLoadingStart());
@@ -124,7 +127,7 @@ const AddEmployeeScreen = () => {
             setType("");
             setImage("");
         } catch (error: any) {
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
         } finally {
             dispatch(fetchLoadingFinish());
         }

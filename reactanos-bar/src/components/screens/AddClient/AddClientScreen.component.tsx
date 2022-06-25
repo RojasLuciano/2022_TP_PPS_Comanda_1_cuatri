@@ -28,6 +28,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LoginStackParamList } from '../../../navigation/stacks/LoginStack';
 import { sendPushNotification } from '../../../utils/pushNotifications';
 import { successHandler } from '../../../utils/SuccessHandler';
+import { ConfigurationTypes } from '../../../redux/configurationReducer';
+import { IStore } from '../../../redux/store';
 
 type NewClient = {
   lastName: string;
@@ -48,6 +50,7 @@ const AddClientScreen = () => {
   const passInput: MutableRefObject<any> = useRef();
   const userData: any = useSelector<any>((store) => store.auth);
   const navigation = useNavigation<NativeStackNavigationProp<LoginStackParamList>>()
+  const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
   const handlerSignUp = () => {
     navigation.goBack();
@@ -58,7 +61,7 @@ const AddClientScreen = () => {
       const values = { email, password };
       dispatch(handleLogin(values));
     } catch (error: any) {
-      errorHandler(error.code)
+      errorHandler(error.code, configuration.vibration)
     }
   }
 
@@ -97,7 +100,7 @@ const AddClientScreen = () => {
       }
     }
     if (values.password !== values.passwordRepeat) {
-      errorHandler('pass-diff');
+      errorHandler('pass-diff', configuration.vibration);
       return;
     }
     dispatch(fetchLoadingStart());
@@ -168,7 +171,7 @@ const AddClientScreen = () => {
       setValue("passwordRepeat", "")
       setImage("");
     } catch (error: any) {
-      errorHandler(error.code);
+      errorHandler(error.code, configuration.vibration);
     } finally {
       dispatch(fetchLoadingFinish());
     }

@@ -16,6 +16,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { validateInputs } from "../../../utils/utils";
 import { successHandler } from "../../../utils/SuccessHandler";
 import { Screens } from "../../../navigation/Screens";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
 
 interface TableData {
     tableNumber: number;
@@ -29,6 +30,7 @@ const AddTableScreen = ({ navigation }: any) => {
     const [tableType, setTableType] = useState("");
     const[statusTable, setStatus] = useState("Desocupada");
     const dispatch = useDispatch();
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -63,7 +65,7 @@ const AddTableScreen = ({ navigation }: any) => {
             clear();
         } catch (e: any) {
             console.log("AddTableScreen registerTable ",e);
-            errorHandler(e.code);
+            errorHandler(e.code, configuration.vibration);
         } finally {
             dispatch(fetchLoadingFinish());
         }

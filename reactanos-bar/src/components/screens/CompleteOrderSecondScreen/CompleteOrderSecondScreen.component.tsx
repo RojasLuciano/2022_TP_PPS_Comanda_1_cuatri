@@ -78,7 +78,7 @@ const CompleteOrderSecondScreen = ({ navigation, route }: any) => {
         successHandler('product-delivered')
         navigation.goBack();
         }
-        catch (error) {
+        catch (error:any) {
             console.log("CompleteOrderSecondScreen makeAnOrder ", error);
         }
         finally {

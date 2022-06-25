@@ -70,7 +70,7 @@ export const fetchInitialState = () => ({
     type: INITIAL_STATE
 })
 
-export const handleLogin = (data: FormData) => async (dispatch: any) => {
+export const handleLogin = (data: FormData) => async (dispatch: any, getState:any) => {
     try {
         dispatch(fetchInit());
         dispatch(fetchLoadingStart());
@@ -85,7 +85,7 @@ export const handleLogin = (data: FormData) => async (dispatch: any) => {
         })
         await sleep(1000);
     } catch (error: any) {
-        errorHandler(error.code);
+        errorHandler(error.code, getState().configuration.vibration);
         handleLogout();
         dispatch(fetchError(error.code));
     } finally {
@@ -107,7 +107,7 @@ export const refreshUserData = () => async (dispatch: any, getState: () => IStor
         })
         await sleep(1000);
     } catch (error: any) {
-        errorHandler(error.code);
+        errorHandler(error.code, getState().configuration.vibration);
         handleLogout();
         dispatch(fetchError(error.code));
     } finally {
@@ -115,7 +115,7 @@ export const refreshUserData = () => async (dispatch: any, getState: () => IStor
     }
 }
 
-export const handleRegister = (data: FormData) => async (dispatch: any) => {
+export const handleRegister = (data: FormData) => async (dispatch: any, getState:any) => {
     try {
         dispatch(fetchInit());
         dispatch(fetchLoadingStart());
@@ -124,7 +124,7 @@ export const handleRegister = (data: FormData) => async (dispatch: any) => {
         dispatch(fetchInitialState());
         showMessage({ type: "success", message: "Exito", description: 'Usuario creado exitosamente' })
     } catch (error: any) {
-        errorHandler(error.code);
+        errorHandler(error.code, getState().configuration.vibration);
         dispatch(fetchError(error.code));
     } finally {
         dispatch(fetchLoadingFinish());
@@ -141,15 +141,17 @@ async function playSound(sound: any) {
     }
 }
 
-export const handleLogout = () => async (dispatch: any,) => {
+export const handleLogout = () => async (dispatch: any,getState:any) => {
     try { 
-        playSound(require("../../assets/finish.mp3"));
+        if(getState().configuration.sound){
+            playSound(require("../../assets/finish.mp3"));
+        }
         dispatch(fetchInit());
         dispatch(fetchLoadingStart());
         signOut(auth);
         dispatch(fetchInitialState());
     } catch (error: any) {
-        errorHandler(error.code);
+        errorHandler(error.code, getState().configuration.vibration);
         dispatch(fetchError(error.code));
     } finally {
         dispatch(fetchLoadingFinish());

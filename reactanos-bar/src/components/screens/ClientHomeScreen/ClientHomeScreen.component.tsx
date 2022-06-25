@@ -29,6 +29,7 @@ import { sleep } from "../../../utils/utils";
 import { sendPushNotification } from "../../../utils/pushNotifications";
 import { successHandler } from '../../../utils/SuccessHandler';
 import Modal from '../../atoms/Modal/Modal.component';
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
 
 const ClientHomeScreen = ({ navigation }: any) => {
     const data: AuthTypes = useSelector<IStore, any>((store) => store.auth);
@@ -36,6 +37,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const [tableButtons, setTableButtons] = useState(false);
     const [orderStatus, setOrderStatus] = useState("");
     const [discount, setDiscount] = useState("");
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -69,7 +71,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen signToRestaurant", error);
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
             dispatch(fetchLoadingFinish());
         }
     };
@@ -96,7 +98,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen sitOnTable", error);
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
             dispatch(fetchLoadingFinish());
         }
     };
@@ -144,7 +146,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             setTableButtons(true);
         } catch (error: any) {
             console.log("ClientHomeScreen goBackQr ", error);
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
             dispatch(fetchLoadingFinish());
         }
     };
@@ -163,7 +165,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             navigation.navigate(Screens.FINISH_TABLE);
         } catch (error: any) {
             console.log("ClientHomeScreen goBackQr ", error);
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
             dispatch(fetchLoadingFinish());
         }
     };
@@ -221,7 +223,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
             await sleep(1000);
         } catch (error: any) {
             console.log("ClientHomeScreen getOrderStatus ", error);
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
         } finally {
             dispatch(fetchLoadingFinish());
         }

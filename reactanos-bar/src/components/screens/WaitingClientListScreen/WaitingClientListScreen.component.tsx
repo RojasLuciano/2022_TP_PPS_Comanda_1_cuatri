@@ -12,7 +12,7 @@ import { db, storage } from "../../../InitApp";
 import { useFocusEffect } from "@react-navigation/native";
 import { getDownloadURL, ref } from "firebase/storage";
 import { ScrollView } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sleep } from "../../../utils/utils";
 import {
     fetchLoadingFinish,
@@ -26,10 +26,13 @@ import { errorHandler } from '../../../utils/ErrorsHandler';
 import { showMessage } from 'react-native-flash-message';
 import { RefreshControl } from "react-native";
 import { sendPushNotification } from "../../../utils/pushNotifications";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
+import { IStore } from '../../../redux/store';
 
 const WaitingClientListScreen = ({navigation}:any) => {
     const [data, setData] = useState<Client[]>([]);
     const dispatch = useDispatch();
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -91,7 +94,7 @@ const WaitingClientListScreen = ({navigation}:any) => {
             await getDocuments();
         } catch (error:any) {
             console.log("WaitingClientListScreen handleAccept ",error);
-            errorHandler(error.code)            
+            errorHandler(error.code, configuration.vibration)            
         } finally{
             dispatch(fetchLoadingFinish())
         }

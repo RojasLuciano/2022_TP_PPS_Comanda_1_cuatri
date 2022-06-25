@@ -5,6 +5,8 @@ import QRCodeScreen from '../../components/screens/QRCodeScreen/QRCodeScreen.com
 import { TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons'; 
 import AddProductsScreen from '../../components/screens/AddProductsScreen/AddProductsScreen.component';
+import { useDispatch} from 'react-redux';
+import { handleModal } from '../../redux/configurationReducer';
 
 export type AddProductStackParamList = {
     [Screens.ADD_PRODUCTS]: undefined | {};
@@ -13,9 +15,15 @@ export type AddProductStackParamList = {
 const Stack = createStackNavigator<AddProductStackParamList>();
 
 const AddProductStack = () => {
+  const dispatch = useDispatch();
   return (
     <Stack.Navigator initialRouteName={Screens.ADD_PRODUCTS} >
         <Stack.Screen name={Screens.ADD_PRODUCTS} component={AddProductsScreen} options={({navigation}) => ({
+          headerRight:()=><TouchableOpacity style={{marginHorizontal:14}}
+           onPress={() => dispatch(handleModal(true))}>
+             <Feather name="settings" size={24} color="black" />
+           </TouchableOpacity>
+       ,
         headerLeft:()=><TouchableOpacity style={{marginHorizontal:14}}
           onPress={() => navigation.openDrawer()}>
             <Feather name="menu" size={24} color="black" />

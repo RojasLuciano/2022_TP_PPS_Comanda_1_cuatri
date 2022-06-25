@@ -9,7 +9,7 @@ import Modal from "../../atoms/Modal/Modal.component";
 import Carousel from "../../molecules/Carousel/Carousel.component";
 import { useForm } from "react-hook-form";
 import AddProductsController from "../../organisms/AddProductsController/AddProductsController.component";
-import { uploadImages } from '../../../utils/utils';
+import { uploadImages, validateInputs } from '../../../utils/utils';
 import { errorHandler } from "../../../utils/ErrorsHandler";
 import { db } from "../../../InitApp";
 import { addDoc, collection } from "firebase/firestore";
@@ -20,6 +20,7 @@ import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderRedu
 import { successHandler } from "../../../utils/SuccessHandler";
 import { Screens } from "../../../navigation/Screens";
 import { useFocusEffect } from "@react-navigation/native";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
 
 interface ProductData{
     name:string;
@@ -35,6 +36,7 @@ const AddProductsScreen = ({navigation}:any) => {
     const data:AuthTypes = useSelector<IStore, any>(store=>store.auth);
     const dispatch = useDispatch();
     const [profile, setProfile] = useState("");
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -46,6 +48,7 @@ const AddProductsScreen = ({navigation}:any) => {
         try {
             dispatch(fetchLoadingStart());
             const values = getValues();
+            validateInputs(values);
             const imagesRef = await uploadImages(images);
             const docRef = await addDoc(collection(db, "products"), {
                 user: data.user.email,
@@ -64,7 +67,7 @@ const AddProductsScreen = ({navigation}:any) => {
             reset();
         } catch (e:any) {
             console.log(e);
-            errorHandler(e.code);
+            errorHandler(e.code, configuration.vibration);
         }finally{
             dispatch(fetchLoadingFinish());
         }

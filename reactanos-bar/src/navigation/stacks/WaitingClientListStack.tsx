@@ -6,6 +6,8 @@ import QRScannerScreen from '../../components/screens/QRScannerScreen/QRScannerS
 import WaitingClientListScreen from '../../components/screens/WaitingClientListScreen/WaitingClientListScreen.component';
 import { TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { handleModal } from '../../redux/configurationReducer';
 
 export type AddProductStackParamList = {
     [Screens.WAITING_CLIENT_LIST]: undefined | {};
@@ -14,9 +16,15 @@ export type AddProductStackParamList = {
 const Stack = createStackNavigator<AddProductStackParamList>();
 
 const WaitingClientListStack = () => {
+  const dispatch = useDispatch();
   return (
     <Stack.Navigator initialRouteName={Screens.WAITING_CLIENT_LIST}   >
         <Stack.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListScreen}  options={({navigation}) => ({
+          headerRight:()=><TouchableOpacity style={{marginHorizontal:14}}
+          onPress={() => dispatch(handleModal(true))}>
+            <Feather name="settings" size={24} color="black" />
+          </TouchableOpacity>
+      ,
         headerLeft:()=><TouchableOpacity style={{marginHorizontal:14}}
           onPress={() => navigation.openDrawer()}>
             <Feather name="menu" size={24} color="black" />
