@@ -63,6 +63,7 @@ const AddClientScreen = () => {
 
   useEffect(()=>{
     try {
+      
       Object.values(errors).map((value) => {
         if (!value.message) {
             throw ({ code: "empty-fields" });
@@ -101,12 +102,15 @@ const AddClientScreen = () => {
     return result + "@reactanosbar.com";
   }
 
-  const onSubmit = async (data:any) => {
+  const handleOnSubmit = (data:any) => {
+    onSubmit(false);
+  }
+
+  const onSubmit = async (guest:any) => {
     try {
-      const guest= false
     const values = getValues();
     if (!guest) {
-      validateInputs(values);
+          validateInputs(values);
     } else {
       if (!values.name) {
         showMessage({ type: "danger", message: "Error", description: "El nombre es requerido para invitado" });
@@ -321,7 +325,7 @@ const AddClientScreen = () => {
 
           />
         </StyledMargin>
-        <Button onPress={handleSubmit(onSubmit)}>Crear usuario</Button>
+        <Button onPress={handleSubmit(handleOnSubmit)}>Crear usuario</Button>
         {userData.user.email === undefined && <Button onPress={() => onSubmit(true)}>Invitado</Button>}
       </StyledLinearGradient>
     </StyledView>
