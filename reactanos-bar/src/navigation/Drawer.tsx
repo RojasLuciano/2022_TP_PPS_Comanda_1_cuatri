@@ -69,6 +69,7 @@ const DrawerStack = () => {
           </TouchableOpacity>
       })} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.ADD_TABLE} component={AddTableStack} options={{ headerShown: false }} />
+        <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />
         <Drawer.Screen name={Screens.ADD_ADMINS} component={AddAdminsScreen} />
         <Drawer.Screen name={Screens.ADD_PRODUCTS} component={AddProductStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.ADD_EMPLOYEE} component={AddEmployeeScreen} />
@@ -98,7 +99,7 @@ const DrawerStack = () => {
       <>
         <Modal isVisible={configuration.modal} onPrimaryText='Aceptar' title='Configuración' onPrimary={()=>dispatch(handleModal(false))} sound vibration />
         <Drawer.Navigator initialRouteName={Screens.PENDING_ORDER_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
-          <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} />
+          <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
           <Drawer.Screen name={Screens.ADD_PRODUCTS} component={AddProductStack} options={{ headerShown: false }} />
         </Drawer.Navigator>
       </>
