@@ -53,8 +53,8 @@ const AddEmployeeScreen = () => {
         setScanned(true);
         setOpenQR(false);
         const dataSplit = data.split('@')
-        setValue("dni", dataSplit[1].trim())
-        setValue("lastName", dataSplit[4].trim())
+        setValue("dni", dataSplit[4].trim())
+        setValue("lastName", dataSplit[1].trim())
         setValue("name", dataSplit[2].trim())
     };
 

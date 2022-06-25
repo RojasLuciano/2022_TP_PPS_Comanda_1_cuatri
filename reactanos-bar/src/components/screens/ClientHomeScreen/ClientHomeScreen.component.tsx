@@ -36,8 +36,8 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const dispatch = useDispatch();
     const [tableButtons, setTableButtons] = useState(false);
     const [orderStatus, setOrderStatus] = useState("");
+    const [orderId, setOrderId] = useState("");
     const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
-    const [finished, setFinished] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -164,9 +164,6 @@ const ClientHomeScreen = ({ navigation }: any) => {
             }
             navigation.navigate(Screens.FINISH_TABLE, {
                 screen: Screens.FINISH_TABLE,
-                params: {
-                    goBack: () => setFinished(true)
-                },
             });
         } catch (error: any) {
             console.log("ClientHomeScreen goBackQr ", error);
@@ -174,6 +171,13 @@ const ClientHomeScreen = ({ navigation }: any) => {
             dispatch(fetchLoadingFinish());
         }
     };
+
+    const finishOrder = async () => {
+        const orderCollection = collection(db, "orders");
+        const orderRef = doc(orderCollection, orderId);
+        await updateDoc(orderRef, { orderStatus: "Terminado" });
+        await sleep(1000);
+    }
 
     const goToQr = () => {
         navigation.navigate(Screens.QR_SCANNER, {
@@ -212,15 +216,21 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const handleOrderStatus = async () => {
         dispatch(fetchLoadingStart());
         try {
+            // if(!data.user.restoStatus)return
             const querySnapshot = await getDocs(
                 query(
                     collection(db, "orders"),
-                    where("email", "==", data.user.email)
+                    where("email", "==", data.user.email),
+                    where("orderStatus", "!=", "Terminado")
                 )
             );
             querySnapshot.forEach((doc) => {
                 const res: any = { ...doc.data() };
                 setOrderStatus(res.orderStatus);
+                setOrderId(doc.id);
+                if(res.orderStatus==='Cobrado'){
+                    setTableButtons(false)
+                }
             });
             await sleep(1000);
         } catch (error: any) {
@@ -247,7 +257,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     <RefreshControl refreshing={false} onRefresh={onRefresh} />
                 }
             >
-                <Modal isVisible={orderStatus==='Cobrado' && finished} title="¡Gracias por visitarnos!" onPrimary={()=>setFinished(false)} subtitle="Esperamos verte pronto nuevamente"  onPrimaryText="Cerrar sesión"></Modal>
+                <Modal isVisible={orderStatus==='Cobrado'} title="¡Gracias por visitarnos!" onPrimary={finishOrder} subtitle="Esperamos verte pronto nuevamente"  onPrimaryText="Cerrar sesión"></Modal>
                 <Heading bold level="L" color="white">
                     ¡Bienvenido a nuestro local!
                 </Heading>
@@ -276,7 +286,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     )}
                 {!tableButtons && (
                     <MarginVertical>
-                        {orderStatus!='Cobrado' && !data.user.restoStatus && (
+                        {!data.user.restoStatus && (
                             <CardButton onPress={handleSignToRestaurant}>
                                 Ingresar al local
                             </CardButton>

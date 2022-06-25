@@ -111,6 +111,7 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
                     keyboardType="email-address"
                     control={control}
                     name="email"
+                    autoCapitalize="none"
                 />
                 <ControlledPassword
                     icon={<MaterialIcons name="lock" />}

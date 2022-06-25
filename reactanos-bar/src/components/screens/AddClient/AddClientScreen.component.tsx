@@ -30,6 +30,7 @@ import { sendPushNotification } from '../../../utils/pushNotifications';
 import { successHandler } from '../../../utils/SuccessHandler';
 import { ConfigurationTypes } from '../../../redux/configurationReducer';
 import { IStore } from '../../../redux/store';
+import ControlledCurrency from '../../molecules/ControlledCurrency/ControlledCurrency.component';
 
 type NewClient = {
   lastName: string;
@@ -42,12 +43,16 @@ type NewClient = {
 
 const AddClientScreen = () => {
   const [image, setImage] = useState("");
-  const { control, getValues, formState: { errors }, reset, setValue } = useForm<NewClient>();
+  const { control, getValues, formState: { errors }, reset, setValue, handleSubmit } = useForm<NewClient>();
   const [scanned, setScanned] = useState(false);
   const [openQR, setOpenQR] = useState(false);
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
+  const lastNameInput: MutableRefObject<any> = useRef();
+  const dniInput: MutableRefObject<any> = useRef();
+  const emailInput: MutableRefObject<any> = useRef();
   const passInput: MutableRefObject<any> = useRef();
+  const repeatPassInput: MutableRefObject<any> = useRef();
   const userData: any = useSelector<any>((store) => store.auth);
   const navigation = useNavigation<NativeStackNavigationProp<LoginStackParamList>>()
   const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
@@ -55,6 +60,18 @@ const AddClientScreen = () => {
   const handlerSignUp = () => {
     navigation.goBack();
   }
+
+  useEffect(()=>{
+    try {
+      Object.values(errors).map((value) => {
+        if (!value.message) {
+            throw ({ code: "empty-fields" });
+        }
+    });
+    } catch (error:any) {
+      errorHandler(error.code, configuration.vibration)
+    }
+  },[errors])
 
   const handleSignIn = (email: string, password: string) => {
     try {
@@ -69,8 +86,8 @@ const AddClientScreen = () => {
     setScanned(true);
     setOpenQR(false);
     const dataSplit = data.split('@')
-    setValue("dni", dataSplit[1].trim())
-    setValue("lastName", dataSplit[4].trim())
+    setValue("dni", dataSplit[4].trim())
+    setValue("lastName", dataSplit[1].trim())
     setValue("name", dataSplit[2].trim())
   };
 
@@ -84,8 +101,9 @@ const AddClientScreen = () => {
     return result + "@reactanosbar.com";
   }
 
-  const onSubmit = async (guest: boolean) => {
+  const onSubmit = async (data:any) => {
     try {
+      const guest= false
     const values = getValues();
     if (!guest) {
       validateInputs(values);
@@ -232,7 +250,8 @@ const AddClientScreen = () => {
           />
         </View>
         <StyledMargin>
-          <ControlledInput
+          <ControlledInput error={!!errors.name} required
+            onSubmitEditing={() => lastNameInput.current.focus()}
             control={control}
             name="name"
             variant="rounded"
@@ -240,7 +259,9 @@ const AddClientScreen = () => {
           />
         </StyledMargin>
         <StyledMargin>
-          <ControlledInput
+          <ControlledInput  error={!!errors.lastName} required
+            onSubmitEditing={() => dniInput.current.focus()}
+            ref={lastNameInput}
             control={control}
             name="lastName"
             variant="rounded"
@@ -248,17 +269,21 @@ const AddClientScreen = () => {
           />
         </StyledMargin>
         <StyledMargin>
-          <ControlledInput
+          <ControlledCurrency  error={!!errors.dni} number required
+            onSubmitEditing={() => emailInput.current.focus()}
+            ref={dniInput}
             control={control}
             name="dni"
             variant="rounded"
             placeholder="Documento"
             keyboardType="number-pad"
+            maxLength={10}
           />
         </StyledMargin>
         <StyledMargin>
-          <ControlledInput
+          <ControlledInput error={!!errors.email} required
             onSubmitEditing={() => passInput.current.focus()}
+            ref={emailInput}
             placeholder="Correo electrónico"
             keyboardType="email-address"
             control={control}
@@ -267,12 +292,13 @@ const AddClientScreen = () => {
           />
         </StyledMargin>
         <StyledMargin>
-          <ControlledPassword
+          <ControlledPassword error={!!errors.password} required
             show={show}
             rightIcon={
               <MaterialIcons name={show ? "visibility" : "visibility-off"} />
             }
             onPressRight={() => setShow(!show)}
+            onSubmitEditing={() => repeatPassInput.current.focus()}
             ref={passInput}
             placeholder="Contraseña"
             name="password"
@@ -281,20 +307,21 @@ const AddClientScreen = () => {
           />
         </StyledMargin>
         <StyledMargin>
-          <ControlledPassword
+          <ControlledPassword error={!!errors.passwordRepeat} required
             show={show}
             rightIcon={
               <MaterialIcons name={show ? "visibility" : "visibility-off"} />
             }
             onPressRight={() => setShow(!show)}
             placeholder="Repetir contraseña"
+            ref={repeatPassInput}
             name="passwordRepeat"
             control={control}
             variant="rounded"
 
           />
         </StyledMargin>
-        <Button onPress={() => onSubmit(false)}>Crear usuario</Button>
+        <Button onPress={handleSubmit(onSubmit)}>Crear usuario</Button>
         {userData.user.email === undefined && <Button onPress={() => onSubmit(true)}>Invitado</Button>}
       </StyledLinearGradient>
     </StyledView>

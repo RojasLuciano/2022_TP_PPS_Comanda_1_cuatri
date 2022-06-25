@@ -9,6 +9,7 @@ export interface InputProps extends TextInputProps {
     icon?: any;
     rightIcon?: any;
     onPressRight?: () => void;
+    error?:boolean;
 }
 
 const Input = React.forwardRef((props: InputProps, ref) => {
@@ -30,7 +31,9 @@ const Input = React.forwardRef((props: InputProps, ref) => {
                     <Icon as={props.icon} size={5} m="2" color="muted.400" />
                 )
             }
-            style={styles.input}
+            borderColor={props.error?"danger.400":"cyan.50"}
+            borderWidth={2}
+            style={[styles.input]}
             ref={ref}
             variant={props.variant}
             {...props}
