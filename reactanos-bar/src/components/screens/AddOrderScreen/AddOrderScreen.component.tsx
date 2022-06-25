@@ -15,13 +15,14 @@ import {
 } from "../../../redux/loaderReducer";
 import { sleep, currencyFormat } from '../../../utils/utils';
 import { addDoc, collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
-import { db } from "../../../InitApp";
+import { db, storage } from "../../../InitApp";
 import { useFocusEffect } from "@react-navigation/native";
 import Divider from "../../atoms/Divider/Divider.component";
 import { AuthTypes } from "../../../redux/authReducer";
 import { IStore } from "../../../redux/store";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { successHandler } from '../../../utils/SuccessHandler';
+import { getDownloadURL, ref } from "firebase/storage";
 
 const AddOrderScreen = ({navigation}:any) => {
     const dispatch = useDispatch();
@@ -61,6 +62,10 @@ const AddOrderScreen = ({navigation}:any) => {
             querySnapshot.forEach(async (doc) => {
                 const res: any = { ...doc.data(), id: doc.id };
                 let images: any = [];
+                res.images.forEach(async (image: any) => {
+                    const imageUrl = await getDownloadURL(ref(storage, image));
+                    images.push(imageUrl);
+                });
                 await sleep(2000);
                 setData((arr: any) => [...arr, { ...res, id: doc.id, images }]);
             });

@@ -17,7 +17,7 @@ interface UserCardProps {
     email?: string;
     dni?: string;
     image?: string;
-    onPress: () => void;
+    onPress?: () => void;
     user?: string;
     state?: string;
     table?:string;

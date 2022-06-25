@@ -26,6 +26,7 @@ import { errorHandler } from "../../../utils/ErrorsHandler";
 import { RefreshControl, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { sleep } from "../../../utils/utils";
+import { sendPushNotification } from "../../../utils/pushNotifications";
 
 const ClientHomeScreen = ({ navigation }: any) => {
     const data: AuthTypes = useSelector<IStore, any>((store) => store.auth);
@@ -40,6 +41,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
     );
 
     const onRefresh = () => {
+        handleOrderStatus();
         dispatch(refreshUserData());
     };
 
@@ -63,6 +65,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 message: "Exito",
                 description: "Ahora estás pendiente de ingresar al local",
             });
+            await sendPushNotification({title:"Lista de espera", description:"Hay un cliente nuevo en la lista de espera", profile:"meter"})
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen signToRestaurant", error);
@@ -216,7 +219,6 @@ const ClientHomeScreen = ({ navigation }: any) => {
             querySnapshot.forEach((doc) => {
                 const res: any = { ...doc.data() };
                 setOrderStatus(res.orderStatus);
-                console.log(doc.data());
             });
             await sleep(1000);
         } catch (error: any) {
@@ -287,12 +289,12 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     </MarginVertical>
                 )}
                 {!tableButtons &&
-                    (data.user.restoStatus === "Pendiente" ||
-                        (data.user.restoStatus === "Pedido aceptado" && (
+                    ((data.user.restoStatus === "Pendiente" || data.user.restoStatus === "Pedido terminado" ||
+                        data.user.restoStatus === "Pedido aceptado") && (
                             <CardButton onPress={goToQr}>
                                 Escanear QR de la mesa
                             </CardButton>
-                        )))}
+                        ))}
                 {tableButtons && (
                     <>
                         {orderStatus !== "Pagado" && orderStatus !== "Pago confirmado" && (

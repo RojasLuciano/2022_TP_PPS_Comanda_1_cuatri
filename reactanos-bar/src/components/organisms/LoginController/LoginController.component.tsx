@@ -82,7 +82,7 @@ const LoginController: FC<LoginControllerProps> = ({ control, onSubmit, fastSign
                     <Text>Admin</Text>
                 </Button>
                 <Button
-                    onPress={() => fastSignIn({ email: "empleado@reactanosbar.com", password: "123456" })}
+                    onPress={() => fastSignIn({ email: "metre@reactanos.com", password: "123456" })}
                     size='M'
                 >
                     <Text>Empleado</Text>

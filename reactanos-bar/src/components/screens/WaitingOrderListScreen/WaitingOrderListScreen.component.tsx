@@ -19,11 +19,11 @@ import {
     fetchLoadingStart,
 } from "../../../redux/loaderReducer";
 import { StyledView } from "./WaitingOrderListScreen.styled";
-import { Client } from "../../../models/user/client.types";
 import { errorHandler } from "../../../utils/ErrorsHandler";
 import { showMessage } from "react-native-flash-message";
 import { RefreshControl } from "react-native";
 import OrderDetails from "../../organisms/OrderDetails/OrderDetails.component";
+import { sendPushNotification } from "../../../utils/pushNotifications";
 
 //Esta pantalla es listar pedidos.
 
@@ -79,6 +79,7 @@ const WaitingOrderListScreen = ({ navigation }: any) => {
                 message: "Exito",
                 description: "El pedido fue distribuído a las distintas áreas",
             });
+            await sendPushNotification({title:"Nuevo pedido", description:"Tenés un nuevo pedido para realizar", profile:["waiter", "cook"]})
             setData([]);
             await getDocuments();
         } catch (error: any) {
