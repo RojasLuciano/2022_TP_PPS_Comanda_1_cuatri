@@ -83,8 +83,7 @@ const DrawerStack = () => {
   if (userData.user.profile === "cook" || userData.user.profile === "bartender") {
     return (
       <Drawer.Navigator initialRouteName={Screens.PENDING_ORDER_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
-        <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderFirstScreen} />
-        <Drawer.Screen name={Screens.PENDING_ORDER} component={CompleteOrderSecondScreen} />
+        <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} />
         <Drawer.Screen name={Screens.ADD_PRODUCTS} component={AddProductStack} options={{ headerShown: false }} />
       </Drawer.Navigator>
     );
@@ -104,6 +103,8 @@ const DrawerStack = () => {
         <Drawer.Screen name={Screens.DELIVER_ORDER_TABLE} component={DeliverOrderTableListScreen} />
         <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
+        <Drawer.Screen name={Screens.DELIVER_ORDER_TABLE} component={DeliverOrderTableListScreen} />
+        <Drawer.Screen name={Screens.COLLECT_TABLE_MONEY} component={CollectMoneyScreen} />
       </Drawer.Navigator>
     );
   }

@@ -58,7 +58,7 @@ const AddTableScreen = ({ navigation }: any) => {
                 title: "Mesa creada exitosamente",
                 subtitle:
                     "La mesa ya está cargado en nuestras bases de datos, de todas formas asegurate de guardar el código QR que te brindamos",
-                code: JSON.stringify({tableCode:values.tableNumber.toString()}),
+                code: values.tableNumber.toString()
             });
             clear();
         } catch (e: any) {

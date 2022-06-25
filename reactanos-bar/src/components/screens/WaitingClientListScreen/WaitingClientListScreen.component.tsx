@@ -102,7 +102,7 @@ const WaitingClientListScreen = ({navigation}:any) => {
         dispatch(fetchLoadingStart())
         try {
             const ref = doc(db, "users", id);
-            await updateDoc(ref, {status:statusChange})
+            await updateDoc(ref, {restoStatus:statusChange})
             getDocuments();
         } catch (error) {
             console.log(error)

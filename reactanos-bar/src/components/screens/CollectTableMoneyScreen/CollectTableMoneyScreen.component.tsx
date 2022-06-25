@@ -98,7 +98,7 @@ const CollectMoneyScreen = ({navigation}:any) => {
                         lastName={item.lastName}
                         image={item.image}
                         table={item.table}
-                        total={formatAmount(item.finalAmount)}
+                        total={formatAmount(item.totalAmount)}
                         onPress={() => handleCollect(item.orderId, item.table, item.id)}
                         user="Cliente"
                         state="Pendiente"
