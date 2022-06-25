@@ -83,7 +83,7 @@ const DrawerStack = () => {
     return (
       <>
         <Modal isVisible={configuration.modal} onPrimaryText='Aceptar' title='Configuración' onPrimary={()=>dispatch(handleModal(false))} sound vibration />
-        <Drawer.Navigator initialRouteName={Screens.GRAPHIC_SCREEN} drawerContent={props => <CustomDrawerContent {...props} />}>
+        <Drawer.Navigator initialRouteName={Screens.WAITING_CLIENT_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
           <Drawer.Screen name={Screens.ADD_EMPLOYEE} component={AddEmployeeScreen} />
           <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />
           <Drawer.Screen name={Screens.ADD_PRODUCTS} component={AddProductStack} options={{ headerShown: false }} />

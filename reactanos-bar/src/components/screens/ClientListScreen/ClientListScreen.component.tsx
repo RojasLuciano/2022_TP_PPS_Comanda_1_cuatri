@@ -22,6 +22,7 @@ import { StyledView } from "./ClientListScreen.styled";
 import UserCard from "../../molecules/UserCard/UserCard.component";
 import { Client } from "../../../models/user/client.types";
 import emailjs  from '@emailjs/browser';
+import { RefreshControl } from "react-native";
 
 const ClientListScreen = () => {
     const [data, setData] = useState<Client[]>([]);
@@ -32,6 +33,10 @@ const ClientListScreen = () => {
             getDocuments();
         }, [])
     );
+
+    const onRefresh = () => {
+        getDocuments();
+    };
 
     const getDocuments = async () => {
         dispatch(fetchLoadingStart());
@@ -89,7 +94,9 @@ const ClientListScreen = () => {
 
     return (
         <StyledView colors={["#6190E8", "#A7BFE8"]}>
-            <ScrollView style={{ width: "100%" }}>
+            <ScrollView style={{ width: "100%" }} refreshControl={
+                    <RefreshControl refreshing={false} onRefresh={onRefresh} />
+                }>
                 {data.map((item) => (
                     <UserCard
                         key={item.id}

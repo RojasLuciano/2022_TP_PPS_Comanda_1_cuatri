@@ -48,7 +48,6 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const onRefresh = () => {
         handleOrderStatus();
         dispatch(refreshUserData());
-        console.log(orderId)
     };
 
     const signToRestaurant = async (code: any) => {
