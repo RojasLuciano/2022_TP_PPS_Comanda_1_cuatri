@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Reactanos-bar",
-    "slug": "Reactanos-bar",
+    "name": "Reactanos",
+    "slug": "Reactanos",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
       },
       "googleServicesFile": "./google-services.json",
@@ -32,7 +32,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon.png",
+          "icon": "./assets/logo.png",
           "color": "#ffffff",
           "sounds": [
             "./local/assets/notification-sound.wav",
