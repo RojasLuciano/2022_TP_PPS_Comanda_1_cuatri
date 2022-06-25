@@ -67,3 +67,7 @@ O- Generar reservas agendadas: Alan / Ezequiel / Luciano
 ### Lecture QR Cliente/Invitado.
 <img src="./reactanos-bar/docs/captures/QRDeMesaIncorrecto.png" width="245"/> 
 ### Panel de administrador
+
+
+### Pantalla de configuracion para sonido y vibracion.
+<img src="./reactanos-bar/docs/captures/PantallaDeConfiguracion.png" width="245"/> 
