@@ -2,7 +2,13 @@
   "expo": {
     "name": "Reactanos",
     "slug": "Reactanos",
+    "description":"Reactanos",
     "version": "1.0.0",
+    "notification": {
+      "icon": "./assets/logo.png",
+      "color": "#1c1e3d",
+      "iosDisplayInForeground": true
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
