@@ -22,7 +22,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../InitApp";
 import { showMessage } from "react-native-flash-message";
-import { errorHandler } from "../../../utils/ErrorsHandler";
+import { errorHandler } from '../../../utils/ErrorsHandler';
 import { RefreshControl, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { sleep } from "../../../utils/utils";
@@ -48,6 +48,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const onRefresh = () => {
         handleOrderStatus();
         dispatch(refreshUserData());
+        console.log(orderId)
     };
 
     const signToRestaurant = async (code: any) => {
@@ -173,10 +174,19 @@ const ClientHomeScreen = ({ navigation }: any) => {
     };
 
     const finishOrder = async () => {
-        const orderCollection = collection(db, "orders");
-        const orderRef = doc(orderCollection, orderId);
-        await updateDoc(orderRef, { orderStatus: "Terminado" });
-        await sleep(1000);
+        dispatch(fetchLoadingStart());
+        try {
+            setOrderStatus("")
+            const orderCollection = collection(db, "orders");
+            const orderRef = doc(orderCollection, orderId);
+            await updateDoc(orderRef, { orderStatus: "Terminado" });
+            await sleep(1000);
+            onRefresh();
+        } catch (error) {
+            errorHandler('', configuration.vibration)
+        } finally{
+            dispatch(fetchLoadingFinish());
+        }
     }
 
     const goToQr = () => {
@@ -216,7 +226,6 @@ const ClientHomeScreen = ({ navigation }: any) => {
     const handleOrderStatus = async () => {
         dispatch(fetchLoadingStart());
         try {
-            // if(!data.user.restoStatus)return
             const querySnapshot = await getDocs(
                 query(
                     collection(db, "orders"),
@@ -257,7 +266,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     <RefreshControl refreshing={false} onRefresh={onRefresh} />
                 }
             >
-                <Modal isVisible={orderStatus==='Cobrado'} title="¡Gracias por visitarnos!" onPrimary={finishOrder} subtitle="Esperamos verte pronto nuevamente"  onPrimaryText="Cerrar sesión"></Modal>
+                <Modal isVisible={orderStatus==='Cobrado'} title="¡Gracias por visitarnos!" onPrimary={finishOrder} subtitle="Esperamos que nuestros servicios hayan sido de tu agrado"  onPrimaryText="Cerrar sesión"></Modal>
                 <Heading bold level="L" color="white">
                     ¡Bienvenido a nuestro local!
                 </Heading>

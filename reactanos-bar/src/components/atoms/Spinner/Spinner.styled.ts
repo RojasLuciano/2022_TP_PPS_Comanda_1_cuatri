@@ -5,7 +5,8 @@ export const StyledView = styled.View`
     width:100%;
     background-color: rgba(255,255,255,0.7)
     position:absolute;
-    z-index:1000;
+    z-index:1100;
     justify-content:center;
     align-items:center;
+    elevation:20;
 `
