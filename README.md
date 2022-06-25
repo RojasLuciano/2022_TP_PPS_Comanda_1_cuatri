@@ -56,7 +56,5 @@ O- Generar reservas agendadas: Alan / Ezequiel / Luciano
 
 
 ### Pantalla de inicio.
-<img src="../reactanos-bar/docs/captures/Login.png" width="245"/> 
-<img src="./reactanos-bar/docs/captures/Login.png" width="245"/> 
-<img src="../reactanos-bar/docs/captures/Login.png" width="245"/> 
-<img src="../reactanos-bar/docs/captures/Login.png" width="245"/>
+<img src="./reactanos-bar/docs/captures/Login.png" width="245"/> <img src="./reactanos-bar/docs/captures/LoginCamposRequeridos.png" width="245"/> <img src="./reactanos-bar/docs/captures/LoginUsuarioNoAutorizado.png" width="245"/>
+ 
