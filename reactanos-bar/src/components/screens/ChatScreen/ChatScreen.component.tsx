@@ -23,7 +23,7 @@ const ChatScreen = ({ navigation, route }: any) => {
   const userData: any = useSelector<any>((store) => store.auth);
 
   useLayoutEffect(() => {
-    let table = userData.user?.profile === "cliente" ? userData.user?.table : route.params?.table;
+    let table = (userData.user?.profile === "cliente" ||  userData.user?.profile === "invitado")? userData.user?.table : route.params?.table;
 
     const unsubscribe = onSnapshot(
       query(collection(db, "chatMesa" + table), orderBy("createdAt", "desc")),
@@ -45,8 +45,8 @@ const ChatScreen = ({ navigation, route }: any) => {
       GiftedChat.append(previousMessages, messages)
     );
     const { _id, createdAt, text, user } = messages[0];
-    let table = userData.user?.profile === "cliente" ? userData.user?.table : route.params?.table;
-    if(userData.user?.profile === "cliente"){
+    let table = (userData.user?.profile === "cliente" ||  userData.user?.profile === "invitado")? userData.user?.table : route.params?.table;
+    if(userData.user?.profile === "cliente" || userData.user?.profile === "invitado"){
       await sendPushNotification({title:"Consulta", description:"Tenés un nuevo mensaje de un cliente", profile:"waiter"})
       await sleep(1000);
     }
