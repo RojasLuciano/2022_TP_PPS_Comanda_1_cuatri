@@ -64,6 +64,9 @@ O- Generar reservas agendadas: Alan / Ezequiel / Luciano
 ### Asignacion de mesa desde metre
 <img src="./reactanos-bar/docs/captures/AsignaciondeMesa.gif" width="245"/>
 
+### Cliente/Invitado qr para acceder a la mesa asignada
+ <img src="./reactanos-bar/docs/captures/QRIngresoLocal.gif" width="245"/>
+
 
 ### Vista desde metre, error al asignar mesa
 <img src="./reactanos-bar/docs/captures/QRMesaOcupada.png" width="245"/>
