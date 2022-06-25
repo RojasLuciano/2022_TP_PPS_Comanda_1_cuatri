@@ -38,7 +38,7 @@ export const uploadImages = async (images: string[]) => {
 export const validateInputs = (values: any) => {
     Object.values(values).map((value) => {
         if (!value) {
-            throw { code: "empty-fields" };
+            throw ({ code: "empty-fields" });
         }
     });
 };

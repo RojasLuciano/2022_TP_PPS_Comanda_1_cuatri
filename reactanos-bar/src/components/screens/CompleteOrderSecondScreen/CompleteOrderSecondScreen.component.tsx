@@ -29,6 +29,7 @@ import { Screens } from "../../../navigation/Screens";
 import { AuthTypes } from "../../../redux/authReducer";
 import { IStore } from "../../../redux/store";
 import { sendPushNotification } from "../../../utils/pushNotifications";
+import { successHandler } from "../../../utils/SuccessHandler";
 
 const CompleteOrderSecondScreen = ({ navigation, route }: any) => {
     const [data, setData] = useState<any[]>([]);
@@ -64,7 +65,7 @@ const CompleteOrderSecondScreen = ({ navigation, route }: any) => {
         const userRef = doc(userCollection, orderId);
         const userDoc = await getDoc(userRef);
         const userData = userDoc.data();
-        const products = userData.products;
+        const products = userData?.products;
         products.map((product: any) => {
             if (product.id === productParam) {
                 product.status = "Entregado";
@@ -72,16 +73,12 @@ const CompleteOrderSecondScreen = ({ navigation, route }: any) => {
         }
         )   
         const update = await updateDoc(userRef, { products });
-        showMessage 
-        ({
-            message: "Producto entregado",
-            type: "success",
-            duration: 2000,
-        });
         await sendPushNotification({title:"Pedido", description:"Tenés un pedido que puede estar listo para entregar", profile:"waiter"})
+        await sleep(1000);
+        successHandler('product-delivered')
         navigation.goBack();
         }
-        catch (error) {
+        catch (error:any) {
             console.log("CompleteOrderSecondScreen makeAnOrder ", error);
         }
         finally {

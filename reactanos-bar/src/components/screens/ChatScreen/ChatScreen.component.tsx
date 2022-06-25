@@ -16,6 +16,7 @@ import { db } from "../../../InitApp";
 import { useSelector } from "react-redux";
 import { StyledView } from "./ChatScreen.styled";
 import { sendPushNotification } from "../../../utils/pushNotifications";
+import { sleep } from '../../../utils/utils';
 
 const ChatScreen = ({ navigation, route }: any) => {
   const [messages, setMessages] = useState<any>([]);
@@ -47,6 +48,7 @@ const ChatScreen = ({ navigation, route }: any) => {
     let table = userData.user?.profile === "cliente" ? userData.user?.table : route.params?.table;
     if(userData.user?.profile === "cliente"){
       await sendPushNotification({title:"Consulta", description:"Tenés un nuevo mensaje de un cliente", profile:"waiter"})
+      await sleep(1000);
     }
     addDoc(collection(db, "chatMesa" + table), {
       _id,

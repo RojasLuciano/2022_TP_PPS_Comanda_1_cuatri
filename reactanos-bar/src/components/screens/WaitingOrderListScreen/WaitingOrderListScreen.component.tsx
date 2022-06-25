@@ -12,7 +12,7 @@ import {
 import { db } from "../../../InitApp";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import { currencyFormat, sleep } from "../../../utils/utils";
 import {
     fetchLoadingFinish,
@@ -24,12 +24,16 @@ import { showMessage } from "react-native-flash-message";
 import { RefreshControl } from "react-native";
 import OrderDetails from "../../organisms/OrderDetails/OrderDetails.component";
 import { sendPushNotification } from "../../../utils/pushNotifications";
+import { successHandler } from "../../../utils/SuccessHandler";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
+import { IStore } from "../../../redux/store";
 
 //Esta pantalla es listar pedidos.
 
 const WaitingOrderListScreen = ({ navigation }: any) => {
     const [data, setData] = useState<any[]>([]);
     const dispatch = useDispatch();
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -74,17 +78,14 @@ const WaitingOrderListScreen = ({ navigation }: any) => {
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, userId);
             await updateDoc(userRef, { restoStatus: "Pedido aceptado" });
-            showMessage({
-                type: "success",
-                message: "Exito",
-                description: "El pedido fue distribuído a las distintas áreas",
-            });
             await sendPushNotification({title:"Nuevo pedido", description:"Tenés un nuevo pedido para realizar", profile:["waiter", "cook"]})
+            await sleep(1000);
+            successHandler('order-sector-delivered')
             setData([]);
             await getDocuments();
         } catch (error: any) {
             console.log("WaitingOrderListScreen handleAccept ",error);
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
         } finally {
             dispatch(fetchLoadingFinish());
         }

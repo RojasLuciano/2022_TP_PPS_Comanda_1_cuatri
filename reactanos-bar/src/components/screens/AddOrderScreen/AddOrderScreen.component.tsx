@@ -23,6 +23,7 @@ import { IStore } from "../../../redux/store";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { successHandler } from '../../../utils/SuccessHandler';
 import { getDownloadURL, ref } from "firebase/storage";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
 
 const AddOrderScreen = ({navigation}:any) => {
     const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const AddOrderScreen = ({navigation}:any) => {
     const [products, setProducts] = useState<any>([]);
     const userData:AuthTypes = useSelector<IStore, any>(store=>store.auth);
     const [orderStatusPending, setOrderStatus] = useState("Pendiente");
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -97,7 +99,7 @@ const AddOrderScreen = ({navigation}:any) => {
             successHandler('order-created')
         } catch (error) {
             console.log("AddOrderScreen registerOrder ",error);
-            errorHandler('order-error')
+            errorHandler('order-error', configuration.vibration)
         } finally{
             dispatch(fetchLoadingFinish())
         }

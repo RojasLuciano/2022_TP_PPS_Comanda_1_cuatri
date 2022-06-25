@@ -18,7 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ref, uploadBytes } from 'firebase/storage';
 import { showMessage } from 'react-native-flash-message';
 import * as ImagePicker from "expo-image-picker";
-import { getBlob } from '../../../utils/utils';
+import { getBlob, sleep, validateInputs } from '../../../utils/utils';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,6 +27,9 @@ import { handleLogin } from '../../../redux/authReducer';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LoginStackParamList } from '../../../navigation/stacks/LoginStack';
 import { sendPushNotification } from '../../../utils/pushNotifications';
+import { successHandler } from '../../../utils/SuccessHandler';
+import { ConfigurationTypes } from '../../../redux/configurationReducer';
+import { IStore } from '../../../redux/store';
 
 type NewClient = {
   lastName: string;
@@ -47,6 +50,7 @@ const AddClientScreen = () => {
   const passInput: MutableRefObject<any> = useRef();
   const userData: any = useSelector<any>((store) => store.auth);
   const navigation = useNavigation<NativeStackNavigationProp<LoginStackParamList>>()
+  const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
   const handlerSignUp = () => {
     navigation.goBack();
@@ -57,7 +61,7 @@ const AddClientScreen = () => {
       const values = { email, password };
       dispatch(handleLogin(values));
     } catch (error: any) {
-      errorHandler(error.code)
+      errorHandler(error.code, configuration.vibration)
     }
   }
 
@@ -81,14 +85,10 @@ const AddClientScreen = () => {
   }
 
   const onSubmit = async (guest: boolean) => {
+    try {
     const values = getValues();
     if (!guest) {
-      Object.values(values).map(value => {
-        if (!value) {
-          showMessage({ type: "danger", message: "Error", description: "Todos los campos son requeridos" });
-          return;
-        }
-      })
+      validateInputs(values);
     } else {
       if (!values.name) {
         showMessage({ type: "danger", message: "Error", description: "El nombre es requerido para invitado" });
@@ -100,11 +100,10 @@ const AddClientScreen = () => {
       }
     }
     if (values.password !== values.passwordRepeat) {
-      errorHandler('pass-diff');
+      errorHandler('pass-diff', configuration.vibration);
       return;
     }
     dispatch(fetchLoadingStart());
-    try {
       if (!guest) {
         await createUserWithEmailAndPassword(
           auth,
@@ -127,6 +126,8 @@ const AddClientScreen = () => {
           pollfilled: false,
           table: 0,
         });
+        await sendPushNotification({title:"Registro", description:"Se registró un nuevo cliente", profile:["supervisor","admin"]})
+        await sleep(1000);
         if (userData.user.email === undefined) {
           handlerSignUp();
         }
@@ -154,16 +155,13 @@ const AddClientScreen = () => {
           emailGuest,
           "123456"
         );
+        await sendPushNotification({title:"Registro", description:"Se registró un nuevo invitado", profile:["supervisor","admin"]})
+        await sleep(1000);
         if (userData.user.email === undefined) {
           handleSignIn(emailGuest, "123456");
         }
       }
-      showMessage({
-        type: "success",
-        message: "Exito",
-        description: "Usuario creado exitosamente",
-      });
-      await sendPushNotification({title:"Registro", description:"Se registró un nuevo cliente", profile:["supervisor","admin"]})
+      successHandler("user-created");
       reset();
       setValue("lastName", "")
       setValue("name", "")
@@ -173,7 +171,7 @@ const AddClientScreen = () => {
       setValue("passwordRepeat", "")
       setImage("");
     } catch (error: any) {
-      errorHandler(error.code);
+      errorHandler(error.code, configuration.vibration);
     } finally {
       dispatch(fetchLoadingFinish());
     }

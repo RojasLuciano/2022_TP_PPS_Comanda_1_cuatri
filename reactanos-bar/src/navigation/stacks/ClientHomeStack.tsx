@@ -7,6 +7,8 @@ import ClientHomeScreen from '../../components/screens/ClientHomeScreen/ClientHo
 import QRStack from './QRStack';
 import AddOrderScreen from '../../components/screens/AddOrderScreen/AddOrderScreen.component';
 import FinishTableScreen from '../../components/screens/FinishTableScreen/FinishTableScreen.component';
+import { useDispatch } from 'react-redux';
+import { handleModal } from '../../redux/configurationReducer';
 
 export type ClientHomeStackParamList = {
     [Screens.CLIENT_HOME]: undefined | {};
@@ -17,10 +19,16 @@ export type ClientHomeStackParamList = {
 const Stack = createStackNavigator<ClientHomeStackParamList>();
 
 const ClientHomeStack = () => {
+  const dispatch=useDispatch()
   return (
     <Stack.Navigator initialRouteName={Screens.CLIENT_HOME}  >
         <Stack.Screen name={Screens.CLIENT_HOME} component={ClientHomeScreen} options={({navigation}) => ({
           headerShown:true,
+          headerRight:()=><TouchableOpacity style={{marginHorizontal:14}}
+           onPress={() => dispatch(handleModal(true))}>
+             <Feather name="settings" size={24} color="black" />
+           </TouchableOpacity>
+       ,
         headerLeft:()=><TouchableOpacity style={{marginHorizontal:14}}
           onPress={() => navigation.openDrawer()}>
             <Feather name="menu" size={24} color="black" />

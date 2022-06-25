@@ -7,6 +7,7 @@ import { ImageBackground, LogBox } from 'react-native';
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import AnimatedLottieView from 'lottie-react-native';
+import store from './src/redux/store';
 
 const ignoreWarns = [
   "Setting a timer for a long period of time",
@@ -31,7 +32,6 @@ LogBox.ignoreLogs(ignoreWarns);
 
 export default function App() {
   const [lottieLoad, setLottieLoad] = React.useState(false);
-  const store = generateStore();
 
   useEffect(() => {
     setTimeout(() => {

@@ -12,7 +12,7 @@ import { db, storage } from "../../../InitApp";
 import { useFocusEffect } from "@react-navigation/native";
 import { getDownloadURL, ref } from "firebase/storage";
 import { ScrollView } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sleep } from "../../../utils/utils";
 import {
     fetchLoadingFinish,
@@ -25,10 +25,14 @@ import { Screens } from "../../../navigation/Screens";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { showMessage } from 'react-native-flash-message';
 import { RefreshControl } from "react-native";
+import { sendPushNotification } from "../../../utils/pushNotifications";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
+import { IStore } from '../../../redux/store';
 
 const WaitingClientListScreen = ({navigation}:any) => {
     const [data, setData] = useState<Client[]>([]);
     const dispatch = useDispatch();
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -83,12 +87,14 @@ const WaitingClientListScreen = ({navigation}:any) => {
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, id);
             await updateDoc(userRef, {table: tableCode, restoStatus:"Asignado"})
+            await sendPushNotification({title:"Ingreso al local", description:"Ya estás dentro del local", profile:"cliente"})
+            await sleep(1000);
             showMessage({type:'success', message:'Exito', description:'Cliente asignado exitosamente'})
             setData([]);
             await getDocuments();
         } catch (error:any) {
             console.log("WaitingClientListScreen handleAccept ",error);
-            errorHandler(error.code)            
+            errorHandler(error.code, configuration.vibration)            
         } finally{
             dispatch(fetchLoadingFinish())
         }
@@ -98,11 +104,11 @@ const WaitingClientListScreen = ({navigation}:any) => {
         navigation.navigate(Screens.QR_SCANNER, {goBack:(value:string) => handleAccept(value,id)})
     }
 
-    const handleCancel = async (id:string, statusChange:string) => {
+    const handleCancel = async (id:string) => {
         dispatch(fetchLoadingStart())
         try {
             const ref = doc(db, "users", id);
-            await updateDoc(ref, {restoStatus:statusChange})
+            await updateDoc(ref, {restoStatus:null})
             getDocuments();
         } catch (error) {
             console.log(error)
@@ -125,7 +131,7 @@ const WaitingClientListScreen = ({navigation}:any) => {
                         dni={item.profile === "cliente" ? item.dni : "No registrado"}
                         email={item.profile === "cliente" ? item.email : "No registrado"}
                         onPressActive={() => goToScanner(item.id)}
-                        onPressCancel={() => handleCancel(item.id, "Cancelado")}                        
+                        onPressCancel={() => handleCancel(item.id)}                        
                         user= {item.profile === "invitado" ? "Invitado" : "Cliente"}
                         state="Pendiente"
                     />

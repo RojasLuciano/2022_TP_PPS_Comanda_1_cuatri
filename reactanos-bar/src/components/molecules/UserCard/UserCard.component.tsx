@@ -22,7 +22,7 @@ interface UserCardProps {
     state?: string;
     table?:string;
     total?:string;
-    onPressActive: () => void;
+    onPressActive?: () => void;
     onPressCancel?: () => void;
 }
 

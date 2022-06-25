@@ -27,6 +27,7 @@ import ControlledCurrency from "../../molecules/ControlledCurrency/ControlledCur
 import { useForm } from "react-hook-form";
 import MaskInput, { createNumberMask } from "react-native-mask-input";
 import { Input } from "native-base";
+import { ConfigurationTypes } from "../../../redux/configurationReducer";
 
 const FinishTableScreen = ({navigation}:any) => {
     const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const FinishTableScreen = ({navigation}:any) => {
     const { control, getValues} = useForm<any>();
     const [tip, setTip] = useState("");
     const [total, setTotal] = useState("");
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
 
     useFocusEffect(
         useCallback(() => {
@@ -85,7 +87,7 @@ const FinishTableScreen = ({navigation}:any) => {
             successHandler('order-created')
         } catch (error) {
             console.log("FinishTableScreen registerOrder ",error);
-            errorHandler('order-error')
+            errorHandler('order-error', configuration.vibration)
         } finally{
             dispatch(fetchLoadingFinish())
         }
@@ -109,9 +111,9 @@ const FinishTableScreen = ({navigation}:any) => {
                 {data?.products?.map((product: any, index:number) => (
                     <OrderDetails
                         key={index}
-                        title={`${product.name}`}
+                        title={`1x ${product.name}`}
                         description={product.description}
-                        client={`Importe: ${currencyFormat(product.price)}`}
+                        total={currencyFormat(product.price)}
                     /> 
                 ))}
             </ScrollView>
