@@ -13,6 +13,7 @@ import AddPollScreen from '../../components/screens/AddPollScreen/AddPollScreen'
 import ChatScreen from '../../components/screens/ChatScreen/ChatScreen.component';
 import GuessTheNumberScreen from '../../components/screens/GuessTheNumberScreen/GuesstheNumberScreen';
 import FinishTableStack from './FinishTableStack';
+import GraphicScreen from '../../components/screens/GraphicScreen/GraphicScreen';
 
 export type ClientHomeStackParamList = {
     [Screens.CLIENT_HOME]: undefined | {};
@@ -22,6 +23,7 @@ export type ClientHomeStackParamList = {
     [Screens.ADD_POLL]: undefined | {}
     [Screens.CHAT]: undefined | {}
     [Screens.GUESS_THE_NUMBER]: undefined | {}
+    [Screens.GRAPHIC_SCREEN]: undefined | {}
 };
 const Stack = createStackNavigator<ClientHomeStackParamList>();
 
@@ -47,6 +49,7 @@ const ClientHomeStack = () => {
         <Stack.Screen name={Screens.ADD_POLL} component={AddPollScreen} />
         <Stack.Screen name={Screens.CHAT} component={ChatScreen} />
         <Stack.Screen name={Screens.GUESS_THE_NUMBER} component={GuessTheNumberScreen}  />
+        <Stack.Screen name={Screens.GRAPHIC_SCREEN} component={GraphicScreen}  />
     </Stack.Navigator>
   );
 }
