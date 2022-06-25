@@ -101,6 +101,7 @@ const DrawerStack = () => {
       <Drawer.Navigator initialRouteName={Screens.PENDING_ORDER_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.ADD_CLIENT} component={AddClientScreen} />
         <Drawer.Screen name={Screens.LIST_CHAT} component={ChatStack} options={{ headerShown: false }} />
+        <Drawer.Screen name={Screens.DELIVER_ORDER_TABLE} component={DeliverOrderTableListScreen} />
         <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
       </Drawer.Navigator>
