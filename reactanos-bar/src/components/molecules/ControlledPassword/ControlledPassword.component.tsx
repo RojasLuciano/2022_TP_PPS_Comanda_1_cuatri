@@ -12,6 +12,7 @@ interface ControlledInputProps extends InputProps {
     rightIcon?: any;
     show?: boolean;
     onPressRight?: () => void;
+    required?:boolean
 }
 
 const ControlledPassword = React.forwardRef(
@@ -20,12 +21,13 @@ const ControlledPassword = React.forwardRef(
             <Controller
                 control={props.control}
                 name={props.name}
+                rules={{required:props.required}}
                 render={({ field: { onChange, onBlur, value } }) => (
                     <Input
                         icon={props.icon}
                         onPressRight={props.onPressRight}
                         rightIcon={props.rightIcon}
-                        secureTextEntry={props.show}
+                        secureTextEntry={!props.show}    
                         keyboardType="default"
                         returnKeyType="next"
                         ref={ref}

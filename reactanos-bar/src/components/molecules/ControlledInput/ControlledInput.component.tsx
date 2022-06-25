@@ -10,6 +10,8 @@ interface ControlledInputProps extends InputProps {
     name: string;
     ref?: any;
     icon?: any;
+    error?:boolean;
+    required?:boolean;
 }
 
 const ControlledInput = React.forwardRef((props: ControlledInputProps, ref) => {
@@ -17,10 +19,13 @@ const ControlledInput = React.forwardRef((props: ControlledInputProps, ref) => {
         <Controller
             control={props.control}
             name={props.name}
+            rules={{
+                required: props.required,
+            }}
             render={({ field: { onChange, onBlur, value } }) => (
-                <Input
+                <Input error={props.error}
                     icon={props.icon}
-                    autoCapitalize="none"
+                    autoCapitalize={props.autoCapitalize}
                     keyboardType={props.type}
                     returnKeyType="next"
                     ref={ref}

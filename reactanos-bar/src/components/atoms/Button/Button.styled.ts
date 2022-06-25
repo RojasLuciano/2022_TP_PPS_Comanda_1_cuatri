@@ -3,14 +3,17 @@ import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 
 interface ButtonProps{
     variant: "primary" | "secondary";
+    size: "L" | "M";
+    marginH: "S" | "M";
 }
 
 export const StyledPrimary = styled.TouchableOpacity<ButtonProps>`
-    height:${({variant})=>variant==="primary"?"60px":"40px"};
+    height:${({size})=>size==="L"?"60px":"40px"};
     width:100%;
     border-radius:15px;
     overflow:hidden;
     margin-vertical:5px;
+    margin-horizontal:${({marginH})=>marginH==="S"?"0px":"10px"};
 `
 
 export const StyledText = styled.Text<ButtonProps>`

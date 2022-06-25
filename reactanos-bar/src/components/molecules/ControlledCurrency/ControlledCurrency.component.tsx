@@ -1,7 +1,7 @@
-import { View, Text } from 'react-native'
-import React, { FC } from 'react'
-import { Control, Controller, RefCallBack } from 'react-hook-form'
-import Input, { InputProps } from '../../atoms/Input/Input.component'
+import { TextInput } from 'react-native'
+import React, { Ref } from 'react'
+import { Control, Controller } from 'react-hook-form'
+import { InputProps } from '../../atoms/Input/Input.component'
 import MaskInput, { createNumberMask } from 'react-native-mask-input';
 import styles from './ControlledCurrency.styled';
 
@@ -10,12 +10,19 @@ interface ControlledInputProps extends InputProps{
     placeholder:string;
     type?: "default" | "email-address" | "numeric";
     name:string;
-    ref?:any;
+    number?:boolean;
+    error?:boolean;
+    required?:boolean;
+    onSubmitEditing?:any
 }
 
-const ControlledCurrency = React.forwardRef((props:ControlledInputProps,ref) => {
+const ControlledCurrency = React.forwardRef((props:ControlledInputProps,ref:Ref<TextInput> | undefined) => {
 
-  const mask = createNumberMask({
+  const mask = props.number ? createNumberMask({
+    delimiter: '.',
+    separator: ',',
+    precision: 0,
+  }) : createNumberMask({
     prefix: ['$', ' '],
     delimiter: '.',
     separator: ',',
@@ -23,14 +30,15 @@ const ControlledCurrency = React.forwardRef((props:ControlledInputProps,ref) => 
   })
 
   return (
-    <Controller control={props.control} name={props.name}
+    <Controller control={props.control} name={props.name} rules={{required:props.required}}
         render={({ field: { onChange, onBlur, value } }) => (
-            <MaskInput style={styles.input} placeholderTextColor="gray"
+            <MaskInput style={[styles.input, props.error && {borderColor:'red', borderWidth:1.5}]} placeholderTextColor="gray" ref={ref}
                 value={value} placeholder={props.placeholder} keyboardType="number-pad"
                 onChangeText={(masked, unmasked) => {
-                    onChange(masked);
-                }}
-                mask={mask}
+                    onChange(unmasked);
+                }} maxLength={props.maxLength}
+                    returnKeyType="next"
+                    mask={mask} onSubmitEditing={props.onSubmitEditing}
               />
         )}
     />

@@ -1,16 +1,15 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, {MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
 import {
     StyledLinearGradient,
     StyledMargin,
     StyledView,
 } from "./AddAdminsScreen.styled";
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 import ControlledInput from "../../molecules/ControlledInput/ControlledInput.component";
 import { useForm } from 'react-hook-form';
 import ControlledPassword from '../../molecules/ControlledPassword/ControlledPassword.component';
 import ImageButton from "../../atoms/ImageButton/ImageButton.component";
 import Button from '../../atoms/Button/Button.component';
-import Spinner from '../../atoms/Spinner/Spinner.component';
 import { addDoc, collection } from "firebase/firestore";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { auth, db, storage } from '../../../InitApp';
@@ -22,12 +21,17 @@ import * as ImagePicker from "expo-image-picker";
 import { getBlob } from '../../../utils/utils';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useFocusEffect } from '@react-navigation/native';
-
+import Select from '../../molecules/Select/Select.component';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
+import { successHandler } from '../../../utils/SuccessHandler';
+import { ConfigurationTypes } from '../../../redux/configurationReducer';
+import { IStore } from '../../../redux/store';
 
 type NewUser = {
     lastName: string;
     name: string;
-    dni: number;
+    dni: number | null;
     cuil: string;
     profile: string;
     email: string;
@@ -35,59 +39,36 @@ type NewUser = {
     passwordRepeat: string;
 }
 
-const AddAdminsScreen = ({navigation}) => {
-    const [loading, setLoading] = useState(false);
+const AddAdminsScreen = ({navigation}:any) => {
     const [image, setImage] = useState("");
     const { control, handleSubmit, getValues, formState: { errors }, reset, setValue } = useForm<NewUser>();
     const [scanned, setScanned] = useState(false);
     const [openQR, setOpenQR] = useState(false);
     const [show, setShow] = useState(false);
     const passInput: MutableRefObject<any> = useRef();
+    const [type, setType] = useState("");
+    const configuration:ConfigurationTypes = useSelector<IStore,any>(store=>store.configuration);
+    const dispatch = useDispatch();
 
-    //HARDCODEO
-    // useEffect(() => {
-    //     setValue("lastName", "rojas");
-    //     setValue("name", "lucho");
-    //     setValue("dni", "37933047");
-    //     setValue("cuil", "24379330479");
-    //     setValue("profile", "admin");
-    //     setValue("email", "rojas"+ Math.floor(Math.random()*100) + 1 +"@gmail.com"); 
-    //     setValue("password", "roja$1");
-    //     setValue("passwordRepeat", "roja$1");
-    // }, []);
-
-
-    function cuilValidator(cuil: string): boolean { 
-        if (cuil.length !== 11) {
+    const verifyCuil = (cuit : any) => {
+        if (cuit.length !== 11) {
           return false;
-        }
+        }  
+        return true;
+      };      
       
-        const [checkDigit, ...rest] = cuil
-          .split('')
-          .map(Number)
-          .reverse();
-      
-        const total = rest.reduce(
-          (acc, cur, index) => acc + cur * (2 + (index % 6)),
-          0,
-        );
-      
-        const mod11 = 11 - (total % 11);
-      
-        if (mod11 === 11) {
-          return checkDigit === 0;
-        }
-      
-        if (mod11 === 10) {
-          return false;
-        }
-      
-        return checkDigit === mod11;
-      }
+    const data = [
+        {label:"Dueño", value:"admin"},
+        {label:"Supervisor", value:"supervisor"},
+    ]
+    const handleSelectType = (value:string) => {
+        setType(value);
+        setValue("profile",value);
+    }
 
       React.useEffect(
         () =>
-          navigation.addListener('beforeRemove', (e) => {
+          navigation.addListener('beforeRemove', (e:any) => {
             e.preventDefault();
           }),
         []
@@ -99,12 +80,12 @@ const AddAdminsScreen = ({navigation}) => {
         }, [])
       );
 
-    const handleBarCodeScanned = ({ data }) => {
+    const handleBarCodeScanned = ({ data }:any) => {
         setScanned(true);
         setOpenQR(false);
         const dataSplit = data.split('@')
-        setValue("dni", dataSplit[1].trim())
-        setValue("lastName", dataSplit[4].trim())
+        setValue("dni", dataSplit[4].trim())
+        setValue("lastName", dataSplit[1].trim())
         setValue("name", dataSplit[2].trim())
     };
 
@@ -122,7 +103,7 @@ const AddAdminsScreen = ({navigation}) => {
                 return;
             }
         })
-        if (cuilValidator(values.cuil)) {
+        if (!verifyCuil(values.cuil)) {
             showMessage({ type: "danger", message: "Error", description: "CUIL INVAlIDO" });
             return;
         }
@@ -132,10 +113,11 @@ const AddAdminsScreen = ({navigation}) => {
             return;
         }
         if (values.password !== values.passwordRepeat) {
-            errorHandler('pass-diff');
+            errorHandler('pass-diff', configuration.vibration);
             return;
         }
-        setLoading(true)
+        dispatch(fetchLoadingStart());
+       
         try {
             await createUserWithEmailAndPassword(auth, values.email, values.password);
             const blob: any = await getBlob(image);
@@ -150,13 +132,11 @@ const AddAdminsScreen = ({navigation}) => {
                 profile: values.profile,
                 email: values.email,
                 image: fileRef.fullPath,
-                creationDate: new Date()
+                creationDate: new Date(),
+                status: "Activo",
+                pollfilled: false,
             });
-            showMessage({
-                type: "success",
-                message: "Exito",
-                description: "Usuario creado exitosamente",
-            });
+            successHandler('user-created');
             reset();
             setValue("lastName", "")
             setValue("name", "")
@@ -166,19 +146,20 @@ const AddAdminsScreen = ({navigation}) => {
             setValue("email", "")
             setValue("password", "")
             setValue("passwordRepeat", "")
+            setType("");
             setImage("");
         } catch (error: any) {
-            errorHandler(error.code);
+            errorHandler(error.code, configuration.vibration);
         } finally {
-            setLoading(false);
+            dispatch(fetchLoadingFinish());
         }
     }
 
-    const handleCamera = async (type) => {
+    const handleCamera = async () => {
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.4,
         });
         if (!result.cancelled) {
             setImage(result["uri"]);
@@ -195,7 +176,6 @@ const AddAdminsScreen = ({navigation}) => {
         !openQR ?
             <StyledView>
                 <StyledLinearGradient colors={["#6190E8", "#A7BFE8"]}>
-                    {loading && <Spinner />}
                     <View style={{
                         flexDirection: 'row',
                         alignContent: 'center',
@@ -251,12 +231,7 @@ const AddAdminsScreen = ({navigation}) => {
                     </StyledMargin>
 
                     <StyledMargin>
-                        <ControlledInput
-                            variant="rounded"
-                            control={control}
-                            name="profile"
-                            placeholder='Perfil'
-                        />
+                       <Select value={type} onChange={handleSelectType} placeholder="Perfil" data={data} />
                     </StyledMargin>
 
                     <StyledMargin>
@@ -305,10 +280,22 @@ const AddAdminsScreen = ({navigation}) => {
 
                     <Button onPress={handleSubmit(onSubmit)}>Crear usuario</Button>
                 </StyledLinearGradient>
-            </StyledView> : <BarCodeScanner
-                onBarCodeScanned={scanned && openQR ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
+            </StyledView> :     <BarCodeScanner
+      onBarCodeScanned={scanned && openQR ? undefined : handleBarCodeScanned}
+      style={{        
+        flex: 1,
+        backgroundColor: 'black',                
+        alignItems: 'center',
+        justifyContent: 'center',  }}
+    >
+      <View style={{
+        width: 200,
+        height: 200,
+        borderColor: '#fff',
+        borderWidth: 2,
+        borderRadius: 30
+      }}></View>
+    </BarCodeScanner>
     )
 }
 export default AddAdminsScreen

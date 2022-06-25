@@ -10,9 +10,9 @@ export interface ButtonProps extends AwesomeButtonProps{
 
 const AwesomeButton:FC<ButtonProps> = (props) => {
   return (
-      <Button type={props.type} {...props} stretch
-        width={props.width} borderRadius={props.rounded?40:0}
-        textSize={props.textSize} height={props.height}
+      <Button type={props.type} {...props} backgroundColor="#A7BFE8" backgroundDarker='#6190E8'
+        width={props.width || 40} borderRadius={props.rounded?40:0}
+        textSize={props.textSize || 25} height={props.height || 40}
         onPress={props.onPress}
       >
         {props.children}

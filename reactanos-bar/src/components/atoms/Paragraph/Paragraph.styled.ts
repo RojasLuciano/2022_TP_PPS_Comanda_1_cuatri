@@ -1,34 +1,17 @@
-import styled from 'styled-components/native'
+import styled from "styled-components/native";
 
 interface ParagraphProps{
-    color:string;
+    color: string;
     bold:boolean;
-    textAlign?: 'center' | 'left' | 'right';
+    level: "XL" | "L" | "M";
+    textAlign: 'left' | 'center' | 'right';
 }
 
-const StyledParagraph = styled.Text<ParagraphProps>`
-    color:${({color})=>color};
-    font-weight:${({bold})=>bold?'bold':'normal'};
+const sizes = {XL: '18px', L: '16px', M:'14px', S:'12px'}
+
+export const StyledParagraph = styled.Text<ParagraphProps>`
     text-align:${({textAlign})=>textAlign};
-`
-
-export const ParagraphXL = styled(StyledParagraph)`
-    font-size:16px;
-    line-height:24px;
-`
-
-export const ParagraphL = styled(StyledParagraph)`
-    font-size:14px;
-    line-height:20px;
-`
-
-export const ParagraphM = styled(StyledParagraph)`
-    font-size:12px;
-    line-height:16px;
-`
-
-export const ParagraphS = styled(StyledParagraph)`
-    font-size:10px;
-    line-height:16px;
-    text-transform:uppercase;
+    font-size:${({level})=> sizes[level]};
+    font-weight:${({bold})=>bold?'bold':'normal'};
+    color:${({color})=>color};
 `

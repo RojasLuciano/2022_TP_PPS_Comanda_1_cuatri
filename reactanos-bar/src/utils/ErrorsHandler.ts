@@ -1,30 +1,67 @@
 import { showMessage } from 'react-native-flash-message';
+import {  Vibration } from 'react-native';
+import store from '../redux/store';
 
-export const errorHandler = (error:any) => {
-    switch(error){
+export const errorHandler = (error: any, vibration:boolean) => {
+    let message: string = "";
+    switch (error) {
         case 'auth/invalid-email':
-            showMessage({type:"danger", message:"Error", description:"El correo electrónico es inválido"});
+            message = "El correo electrónico es inválido"
             break;
         case 'auth/email-already-in-use':
-            showMessage({type:"danger", message:"Error", description:"El correo electrónico ingresado ya está registrado"});
+            message = "El correo electrónico ingresado ya está registrado"
             break;
         case 'auth/weak-password':
-            showMessage({type:"danger", message:"Error", description:"La contraseña debe tener un mínimo de 6 carácteres"});
-        break;
+            message = "La contraseña debe tener un mínimo de 6 carácteres"
+            break;
         case 'auth/user-not-found':
-            showMessage({type:"danger", message:"Error", description:"Correo electrónico y/o contraseña inválido"});
-        break;
+            message = "Correo electrónico y/o contraseña inválido"
+            break;
         case 'auth/wrong-password':
-            showMessage({type:"danger", message:"Error", description:"Correo electrónico y/o contraseña inválido"});
-        break;
+            message = "Correo electrónico y/o contraseña inválido"
+            break;
         case 'pass-diff':
-            showMessage({type:"danger", message:"Error", description:"Las contraseñas no coinciden"});
-        break;
+            message = "Las contraseñas no coinciden"
+            break;
         case 'image-error':
-            showMessage({type:"danger", message:"Error", description:"Ha ocurrido un error intentando cargar el producto"});
-        break;
+            message = "Ha ocurrido un error intentando cargar el producto"
+            break;
+        case 'empty-fields':
+            message = "Todos los campos son requeridos"
+            break;
+        case 'table-exists':
+            message = "El número de la tabla ya existe"
+            break;
+        case 'table-not-exists':
+            message = "El código QR no está asociado a alguna de nuestras mesas"
+            break;
+        case 'table-doesnt-match':
+            message = "El código QR de esa mesa no es el mismo que la que te asignaron"
+            break;
+        case 'table-taken':
+            message = "La mesa ya está ocupada"
+            break;
+        case 'unauthorized':
+            message = "Usuario no autorizado"
+            break;
+        case 'invalid-qr':
+            message = "QR inválido"
+            break;
+        case 'havent-guessed':
+            message = "No has adivinado el número"
+            break;
+        case 'order-error':
+            message = "Ocurrió un error al generar el pedido"
+            break;
+        case 'order-not-ready':
+            message = "El pedido no está listo para llevar a la mesa"
+            break;
         default:
-            showMessage({type:"danger", message:"Error", description:"Ha ocurrido un error, por favor reintente nuevamente"});
-        break;
+            message = "Ha ocurrido un error, por favor reintente nuevamente"
+            break;
     }
+    if(vibration){
+        Vibration.vibrate(1000);
+    }
+    showMessage({ type: "danger", message: "Error", description: message });
 }

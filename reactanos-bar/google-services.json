@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "879248746442",
+    "project_id": "reactanos-bar",
+    "storage_bucket": "reactanos-bar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:879248746442:android:244e630f535933b1895133",
+        "android_client_info": {
+          "package_name": "com.pps.reactanosbar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "879248746442-pcrhduc13404cs8j9cd6m14ki7rb08ol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTzIU5pr3bVNUi52vP07NfJIozzuKhAbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "879248746442-pcrhduc13404cs8j9cd6m14ki7rb08ol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
