@@ -265,7 +265,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     <RefreshControl refreshing={false} onRefresh={onRefresh} />
                 }
             >
-                <Modal isVisible={orderStatus==='Cobrado'} title="¡Gracias por visitarnos!" onPrimary={finishOrder} subtitle="Esperamos que nuestros servicios hayan sido de tu agrado"  onPrimaryText="Cerrar sesión"></Modal>
+                <Modal isVisible={orderStatus==='Cobrado'} title="¡Gracias por visitarnos!" onPrimary={finishOrder} subtitle="Esperamos que nuestros servicios hayan sido de tu agrado"  onPrimaryText="Aceptar"></Modal>
                 <Heading bold level="L" color="white">
                     ¡Bienvenido a nuestro local!
                 </Heading>
