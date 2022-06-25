@@ -49,11 +49,6 @@ const DrawerStack = () => {
     return (
       <Drawer.Navigator initialRouteName={Screens.CLIENT_HOME} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.CLIENT_HOME} component={ClientHomeStack} options={{ headerShown: false }} />
-        {userData.user.table != 0 && <Drawer.Screen name={Screens.ADD_ORDER} component={AddOrderScreen} />}
-        {userData.user.table != 0 && <Drawer.Screen name={Screens.CHAT} component={ChatScreen} />}
-        {userData.user.table != 0 && <Drawer.Screen name={Screens.GRAPHIC_SCREEN} component={GraphicScreen} />}
-        {userData.user.table != 0 && <Drawer.Screen name={Screens.ADD_POLL} component={AddPollScreen} />}
-        {userData.user.table != 0 && <Drawer.Screen name={Screens.GUESS_THE_NUMBER} component={GuessTheNumberScreen} />}
       </Drawer.Navigator>
     );
   }
@@ -62,6 +57,7 @@ const DrawerStack = () => {
       <Drawer.Navigator initialRouteName={Screens.CLIENT_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.ADD_TABLE} component={AddTableStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.ADD_ADMINS} component={AddAdminsScreen} />
+        <Drawer.Screen name={Screens.ADD_PRODUCTS} component={AddProductStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.ADD_EMPLOYEE} component={AddEmployeeScreen} />
         <Drawer.Screen name={Screens.GRAPHIC_SCREEN} component={GraphicScreen} />
         <Drawer.Screen name={Screens.CLIENT_LIST} component={ClientListScreen} />
@@ -97,10 +93,9 @@ const DrawerStack = () => {
   }
   if (userData.user.profile === "waiter") { //mozo
     return (
-      <Drawer.Navigator initialRouteName={Screens.PENDING_ORDER_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Navigator initialRouteName={Screens.ORDER_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.ADD_CLIENT} component={AddClientScreen} />
         <Drawer.Screen name={Screens.LIST_CHAT} component={ChatStack} options={{ headerShown: false }} />
-        <Drawer.Screen name={Screens.DELIVER_ORDER_TABLE} component={DeliverOrderTableListScreen} />
         <Drawer.Screen name={Screens.ORDER_LIST} component={WaitingOrderListScreen} />
         <Drawer.Screen name={Screens.PENDING_ORDER_LIST} component={CompleteOrderStack} options={{ headerShown: false }} />
         <Drawer.Screen name={Screens.DELIVER_ORDER_TABLE} component={DeliverOrderTableListScreen} />
@@ -110,7 +105,7 @@ const DrawerStack = () => {
   }
   if (userData.user.profile === "meter") {
     return (
-      <Drawer.Navigator initialRouteName={Screens.CLIENT_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Navigator initialRouteName={Screens.WAITING_CLIENT_LIST} drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name={Screens.ADD_CLIENT} component={AddClientScreen} />
         <Drawer.Screen name={Screens.WAITING_CLIENT_LIST} component={WaitingClientListStack} options={{ headerShown: false }} />
       </Drawer.Navigator>

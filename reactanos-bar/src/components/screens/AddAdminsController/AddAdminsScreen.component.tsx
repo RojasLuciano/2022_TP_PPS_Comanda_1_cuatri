@@ -24,6 +24,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Select from '../../molecules/Select/Select.component';
 import { useDispatch } from 'react-redux';
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
+import { successHandler } from '../../../utils/SuccessHandler';
 
 type NewUser = {
     lastName: string;
@@ -147,11 +148,7 @@ const AddAdminsScreen = ({navigation}:any) => {
                 status: "Activo",
                 pollfilled: false,
             });
-            showMessage({
-                type: "success",
-                message: "Exito",
-                description: "Usuario creado exitosamente",
-            });
+            successHandler('user-created');
             reset();
             setValue("lastName", "")
             setValue("name", "")

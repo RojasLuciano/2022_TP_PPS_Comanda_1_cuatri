@@ -25,6 +25,7 @@ import { Screens } from "../../../navigation/Screens";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { showMessage } from 'react-native-flash-message';
 import { RefreshControl } from "react-native";
+import { sendPushNotification } from "../../../utils/pushNotifications";
 
 const WaitingClientListScreen = ({navigation}:any) => {
     const [data, setData] = useState<Client[]>([]);
@@ -83,6 +84,8 @@ const WaitingClientListScreen = ({navigation}:any) => {
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, id);
             await updateDoc(userRef, {table: tableCode, restoStatus:"Asignado"})
+            await sendPushNotification({title:"Ingreso al local", description:"Ya estás dentro del local", profile:"cliente"})
+            await sleep(1000);
             showMessage({type:'success', message:'Exito', description:'Cliente asignado exitosamente'})
             setData([]);
             await getDocuments();
@@ -98,11 +101,11 @@ const WaitingClientListScreen = ({navigation}:any) => {
         navigation.navigate(Screens.QR_SCANNER, {goBack:(value:string) => handleAccept(value,id)})
     }
 
-    const handleCancel = async (id:string, statusChange:string) => {
+    const handleCancel = async (id:string) => {
         dispatch(fetchLoadingStart())
         try {
             const ref = doc(db, "users", id);
-            await updateDoc(ref, {restoStatus:statusChange})
+            await updateDoc(ref, {restoStatus:null})
             getDocuments();
         } catch (error) {
             console.log(error)
@@ -125,7 +128,7 @@ const WaitingClientListScreen = ({navigation}:any) => {
                         dni={item.profile === "cliente" ? item.dni : "No registrado"}
                         email={item.profile === "cliente" ? item.email : "No registrado"}
                         onPressActive={() => goToScanner(item.id)}
-                        onPressCancel={() => handleCancel(item.id, "Cancelado")}                        
+                        onPressCancel={() => handleCancel(item.id)}                        
                         user= {item.profile === "invitado" ? "Invitado" : "Cliente"}
                         state="Pendiente"
                     />

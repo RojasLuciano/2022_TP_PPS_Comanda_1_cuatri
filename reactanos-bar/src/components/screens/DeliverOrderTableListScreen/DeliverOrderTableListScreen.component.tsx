@@ -24,6 +24,7 @@ import { errorHandler } from "../../../utils/ErrorsHandler";
 import { showMessage } from "react-native-flash-message";
 import { RefreshControl } from "react-native";
 import OrderDetails from "../../organisms/OrderDetails/OrderDetails.component";
+import { successHandler } from "../../../utils/SuccessHandler";
 
 //Esta pantalla es listar pedidos.
 
@@ -72,11 +73,7 @@ const DeliverOrderTableListScreen = ({ navigation }: any) => {
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, order.id);
             await updateDoc(userRef, { restoStatus: "Pedido terminado" });
-            showMessage({
-                type: "success",
-                message: "Exito",
-                description: "El pedido fue servido en la mesa",
-            });
+            successHandler('order-on-table')
             setData([]);
             await getDocuments();
         } catch (error: any) {

@@ -24,6 +24,7 @@ import UserCard from "../../molecules/UserCard/UserCard.component";
 import { errorHandler } from '../../../utils/ErrorsHandler';
 import { showMessage } from 'react-native-flash-message';
 import { RefreshControl } from "react-native";
+import { sendPushNotification } from "../../../utils/pushNotifications";
 
 const CollectMoneyScreen = ({navigation}:any) => {
     const [data, setData] = useState<any[]>([]);
@@ -70,6 +71,7 @@ const CollectMoneyScreen = ({navigation}:any) => {
             const orderCollection = collection(db, "orders");
             const orderRef = doc(orderCollection, orderId);
             await updateDoc(orderRef, {orderStatus:"Cobrado"});
+            await sendPushNotification({title:"Cuenta cobrada", description:"¡Gracias por visitarnos!", profile:"cliente"})
             showMessage({type:'success', message:'Exito', description:'Cuenta cobrada exitosamente'})
             setData([]);
             await getDocuments();

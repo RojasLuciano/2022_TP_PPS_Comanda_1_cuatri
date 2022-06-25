@@ -6,7 +6,7 @@ import Heading from "../../atoms/Heading/Heading.component";
 import { Screens } from "../../../navigation/Screens";
 import { IStore } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthTypes, refreshUserData } from "../../../redux/authReducer";
+import { AuthTypes, handleLogout, refreshUserData } from "../../../redux/authReducer";
 import {
     fetchLoadingFinish,
     fetchLoadingStart,
@@ -27,19 +27,22 @@ import { RefreshControl, ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { sleep } from "../../../utils/utils";
 import { sendPushNotification } from "../../../utils/pushNotifications";
+import { successHandler } from '../../../utils/SuccessHandler';
+import Modal from '../../atoms/Modal/Modal.component';
 
 const ClientHomeScreen = ({ navigation }: any) => {
     const data: AuthTypes = useSelector<IStore, any>((store) => store.auth);
     const dispatch = useDispatch();
     const [tableButtons, setTableButtons] = useState(false);
     const [orderStatus, setOrderStatus] = useState("");
+    const [discount, setDiscount] = useState("");
 
     useFocusEffect(
         useCallback(() => {
             onRefresh();
         }, [])
     );
-
+        
     const onRefresh = () => {
         handleOrderStatus();
         dispatch(refreshUserData());
@@ -60,12 +63,9 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 restoStatus: "Pendiente",
                 modifiedDate: new Date(),
             });
-            showMessage({
-                type: "success",
-                message: "Exito",
-                description: "Ahora estás pendiente de ingresar al local",
-            });
             await sendPushNotification({title:"Lista de espera", description:"Hay un cliente nuevo en la lista de espera", profile:"meter"})
+            await sleep(1000);
+            successHandler('waiting-list');
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen signToRestaurant", error);
@@ -92,12 +92,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                 restoStatus: "Sentado",
                 modifiedDate: new Date(),
             });
-            showMessage({
-                type: "success",
-                message: "Exito",
-                description:
-                    "Te acabas de sentar en la mesa, ya podés hacer tu pedido",
-            });
+            successHandler("sit-on-table")
             dispatch(refreshUserData());
         } catch (error: any) {
             console.log("ClientHomeScreen sitOnTable", error);
@@ -219,6 +214,9 @@ const ClientHomeScreen = ({ navigation }: any) => {
             querySnapshot.forEach((doc) => {
                 const res: any = { ...doc.data() };
                 setOrderStatus(res.orderStatus);
+                if(res.discount){
+                    setDiscount(res.discount);
+                }
             });
             await sleep(1000);
         } catch (error: any) {
@@ -245,6 +243,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     <RefreshControl refreshing={false} onRefresh={onRefresh} />
                 }
             >
+                <Modal isVisible={orderStatus==='Cobrado'} title="¡Gracias por visitarnos!" onPrimary={()=>dispatch(handleLogout())} subtitle="Esperamos verte pronto nuevamente"  onPrimaryText="Cerrar sesión"></Modal>
                 <Heading bold level="L" color="white">
                     ¡Bienvenido a nuestro local!
                 </Heading>
@@ -259,14 +258,19 @@ const ClientHomeScreen = ({ navigation }: any) => {
                         Estamos a su disposición ante cualquier consulta
                     </Paragraph>
                 </MarginVertical>
-                <MarginVertical>
                     <CardButton onPress={goToOlderPolls}>
                         Ver encuestas antigüas
                     </CardButton>
-                </MarginVertical>
+                    {orderStatus === "Pagado" && (
+                        <MarginVertical>
+                            <CardButton disabled>
+                                Esperá a que confirmen el pago
+                            </CardButton>
+                        </MarginVertical>
+                    )}
                 {!tableButtons && (
                     <MarginVertical>
-                        {!data.user.restoStatus && (
+                        {orderStatus!='Cobrado' && !data.user.restoStatus && (
                             <CardButton onPress={handleSignToRestaurant}>
                                 Ingresar al local
                             </CardButton>
@@ -289,7 +293,7 @@ const ClientHomeScreen = ({ navigation }: any) => {
                     </MarginVertical>
                 )}
                 {!tableButtons &&
-                    ((data.user.restoStatus === "Pendiente" || data.user.restoStatus === "Pedido terminado" ||
+                    ((orderStatus === 'Pendiente' || data.user.restoStatus === "Pedido terminado" ||
                         data.user.restoStatus === "Pedido aceptado") && (
                             <CardButton onPress={goToQr}>
                                 Escanear QR de la mesa
@@ -297,31 +301,33 @@ const ClientHomeScreen = ({ navigation }: any) => {
                         ))}
                 {tableButtons && (
                     <>
-                        {orderStatus !== "Pagado" && orderStatus !== "Pago confirmado" && (
+                        {orderStatus !== "Pagado" && orderStatus !== "Cobrado" && (
                             <>
                                 <MarginVertical>
                                     <CardButton onPress={goToPoll}>
                                         Realizar encuesta
                                     </CardButton>
                                 </MarginVertical>
-                                <MarginVertical>
-                                    <CardButton onPress={goToGames}>
+                                    {!discount &&<CardButton onPress={goToGames}>
                                         Ir a los juegos
+                                    </CardButton>}
+                                <MarginVertical>
+                                    <CardButton onPress={()=>navigation.navigate(Screens.CHAT)}>
+                                        Hacer una consulta
                                     </CardButton>
                                 </MarginVertical>
-                            </>
-                        )}
-                        <MarginVertical>
-                            {orderStatus === "Pedido terminado" ? (
-                                <CardButton onPress={goToFinishTable}>
-                                    Pedir la cuenta
-                                </CardButton>
-                            ) : (
                                 <CardButton onPress={getOrderStatus}>
                                     Estado del pedido
                                 </CardButton>
+                            </>
+                        )}
+                            {orderStatus === "Pedido terminado" && (
+                                <MarginVertical>
+                                    <CardButton onPress={goToFinishTable}>
+                                        Pedir la cuenta
+                                    </CardButton>
+                                </MarginVertical>
                             )}
-                        </MarginVertical>
                     </>
                 )}
             </ScrollView>

@@ -22,11 +22,13 @@ const Modal:FC<ModalProps> = ({title, subtitle, onSecondaryText, onPrimaryText, 
         <StyledView>
             <StyledFullWidth>
                 <Heading>{title}</Heading>
-                <Paragraph>{subtitle}</Paragraph>
             </StyledFullWidth>
+            {subtitle && <StyledFullWidth>
+                <Paragraph>{subtitle}</Paragraph>
+            </StyledFullWidth>}
             <StyledFullWidth>
                 <Button onPress={onPrimary}>{onPrimaryText}</Button>
-                {onSecondary && onSecondaryText && <Button variant='secondary' onPress={onSecondary}>{onSecondaryText}</Button>}
+                {onSecondary && onSecondaryText && <Button size='M' variant='secondary' onPress={onSecondary}>{onSecondaryText}</Button>}
             </StyledFullWidth>
         </StyledView>
         </StyledModalView>

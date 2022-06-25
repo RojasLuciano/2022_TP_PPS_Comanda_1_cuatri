@@ -6,10 +6,9 @@ const QRScannerScreen = ({route, navigation}:any) => {
   const [scanned, setScanned] = useState(false);
 
   const handleScanQR = ({data}:any) => {
-    const tableCode = data.replace(/[^0-9]/g, "");
-    console.log("QRScannerScreen handleScanQR ",tableCode);
+    console.log("QRScannerScreen handleScanQR ",data);
     setScanned(true);
-    route.params.goBack(tableCode)
+    route.params.goBack(data)
     navigation.goBack();
   }
 

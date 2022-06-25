@@ -23,6 +23,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useDispatch } from "react-redux";
 import { fetchLoadingFinish, fetchLoadingStart } from '../../../redux/loaderReducer';
 import Select from '../../molecules/Select/Select.component';
+import { successHandler } from '../../../utils/SuccessHandler';
 
 type NewEmployee = {
     lastName: string;
@@ -111,11 +112,7 @@ const AddEmployeeScreen = () => {
                     pollfilled: false,
                 });
             }
-            showMessage({
-                type: "success",
-                message: "Exito",
-                description: "Empleado creado exitosamente",
-            });
+            successHandler("employee-created");
             reset();
             setValue("lastName", "")
             setValue("name", "")

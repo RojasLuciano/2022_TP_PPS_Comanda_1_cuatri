@@ -109,9 +109,9 @@ const FinishTableScreen = ({navigation}:any) => {
                 {data?.products?.map((product: any, index:number) => (
                     <OrderDetails
                         key={index}
-                        title={`${product.name}`}
+                        title={`1x ${product.name}`}
                         description={product.description}
-                        client={`Importe: ${currencyFormat(product.price)}`}
+                        total={currencyFormat(product.price)}
                     /> 
                 ))}
             </ScrollView>

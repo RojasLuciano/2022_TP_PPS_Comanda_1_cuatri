@@ -24,6 +24,7 @@ import { showMessage } from "react-native-flash-message";
 import { RefreshControl } from "react-native";
 import OrderDetails from "../../organisms/OrderDetails/OrderDetails.component";
 import { sendPushNotification } from "../../../utils/pushNotifications";
+import { successHandler } from "../../../utils/SuccessHandler";
 
 //Esta pantalla es listar pedidos.
 
@@ -74,12 +75,9 @@ const WaitingOrderListScreen = ({ navigation }: any) => {
             const userCollection = collection(db, "users");
             const userRef = doc(userCollection, userId);
             await updateDoc(userRef, { restoStatus: "Pedido aceptado" });
-            showMessage({
-                type: "success",
-                message: "Exito",
-                description: "El pedido fue distribuído a las distintas áreas",
-            });
             await sendPushNotification({title:"Nuevo pedido", description:"Tenés un nuevo pedido para realizar", profile:["waiter", "cook"]})
+            await sleep(1000);
+            successHandler('order-sector-delivered')
             setData([]);
             await getDocuments();
         } catch (error: any) {

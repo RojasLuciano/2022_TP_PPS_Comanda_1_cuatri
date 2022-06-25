@@ -30,7 +30,7 @@ const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, t
         <StyledView>
             <Heading level="L">{title || "Pedido #" + index?.substring(0,6)}</Heading>
             <Heading>{client}</Heading>
-            {<Divider/>}
+            <Divider/>
             {products && Object.keys(newList).map((product:any,index)=>
                 <View key={index} style={{flex:1, flexDirection:'row', justifyContent:'space-between'}}>
                     <Paragraph textAlign="left" >
@@ -43,7 +43,6 @@ const OrderDetails: FC<OrderDetailsProps> = ({ title, index, client, products, t
             )}
             {products && <Divider/>}
             {total&&<Heading textAlign="right" level="L">{total}</Heading>}
-            {description && <View style={{marginVertical:10}}><Paragraph>{description}</Paragraph></View>}
             {onPress && <Button size="M" variant="secondary" onPress={onPress}>{onPressText || 'Aceptar'}</Button>}
         </StyledView>
     );
