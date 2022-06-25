@@ -353,9 +353,11 @@ const ClientHomeScreen = ({ navigation }: any) => {
                                         </MarginVertical>
                                     )}
                                 {!data.user.discount && (
+                                <MarginVertical>
                                     <CardButton onPress={goToGames}>
-                                        Ir a los juegos
-                                    </CardButton>
+                                            Ir a los juegos
+                                        </CardButton>
+                                </MarginVertical>
                                 )}
                                 <MarginVertical>
                                     <CardButton
@@ -364,11 +366,6 @@ const ClientHomeScreen = ({ navigation }: any) => {
                                         }
                                     >
                                         Hacer una consulta
-                                    </CardButton>
-                                </MarginVertical>
-                                <MarginVertical>
-                                    <CardButton onPress={getOrderStatus}>
-                                        Estado del pedido
                                     </CardButton>
                                 </MarginVertical>
                             </>
