@@ -84,6 +84,7 @@ Nicolas luciano rojas
 <img src="./reactanos-bar/docs/captures/QRIngresoLocal.png" width="245"/> 
 
 ### QR de propinas.
+
 <img src="./reactanos-bar/docs/captures/QR200.png" width="245"/> <img src="./reactanos-bar/docs/captures/QR300.png" width="245"/> <img src="./reactanos-bar/docs/captures/QR400.png" width="245"/>
 
 
